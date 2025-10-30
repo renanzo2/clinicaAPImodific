@@ -1,8 +1,8 @@
 package org.example.ucb.clinica_api.dao;
 
-import org.example.ucb.control.RepositorioDeVeterinario;
-import org.example.ucb.model.Veterinario;
-import org.example.ucb.model.Certificacao;
+import org.example.ucb.clinica_api.control.RepositorioDeVeterinario;
+import org.example.ucb.clinica_api.model.Veterinario;
+import org.example.ucb.clinica_api.model.Certificacao;
 
 import java.sql.*;
 import java.util.List;

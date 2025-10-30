@@ -1,13 +1,10 @@
 package org.example.ucb.clinica_api.control;
 
-import org.example.ucb.model.Consulta;
-import java.util.List;
+import org.example.ucb.clinica_api.model.Consulta;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface RepositorioDeConsulta {
-    void salvar(Consulta consulta);
-    Consulta BuscarConsulta(int id);
-    List<Consulta> ListarConsulta();
-    List<Consulta> BuscarPorAnimal(int id);
-    void atualizarConsulta(Consulta consulta);
-    boolean deletarConsulta(int id);
+@Repository
+public interface RepositorioDeConsulta extends JpaRepository<Consulta, Integer>{
+
 }

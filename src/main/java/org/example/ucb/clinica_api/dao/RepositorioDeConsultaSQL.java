@@ -1,10 +1,10 @@
 package org.example.ucb.clinica_api.dao;
 
-import org.example.ucb.control.RepositorioDeConsulta;
-import org.example.ucb.model.Animal;
-import org.example.ucb.model.Consulta;
-import org.example.ucb.model.Pet;
-import org.example.ucb.model.Veterinario;
+import org.example.ucb.clinica_api.control.RepositorioDeConsulta;
+import org.example.ucb.clinica_api.model.Animal;
+import org.example.ucb.clinica_api.model.Consulta;
+import org.example.ucb.clinica_api.model.Pet;
+import org.example.ucb.clinica_api.model.Veterinario;
 
 import java.sql.*;
 import java.util.ArrayList;

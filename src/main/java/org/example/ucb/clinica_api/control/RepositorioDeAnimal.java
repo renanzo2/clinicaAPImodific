@@ -1,14 +1,11 @@
 package org.example.ucb.clinica_api.control;
 
-import org.example.ucb.model.Animal;
-
+import org.example.ucb.clinica_api.model.Animal;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
-public interface RepositorioDeAnimal {
-    void salvar(Animal animal);
-    Animal BuscarPorId(int id);
-    List<Animal> ListarTodos();
-    List<Animal> BuscarPorDono(String CpfDono);
-    boolean deletarAnimal(int id);
-    void atualizar(Animal animal);
+@Repository
+public interface RepositorioDeAnimal extends JpaRepository<Animal, Integer> {
+
 }

@@ -1,7 +1,7 @@
 package org.example.ucb.clinica_api.dao;
 
-import org.example.ucb.control.RepositorioDeDono;
-import org.example.ucb.model.Dono;
+import org.example.ucb.clinica_api.control.RepositorioDeDono;
+import org.example.ucb.clinica_api.model.Dono;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -1,7 +1,7 @@
 package org.example.ucb.clinica_api.dao;
 
-import org.example.ucb.control.RepositorioDeEspecialidade;
-import org.example.ucb.model.Especialidade;
+import org.example.ucb.clinica_api.control.RepositorioDeEspecialidade;
+import org.example.ucb.clinica_api.model.Especialidade;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

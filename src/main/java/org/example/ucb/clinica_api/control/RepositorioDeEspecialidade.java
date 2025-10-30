@@ -1,13 +1,12 @@
 package org.example.ucb.clinica_api.control;
 
-import org.example.ucb.model.Especialidade;
+import org.example.ucb.clinica_api.model.Especialidade;
 import java.util.List;
 
-public interface RepositorioDeEspecialidade {
-    void salvar(Especialidade especialidade);
-    Especialidade BuscarEspecialidade(int id);
-    List<Especialidade> ListarEspecialidade();
-    List<Especialidade> BuscarEspPorVet(String crmv);
-    void atualizarEspecialidade(Especialidade especialidade);
-    boolean deletarEspecialidade(int id);
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface RepositorioDeEspecialidade extends JpaRepository<Especialidade, Integer> {
+
 }

@@ -1,11 +1,11 @@
 package org.example.ucb.clinica_api.dao;
 
-import org.example.ucb.control.RepositorioDeAnimal;
-import org.example.ucb.control.RepositorioDeDono;
-import org.example.ucb.model.Dono;
-import org.example.ucb.model.Animal;
-import org.example.ucb.model.Pet;
-import org.example.ucb.model.Exotico;
+import org.example.ucb.clinica_api.control.RepositorioDeAnimal;
+import org.example.ucb.clinica_api.control.RepositorioDeDono;
+import org.example.ucb.clinica_api.model.Dono;
+import org.example.ucb.clinica_api.model.Animal;
+import org.example.ucb.clinica_api.model.Pet;
+import org.example.ucb.clinica_api.model.Exotico;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

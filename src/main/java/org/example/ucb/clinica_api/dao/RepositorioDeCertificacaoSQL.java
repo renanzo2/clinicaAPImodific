@@ -1,9 +1,9 @@
 package org.example.ucb.clinica_api.dao;
 
-import org.example.ucb.control.RepositorioDeCertificacao;
-import org.example.ucb.model.Certificacao;
-import org.example.ucb.model.Especialidade;
-import org.example.ucb.model.Veterinario;
+import org.example.ucb.clinica_api.control.RepositorioDeCertificacao;
+import org.example.ucb.clinica_api.model.Certificacao;
+import org.example.ucb.clinica_api.model.Especialidade;
+import org.example.ucb.clinica_api.model.Veterinario;
 
 import java.awt.image.AreaAveragingScaleFilter;
 import java.sql.Connection;

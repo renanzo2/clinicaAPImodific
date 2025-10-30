@@ -1,14 +1,10 @@
 package org.example.ucb.clinica_api.control;
 
-import org.example.ucb.model.Dono;
+import org.example.ucb.clinica_api.model.Dono;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public interface RepositorioDeDono extends JpaRepository<Dono,String> {
 
-public interface RepositorioDeDono {
-    void salvar(Dono dono);
-    Dono BuscarPorCPF(String Cpf);
-    List<Dono> ListarDono();
-    List<Dono> BuscarPorAnimal(int id);
-    void atualizar(Dono dono);
-    boolean deletarDono(String Cpf);
 }
