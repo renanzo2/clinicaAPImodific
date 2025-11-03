@@ -3,12 +3,14 @@ package org.example.ucb.clinica_api.controller;
 import org.example.ucb.clinica_api.control.RepositorioDeVeterinario;
 import org.example.ucb.clinica_api.model.Veterinario;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@RestController // 1. Diz ao Spring que esta classe é um "Garçom" (Controlador de API)
-@RequestMapping("/api/veterinarios") // 2. O endereço base (ex: http://localhost:8080/api/veterinarios)
+@RestController
+@RequestMapping("/api/veterinarios")
 @CrossOrigin(origins = "*")
 
 public class VeterinarioController {
@@ -20,18 +22,40 @@ public class VeterinarioController {
         return repositorioDeveterinario.findAll();
     }
 
-    @PostMapping Veterinario salvarVeterinario(@RequestBody Veterinario veterinario) {
+    @PostMapping
+    public Veterinario salvarVeterinario(@RequestBody Veterinario veterinario) {
         return repositorioDeveterinario.save(veterinario);
     }
 
-    @GetMapping
-    public Veterinario buscarProCrmv(@RequestParam String id) {
-        return repositorioDeveterinario.findById(id).get();
+    @GetMapping("/{crmv}")
+    public ResponseEntity<Veterinario> buscarProCrmv(@PathVariable String crmv) {
+        Optional<Veterinario> vet = repositorioDeveterinario.findById(crmv);
+
+        if (vet.isPresent()) {
+            return ResponseEntity.ok().body(vet.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{crmv}")
+    public ResponseEntity<Veterinario> atualizarVeterinario(@PathVariable String crmv, @RequestBody Veterinario vetAtualizado) {
+        if  (!repositorioDeveterinario.existsById(crmv)) {
+            return ResponseEntity.notFound().build();
+        }
+        vetAtualizado.setCrmv(crmv);
+
+        Veterinario vetSalvo = repositorioDeveterinario.save(vetAtualizado);
+        return ResponseEntity.ok(vetSalvo);
     }
 
     @DeleteMapping("/{crmv}")
-    public void deletarVeterinario(@PathVariable String crmv, RequestBody Veterinario vetAtualizado) {
-        return repositorioDeveterinario.save(vetAtualizado);
-    }
+    public ResponseEntity<Void> deletarVeterinario(@PathVariable String crmv) {
+        if (!repositorioDeveterinario.existsById(crmv)) {
+            return ResponseEntity.notFound().build();
+        }
 
+        repositorioDeveterinario.deleteById(crmv);
+        return ResponseEntity.noContent().build();
+    }
 }

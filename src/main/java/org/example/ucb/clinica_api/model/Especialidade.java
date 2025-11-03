@@ -1,5 +1,8 @@
 package org.example.ucb.clinica_api.model;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Especialidade {
     private int id;
     private String nome;

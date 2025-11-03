@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface RepositorioDeAnimal extends JpaRepository<Animal, Integer> {
+public interface RepositorioDeAnimal extends JpaRepository<Animal, String> {
 
 }

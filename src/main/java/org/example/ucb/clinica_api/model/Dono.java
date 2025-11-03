@@ -1,15 +1,26 @@
 package org.example.ucb.clinica_api.model;
 
-import java.time.LocalDate;
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
+@Entity
+@Table(name="dono")
 public class Dono {
 
     //Declaração dos atributos
+    @Id
     private String CPF;
     private String nome;
     private String endereco;
     private LocalDate dataNascimento;
+
+    @OneToMany(mappedBy = "dono")
+    private List<Animal> animais;
 
     //Construtores
     public Dono(String CPF, LocalDate dataNascimento, String endereco, String nome) {

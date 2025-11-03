@@ -1,8 +1,8 @@
 package org.example.ucb.clinica_api.model;
 
-public abstract class Animal {
+public class Animal {
     //Declarando os atributos
-    private int id;
+    private String rfid;
     private String nome;
     private String porte;
     private int idade;
@@ -19,7 +19,7 @@ public abstract class Animal {
 
     }
     public Animal(int id, String nome, String porte, int idade, String especie, Dono dono) {
-        this.id = id;
+        this.rfid = rfid;
         this.nome = nome;
         this.porte = porte;
         this.idade = idade;
@@ -28,11 +28,11 @@ public abstract class Animal {
     }
 
     //Gets e Sets
-    public int getId() {
-        return id;
+    public String getRfid() {
+        return rfid;
     }
-    public void setId(int id) {
-        this.id = id;
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
     }
     public String getNome() {
         return nome;
