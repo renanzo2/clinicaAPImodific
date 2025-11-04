@@ -39,13 +39,13 @@ public class ConsultaController {
         }
     }
 
-    @PostMapping("/{id}")
-    public ResponseEntity<Consulta> atualizarConsulta(@PathVariable int id, @RequestBody Consulta consultaAtualizada){
+    @PutMapping("/{id}")
+    public ResponseEntity<Consulta> atualizarConsulta(@PathVariable Integer id, @RequestBody Consulta consultaAtualizada){
         if(!repositorioDeConsulta.existsById(id)){
             return ResponseEntity.notFound().build();
         }
 
-        consultaAtualizada.setid(id);
+        consultaAtualizada.setId(id);
         Consulta consultaSalva = repositorioDeConsulta.save(consultaAtualizada);
         return ResponseEntity.ok(consultaSalva);
     }

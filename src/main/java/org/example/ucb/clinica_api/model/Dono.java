@@ -22,6 +22,8 @@ public class Dono {
     @OneToMany(mappedBy = "dono")
     private List<Animal> animais;
 
+    public Dono(){}
+
     //Construtores
     public Dono(String CPF, LocalDate dataNascimento, String endereco, String nome) {
         this.CPF = CPF;

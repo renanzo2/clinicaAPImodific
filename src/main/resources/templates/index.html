@@ -398,36 +398,15 @@
                 <form onsubmit="saveAnimal(event)">
                     <input type="hidden" id="animalId">
                     <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>RFID (Chave Primária) *</label>
+                            <input type="text" id="animalRfid" required>
+                        </div>
                         <div class="form-group">
                             <label>Nome do Animal *</label>
                             <input type="text" id="animalNome" required>
                         </div>
-                        <div class="form-group">
-                            <label>Espécie *</label>
-                            <select id="animalEspecie" required>
-                                <option value="">Selecione...</option>
-                                <option value="Cachorro">Cachorro</option>
-                                <option value="Gato">Gato</option>
-                                <option value="Pássaro">Pássaro</option>
-                                <option value="Outro">Outro</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Raça</label>
-                            <input type="text" id="animalRaca">
-                        </div>
-                        <div class="form-group">
-                            <label>Idade</label>
-                            <input type="text" id="animalIdade">
-                        </div>
-                        <div class="form-group">
-                            <label>Dono (ID) *</label>
-                            <input type="text" id="animalDono" required>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('animalForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
                     </div>
                 </form>
             </div>
@@ -560,7 +539,7 @@
                 </div>
             </div>
 
-            <div id="vetForm" class="form-section">
+            <div id="vetForm" class.="form-section">
                 <h3 style="margin-bottom: 20px;">Formulário de Veterinário</h3>
                 <form onsubmit="saveVet(event)">
                     <input type="hidden" id="vetId">
@@ -574,12 +553,12 @@
                             <input type="text" id="vetCrmv" required>
                         </div>
                         <div class="form-group">
-                            <label>Especialidade</label>
-                            <input type="text" id="vetEspec">
+                            <label>Idade *</label>
+                            <input type="number" id="vetIdade" required>
                         </div>
                         <div class="form-group">
-                            <label>Telefone *</label>
-                            <input type="tel" id="vetTelefone" required>
+                            <label>Data de Graduação *</label>
+                            <input type="date" id="vetDataGraduacao" required>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -591,9 +570,13 @@
 
             <table>
                 <thead>
-                <tr><th>ID</th><th>Nome</th><th>CRMV</th><th>Especialidade</th><th>Telefone</th><th>Ações</th></tr>
+                <tr>
+                    <th>CRMV</th> <th>Nome</th>
+                    <th>Idade</th> <th>Data de Graduação</th>
+                </tr>
                 </thead>
                 <tbody id="vetsList"></tbody>
+            </table>
             </table>
         </div>
     </div>
@@ -821,36 +804,40 @@
     }
 
     async function saveAnimal(e) {
-        e.preventDefault();
-        const idInput = document.getElementById('animalId');
-        const id = idInput.value;
+    e.preventDefault();
+    const idInput = document.getElementById('animalId'); // Este campo oculto nem é mais necessário se o RFID é o ID
+    const rfidValor = document.getElementById('animalRfid').value; // 1. Lemos o RFID do form
 
-        // Assumindo que o backend espera um objeto Dono aninhado
-        const animal = {
-            nome: document.getElementById('animalNome').value,
-            especie: document.getElementById('animalEspecie').value,
-            raca: document.getElementById('animalRaca').value,
-            idade: document.getElementById('animalIdade').value,
-            dono: { cpf: document.getElementById('animalDono').value } // Envia o Dono aninhado
-        };
+    const animal = {
+        rfid: rfidValor, // 2. Colocamos o RFID no objeto JSON
+        nome: document.getElementById('animalNome').value,
+        especie: document.getElementById('animalEspecie').value,
+        raca: document.getElementById('animalRaca').value,
+        idade: document.getElementById('animalIdade').value,
+        dono: { cpf: document.getElementById('animalDono').value }
+    };
 
-        const url = id ? `${API_URL}/animais/${id}` : `${API_URL}/animais`;
-        const method = id ? 'PUT' : 'POST';
-        if(id) animal.id = parseInt(id);
+    // O ID na URL é o RFID
+    const url = idInput.value ? `${API_URL}/animais/${idInput.value}` : `${API_URL}/animais`;
+    const method = idInput.value ? 'PUT' : 'POST';
 
-        try {
-            await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(animal)
-            });
-            loadAnimais();
-            cancelForm('animalForm');
-        } catch (error) {
-            console.error('Erro ao salvar animal:', error);
-        }
+    // Se for um PUT (atualização), garante que o objeto 'animal' tenha o rfid correto
+    if(idInput.value) {
+        animal.rfid = idInput.value;
     }
 
+    try {
+        await fetch(url, {
+            method: method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(animal)
+        });
+        loadAnimais();
+        cancelForm('animalForm');
+    } catch (error) {
+        console.error('Erro ao salvar animal:', error);
+    }
+}
     async function editAnimal(id) {
         try {
             const response = await fetch(`${API_URL}/animais/${id}`);
@@ -1088,16 +1075,15 @@
     function renderVets(veterinarios) {
         const tbody = document.getElementById('vetsList');
         if (veterinarios.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum veterinário cadastrado</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum veterinário cadastrado</td></tr>'; // colspan é 5 agora
             return;
         }
         tbody.innerHTML = veterinarios.map(v => `
             <tr>
-                <td>${v.id || v.crmv}</td> <td>${v.nome}</td>
                 <td>${v.crmv}</td>
-                <td>${v.especialidade || '-'}</td>
-                <td>${v.telefone}</td>
-                <td class="action-buttons">
+                <td>${v.nome}</td>
+                <td>${v.idade}</td>
+                <td>${v.dataGraduacao}</td> <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editVet('${v.crmv}')">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteVet('${v.crmv}')">🗑️ Excluir</button>
                 </td>
@@ -1110,11 +1096,12 @@
         const idInput = document.getElementById('vetId');
         const id = idInput.value; // ID aqui é o CRMV
 
+        // MUDANÇA: O objeto agora bate 100% com o Model e o Formulário
         const vet = {
             crmv: document.getElementById('vetCrmv').value,
             nome: document.getElementById('vetNome').value,
-            especialidade: document.getElementById('vetEspec').value,
-            telefone: document.getElementById('vetTelefone').value
+            idade: parseInt(document.getElementById('vetIdade').value), // Converte para número
+            dataGraduacao: document.getElementById('vetDataGraduacao').value
         };
 
         const url = id ? `${API_URL}/veterinarios/${id}` : `${API_URL}/veterinarios`;
@@ -1141,8 +1128,10 @@
             document.getElementById('vetId').value = vet.crmv; // Guarda o CRMV como ID
             document.getElementById('vetNome').value = vet.nome;
             document.getElementById('vetCrmv').value = vet.crmv;
-            document.getElementById('vetEspec').value = vet.especialidade;
-            document.getElementById('vetTelefone').value = vet.telefone;
+
+            // MUDANÇA: Preenchendo os campos corretos
+            document.getElementById('vetIdade').value = vet.idade;
+            document.getElementById('vetDataGraduacao').value = vet.dataGraduacao;
 
             document.getElementById('vetForm').classList.add('active');
         } catch (error) {

@@ -1,6 +1,9 @@
 package org.example.ucb.clinica_api.controller;
 
+import org.example.ucb.clinica_api.control.RepositorioDeEspecialidade;
 import org.example.ucb.clinica_api.control.RepositorioDeVeterinario;
+import org.example.ucb.clinica_api.model.Animal;
+import org.example.ucb.clinica_api.model.Especialidade;
 import org.example.ucb.clinica_api.model.Veterinario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

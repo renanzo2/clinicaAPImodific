@@ -4,6 +4,7 @@ import jakarta.persistence.*;  // ou javax.persistence.*
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "certificacao")
 public class Certificacao {
 
     @Id

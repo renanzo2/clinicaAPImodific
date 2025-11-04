@@ -1,15 +1,22 @@
 package org.example.ucb.clinica_api.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
+@Table(name = "especialidade")
 public class Especialidade {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nome;
 
-    public Especialidade() {
+    @OneToMany(mappedBy = "especialidade")
+    private List<Certificacao> certificacoes;
 
-    }
+    public Especialidade() {}
 
     public Especialidade(int id, String nome){
         this.id = id;
