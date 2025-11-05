@@ -44,7 +44,7 @@ public class DonoController {
             return ResponseEntity.notFound().build();
         }
 
-        donoAtualizado.setCPF(cpf);
+        donoAtualizado.setCpf(cpf);
         Dono donoSalvo = repositorioDeDono.save(donoAtualizado);
         return ResponseEntity.ok(donoSalvo);
     }

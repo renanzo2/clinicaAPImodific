@@ -7,24 +7,26 @@ import java.time.LocalDate;
 @Table(name = "certificacao")
 public class Certificacao {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;  // ← ADICIONA ISSO!
-
+    @Id // 1. O @Id (Chave Primária) é o NumeroRegistro
+    @Column(name = "NumeroRegistro") // 2. "DE-PARA": O campo Java 'numeroRegistro' é a coluna 'NumeroRegistro' no SQL
     private String numeroRegistro;
+
+    @Column(name = "DataObtencao")
     private LocalDate dataObtencao;
+
+    @Column(name = "InstituicaoCertificadora")
     private String instituicaoCertificadora;
 
     @ManyToOne
-    @JoinColumn(name = "veterinario_id")
+    @JoinColumn(name = "CRMV_certif") // 3. "DE-PARA": O nome da sua coluna FK para veterinario
     private Veterinario veterinario;
 
     @ManyToOne
-    @JoinColumn(name = "especialidade_id")
+    @JoinColumn(name = "ID_especialidade") // 4. "DE-PARA": O nome da sua coluna FK para especialidade
     private Especialidade especialidade;
 
-    public Certificacao(){
-    }
+    // 5. OBRIGATÓRIO: Construtor vazio
+    public Certificacao() {}
 
     public Certificacao(String numeroRegistro, LocalDate dataObtencao, String instituicaoCertificadora, Veterinario veterinario) {
         this.numeroRegistro = numeroRegistro;
@@ -34,13 +36,6 @@ public class Certificacao {
     }
 
     // ← ADICIONA OS GETTERS E SETTERS DO ID!
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getNumeroRegistro() {
         return numeroRegistro;

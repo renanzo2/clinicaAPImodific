@@ -1,5 +1,6 @@
 package org.example.ucb.clinica_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime; // Para guardar a hora
@@ -21,12 +22,14 @@ public class Consulta {
 
     // 5. MUITAS Consultas podem pertencer a UM Animal
     @ManyToOne
-    @JoinColumn(name = "id_animal") // O nome da sua coluna FK que aponta para Animal
+    @JoinColumn(name = "id_animal")
+    @JsonBackReference// O nome da sua coluna FK que aponta para Animal
     private Animal animal;
 
     // 6. MUITAS Consultas podem pertencer a UM Veterinario
     @ManyToOne
-    @JoinColumn(name = "crmv_vet") // O nome da sua coluna FK que aponta para Veterinario
+    @JoinColumn(name = "CRMV_veterinario")
+    @JsonBackReference// O nome da sua coluna FK que aponta para Veterinario
     private Veterinario veterinario;
 
     // 7. UMA Consulta pode ter MUITOS Tratamentos

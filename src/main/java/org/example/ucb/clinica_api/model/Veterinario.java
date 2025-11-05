@@ -1,33 +1,41 @@
 package org.example.ucb.clinica_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "veterinario")
+@Table(name = "veterinario") // 1. Diz que o nome da tabela no SQL é "veterinario" (com 'v' minúsculo)
 public class Veterinario {
 
     @Id
+    @Column(name = "CRMV") // 2. "DE-PARA": O campo 'crmv' no Java é a coluna 'CRMV' (maiúsculo) no SQL
     private String crmv;
 
+    @Column(name = "nome") // 3. "DE-PARA" (Boa prática, mesmo sendo igual)
     private String nome;
-    private int idade;
-    private LocalDate dataGraduacao; // <- O nome no Java (dataGraduacao)
-    //    pode ser diferente do banco (data_graduacao)
-    //    O Spring/JPA converte automaticamente.
 
-    // --- RELACIONAMENTOS (Onde a especialidade "mora") ---
+    @Column(name = "idade") // 4. "DE-PARA"
+    private int idade;
+
+    @Column(name = "data_graduacao") // 5. "DE-PARA" (O mais importante!)
+    private LocalDate dataGraduacao; //    Campo 'dataGraduacao' no Java -> Coluna 'data_graduacao' no SQL
+
+    // --- RELACIONAMENTOS ---
+    // (O 'mappedBy' aponta para o nome do *campo Java* na outra classe)
+
     @OneToMany(mappedBy = "veterinario")
+    @JsonBackReference
     private List<Consulta> consultas;
 
     @OneToMany(mappedBy = "veterinario")
-    private List<Certificacao> certificacoes; // <-- A lista de especialidades vem daqui
+    private List<Certificacao> certificacoes;
 
     // Construtor vazio (Obrigatório)
     public Veterinario() {}
 
-    // Construtor principal (para o DAO)
+    // Construtor principal (Obrigatório para o seu DAO)
     public Veterinario(String crmv, String nome, int idade, LocalDate dataGraduacao) {
         this.crmv = crmv;
         this.nome = nome;
@@ -36,7 +44,7 @@ public class Veterinario {
     }
 
     // --- Getters e Setters ---
-    // (Apenas para os campos que existem na tabela)
+    // (Não precisa mexer aqui)
 
     public String getCrmv() { return crmv; }
     public void setCrmv(String crmv) { this.crmv = crmv; }
@@ -46,8 +54,6 @@ public class Veterinario {
     public void setIdade(int idade) { this.idade = idade; }
     public LocalDate getDataGraduacao() { return dataGraduacao; }
     public void setDataGraduacao(LocalDate dataGraduacao) { this.dataGraduacao = dataGraduacao; }
-
-    // Getters/Setters para os relacionamentos
     public List<Consulta> getConsultas() { return consultas; }
     public void setConsultas(List<Consulta> consultas) { this.consultas = consultas; }
     public List<Certificacao> getCertificacoes() { return certificacoes; }

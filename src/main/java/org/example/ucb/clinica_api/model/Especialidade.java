@@ -10,12 +10,16 @@ public class Especialidade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    @Column(name = "IDespecialidade")
+    private Integer id;
+
+    @Column(name = "nome")
     private String nome;
 
     @OneToMany(mappedBy = "especialidade")
     private List<Certificacao> certificacoes;
 
+    // OBRIGATÓRIO: Construtor vazio
     public Especialidade() {}
 
     public Especialidade(int id, String nome){

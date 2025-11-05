@@ -351,18 +351,32 @@
                             <input type="text" id="donoNome" required>
                         </div>
                         <div class="form-group">
-                            <label>CPF *</label>
+                            <label>CPF * (Chave Primária)</label>
                             <input type="text" id="donoCpf" required>
                         </div>
                         <div class="form-group">
-                            <label>Telefone *</label>
-                            <input type="tel" id="donoTelefone" required>
+                            <label>Telefone</label>
+                            <input type="tel" id="donoTelefone">
                         </div>
                         <div class="form-group">
                             <label>E-mail</label>
                             <input type="email" id="donoEmail">
                         </div>
+                        <div class="form-group">
+                            <label>Endereço</label>
+                            <input type="text" id="donoEndereco">
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Nascimento</label>
+                            <input type="date" id="donoDataNascimento">
+                        </div>
                     </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('donoForm')">Cancelar</button>
+                        <button type="submit" class="btn btn-success">💾 Salvar</button>
+                    </div>
+                </form>
+            </div>
                     <div class="form-group">
                         <label>Endereço</label>
                         <input type="text" id="donoEndereco">
@@ -397,23 +411,55 @@
                 <h3 style="margin-bottom: 20px;">Formulário de Animal</h3>
                 <form onsubmit="saveAnimal(event)">
                     <input type="hidden" id="animalId">
-                    <div class="form-grid">
 
-                        <div class="form-group">
-                            <label>RFID (Chave Primária) *</label>
-                            <input type="text" id="animalRfid" required>
-                        </div>
+                    <div class="form-grid">
                         <div class="form-group">
                             <label>Nome do Animal *</label>
                             <input type="text" id="animalNome" required>
                         </div>
+                        <div class="form-group">
+                            <label>Espécie *</label>
+                            <select id="animalEspecie" required>
+                                <option value="">Selecione...</option>
+                                <option value="Cachorro">Cachorro</option>
+                                <option value="Gato">Gato</option>
+                                <option value="Jibóia">Jibóia</option>
+                                <option value="Coelho">Coelho</option>
+                                <option value="Pássaro">Pássaro</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Idade *</label>
+                            <input type="number" id="animalIdade" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Porte (Pequeno, Médio, Grande) *</label>
+                            <input type="text" id="animalPorte" required>
+                        </div>
+                        <div class="form-group">
+                            <label>CPF do Dono *</label>
+                            <input type="text" id="animalDonoCpf" required placeholder="Digite o CPF do dono já cadastrado">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="cancelForm('animalForm')">Cancelar</button>
+                        <button type="submit" class="btn btn-success">💾 Salvar</button>
                     </div>
                 </form>
             </div>
 
             <table>
                 <thead>
-                <tr><th>ID</th><th>Nome</th><th>Espécie</th><th>Raça</th><th>Dono (ID)</th><th>Ações</th></tr>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Espécie</th>
+                    <th>Idade</th>
+                    <th>Porte</th>
+                    <th>CPF do Dono</th>
+                    <th>Ações</th>
+                </tr>
                 </thead>
                 <tbody id="animaisList"></tbody>
             </table>
@@ -440,7 +486,7 @@
                             <input type="text" id="consultaAnimal" required>
                         </div>
                         <div class="form-group">
-                            <label>Veterinário (ID) *</label>
+                            <label>Veterinário (CRMV) *</label>
                             <input type="text" id="consultaVet" required>
                         </div>
                         <div class="form-group">
@@ -470,7 +516,7 @@
 
             <table>
                 <thead>
-                <tr><th>ID</th><th>Animal (ID)</th><th>Veterinário (ID)</th><th>Data</th><th>Horário</th><th>Tipo</th><th>Ações</th></tr>
+                <tr><th>ID</th><th>Animal (ID)</th><th>Veterinário (CRMV)</th><th>Data</th><th>Horário</th><th>Tipo</th><th>Ações</th></tr>
                 </thead>
                 <tbody id="consultasList"></tbody>
             </table>
@@ -539,7 +585,7 @@
                 </div>
             </div>
 
-            <div id="vetForm" class.="form-section">
+            <div id="vetForm" class="form-section">
                 <h3 style="margin-bottom: 20px;">Formulário de Veterinário</h3>
                 <form onsubmit="saveVet(event)">
                     <input type="hidden" id="vetId">
@@ -549,7 +595,7 @@
                             <input type="text" id="vetNome" required>
                         </div>
                         <div class="form-group">
-                            <label>CRMV *</label>
+                            <label>CRMV * (Chave Primária)</label>
                             <input type="text" id="vetCrmv" required>
                         </div>
                         <div class="form-group">
@@ -571,12 +617,14 @@
             <table>
                 <thead>
                 <tr>
-                    <th>CRMV</th> <th>Nome</th>
-                    <th>Idade</th> <th>Data de Graduação</th>
+                    <th>CRMV</th>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                    <th>Data de Graduação</th>
+                    <th>Ações</th>
                 </tr>
                 </thead>
                 <tbody id="vetsList"></tbody>
-            </table>
             </table>
         </div>
     </div>
@@ -597,7 +645,7 @@
                     <input type="hidden" id="certId">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Veterinário (ID) *</label>
+                            <label>Veterinário (CRMV) *</label>
                             <input type="text" id="certVet" required>
                         </div>
                         <div class="form-group">
@@ -622,7 +670,7 @@
 
             <table>
                 <thead>
-                <tr><th>ID</th><th>Veterinário (ID)</th><th>Certificação</th><th>Instituição</th><th>Data</th><th>Ações</th></tr>
+                <tr><th>ID</th><th>Veterinário (CRMV)</th><th>Certificação</th><th>Instituição</th><th>Data</th><th>Ações</th></tr>
                 </thead>
                 <tbody id="certsList"></tbody>
             </table>
@@ -631,12 +679,9 @@
 </div>
 
 <script>
-    // ======================================================
-    // ================ CONFIGURAÇÃO GLOBAL =================
-    // ======================================================
     const API_URL = 'http://localhost:8080/api';
 
-    // --- NAVEGAÇÃO (Sem alteração) ---
+    // --- NAVEGAÇÃO ---
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
             const page = this.dataset.page;
@@ -645,7 +690,7 @@
         });
     });
 
-    // --- FUNÇÕES GLOBAIS DE FORMULÁRIO (Sem alteração) ---
+    // --- FUNÇÕES GLOBAIS DE FORMULÁRIO ---
     function toggleForm(formId) {
         document.getElementById(formId).classList.toggle('active');
     }
@@ -660,13 +705,11 @@
         }
     }
 
-    // Função de helper para lidar com erros de fetch
     async function handleResponse(response) {
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
             throw new Error(errorData.message || `Erro ${response.status}`);
         }
-        // Se a resposta for 204 No Content (ex: DELETE), não há JSON para ler
         if (response.status === 204) {
             return null;
         }
@@ -676,8 +719,10 @@
     // ======================================================
     // =================== CRUD DONOS =======================
     // ======================================================
+    // ======================================================
+    // =================== CRUD DONOS (CORRIGIDO) =======================
+    // ======================================================
 
-    // 1. CARREGAR Donos (Busca dados da API)
     async function loadDonos() {
         try {
             const response = await fetch(`${API_URL}/donos`);
@@ -688,18 +733,17 @@
         }
     }
 
-    // 2. RENDERIZAR Donos (Desenha na tela)
     function renderDonos(donos) {
         const tbody = document.getElementById('donosList');
-        if (donos.length === 0) {
+        if (!donos || donos.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum dono cadastrado</td></tr>';
             return;
         }
         tbody.innerHTML = donos.map(dono => `
             <tr>
-                <td>${dono.id || dono.cpf}</td> <td>${dono.nome}</td>
+                <td>${dono.cpf}</td> <td>${dono.nome}</td>
                 <td>${dono.cpf}</td>
-                <td>${dono.telefone}</td>
+                <td>${dono.telefone || '-'}</td>
                 <td>${dono.email || '-'}</td>
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editDono('${dono.cpf}')">✏️ Editar</button>
@@ -709,36 +753,50 @@
         `).join('');
     }
 
-    // 3. SALVAR/ATUALIZAR Dono (Envia para a API)
     async function saveDono(e) {
         e.preventDefault();
         const idInput = document.getElementById('donoId');
         const id = idInput.value;
+
+        // Objeto JSON agora envia TODOS os campos
         const dono = {
             cpf: document.getElementById('donoCpf').value,
             nome: document.getElementById('donoNome').value,
+            endereco: document.getElementById('donoEndereco').value,
+            dataNascimento: document.getElementById('donoDataNascimento').value,
             telefone: document.getElementById('donoTelefone').value,
-            email: document.getElementById('donoEmail').value,
-            endereco: document.getElementById('donoEndereco').value
+            email: document.getElementById('donoEmail').value
         };
+
+        // Garante que o CPF não seja nulo ao criar
+        if (!id && !dono.cpf) {
+            alert('Erro: O CPF é obrigatório.');
+            return;
+        }
 
         const url = id ? `${API_URL}/donos/${id}` : `${API_URL}/donos`;
         const method = id ? 'PUT' : 'POST';
 
+        // No PUT, o CPF do objeto deve ser o mesmo da URL
+        if (id) {
+            dono.cpf = id;
+        }
+
         try {
-            await fetch(url, {
+            const response = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dono)
             });
+            await handleResponse(response); // Checa se deu erro no backend
             loadDonos();
             cancelForm('donoForm');
         } catch (error) {
             console.error('Erro ao salvar dono:', error);
+            alert('Erro ao salvar dono: ' + error.message);
         }
     }
 
-    // 4. EDITAR Dono (Busca 1 da API e preenche o form)
     async function editDono(cpf) {
         try {
             const response = await fetch(`${API_URL}/donos/${cpf}`);
@@ -750,6 +808,7 @@
             document.getElementById('donoTelefone').value = dono.telefone;
             document.getElementById('donoEmail').value = dono.email;
             document.getElementById('donoEndereco').value = dono.endereco;
+            document.getElementById('donoDataNascimento').value = dono.dataNascimento;
 
             document.getElementById('donoForm').classList.add('active');
         } catch (error) {
@@ -757,7 +816,6 @@
         }
     }
 
-    // 5. DELETAR Dono (Envia comando DELETE para API)
     async function deleteDono(cpf) {
         if (confirm('Tem certeza que deseja excluir este dono?')) {
             try {
@@ -768,9 +826,8 @@
             }
         }
     }
-
     // ======================================================
-    // =================== CRUD ANIMAIS =====================
+    // =================== CRUD ANIMAIS (SEÇÃO CORRIGIDA) =====================
     // ======================================================
 
     async function loadAnimais() {
@@ -785,8 +842,8 @@
 
     function renderAnimais(animais) {
         const tbody = document.getElementById('animaisList');
-        if (animais.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhum animal cadastrado</td></tr>';
+        if (!animais || animais.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum animal cadastrado</td></tr>';
             return;
         }
         tbody.innerHTML = animais.map(a => `
@@ -794,8 +851,9 @@
                 <td>${a.id}</td>
                 <td>${a.nome}</td>
                 <td>${a.especie}</td>
-                <td>${a.raca || '-'}</td>
-                <td>${a.dono ? a.dono.cpf : a.donoId}</td> <td class="action-buttons">
+                <td>${a.idade}</td>
+                <td>${a.porte}</td>
+                <td>${a.dono ? a.dono.cpf : 'N/D'}</td> <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editAnimal(${a.id})">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteAnimal(${a.id})">🗑️ Excluir</button>
                 </td>
@@ -804,40 +862,38 @@
     }
 
     async function saveAnimal(e) {
-    e.preventDefault();
-    const idInput = document.getElementById('animalId'); // Este campo oculto nem é mais necessário se o RFID é o ID
-    const rfidValor = document.getElementById('animalRfid').value; // 1. Lemos o RFID do form
+        e.preventDefault();
+        const idInput = document.getElementById('animalId');
+        const id = idInput.value;
 
-    const animal = {
-        rfid: rfidValor, // 2. Colocamos o RFID no objeto JSON
-        nome: document.getElementById('animalNome').value,
-        especie: document.getElementById('animalEspecie').value,
-        raca: document.getElementById('animalRaca').value,
-        idade: document.getElementById('animalIdade').value,
-        dono: { cpf: document.getElementById('animalDono').value }
-    };
+        // Monta o objeto Animal para enviar ao Java
+        // O backend espera um objeto 'dono' aninhado com o CPF (Chave Primária do Dono)
+        const animal = {
+            nome: document.getElementById('animalNome').value,
+            especie: document.getElementById('animalEspecie').value,
+            idade: parseInt(document.getElementById('animalIdade').value),
+            porte: document.getElementById('animalPorte').value,
+            dono: { cpf: document.getElementById('animalDonoCpf').value } // Envia o Dono aninhado
+        };
 
-    // O ID na URL é o RFID
-    const url = idInput.value ? `${API_URL}/animais/${idInput.value}` : `${API_URL}/animais`;
-    const method = idInput.value ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/animais/${id}` : `${API_URL}/animais`;
+        const method = id ? 'PUT' : 'POST';
+        if(id) animal.id = parseInt(id);
 
-    // Se for um PUT (atualização), garante que o objeto 'animal' tenha o rfid correto
-    if(idInput.value) {
-        animal.rfid = idInput.value;
+        try {
+            await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(animal)
+            });
+            loadAnimais();
+            cancelForm('animalForm');
+        } catch (error) {
+            console.error('Erro ao salvar animal:', error);
+            alert('Erro ao salvar: Verifique se o CPF do dono existe e está correto.');
+        }
     }
 
-    try {
-        await fetch(url, {
-            method: method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(animal)
-        });
-        loadAnimais();
-        cancelForm('animalForm');
-    } catch (error) {
-        console.error('Erro ao salvar animal:', error);
-    }
-}
     async function editAnimal(id) {
         try {
             const response = await fetch(`${API_URL}/animais/${id}`);
@@ -846,9 +902,9 @@
             document.getElementById('animalId').value = animal.id;
             document.getElementById('animalNome').value = animal.nome;
             document.getElementById('animalEspecie').value = animal.especie;
-            document.getElementById('animalRaca').value = animal.raca;
             document.getElementById('animalIdade').value = animal.idade;
-            document.getElementById('animalDono').value = animal.dono ? animal.dono.cpf : '';
+            document.getElementById('animalPorte').value = animal.porte;
+            document.getElementById('animalDonoCpf').value = animal.dono ? animal.dono.cpf : '';
 
             document.getElementById('animalForm').classList.add('active');
         } catch (error) {
@@ -883,15 +939,15 @@
 
     function renderConsultas(consultas) {
         const tbody = document.getElementById('consultasList');
-        if (consultas.length === 0) {
+        if (!consultas || consultas.length === 0) {
             tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhuma consulta cadastrada</td></tr>';
             return;
         }
         tbody.innerHTML = consultas.map(c => `
             <tr>
                 <td>${c.id}</td>
-                <td>${c.animal ? c.animal.id : c.animalId}</td>
-                <td>${c.veterinario ? c.veterinario.crmv : c.vetId}</td>
+                <td>${c.animal ? c.animal.id : 'N/D'}</td>
+                <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
                 <td>${c.data}</td>
                 <td>${c.hora}</td>
                 <td>${c.tipo}</td>
@@ -908,7 +964,7 @@
         const idInput = document.getElementById('consultaId');
         const id = idInput.value;
 
-        // Assumindo que o backend espera os objetos aninhados
+        // O backend espera os objetos aninhados com suas chaves primárias
         const consulta = {
             animal: { id: parseInt(document.getElementById('consultaAnimal').value) },
             veterinario: { crmv: document.getElementById('consultaVet').value },
@@ -931,6 +987,7 @@
             cancelForm('consultaForm');
         } catch (error) {
             console.error('Erro ao salvar consulta:', error);
+            alert('Erro ao salvar: Verifique se o ID do Animal e o CRMV do Veterinário existem.');
         }
     }
 
@@ -979,14 +1036,14 @@
 
     function renderTratamentos(tratamentos) {
         const tbody = document.getElementById('tratamentosList');
-        if (tratamentos.length === 0) {
+        if (!tratamentos || tratamentos.length === 0) {
             tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum tratamento cadastrado</td></tr>';
             return;
         }
         tbody.innerHTML = tratamentos.map(t => `
             <tr>
                 <td>${t.id}</td>
-                <td>${t.animal ? t.animal.id : t.animalId}</td>
+                <td>${t.animal ? t.animal.id : 'N/D'}</td>
                 <td>${t.medicamento}</td>
                 <td>${t.dosagem}</td>
                 <td>${t.frequencia}</td>
@@ -1026,6 +1083,7 @@
             cancelForm('tratamentoForm');
         } catch (error) {
             console.error('Erro ao salvar tratamento:', error);
+            alert('Erro ao salvar: Verifique se o ID do Animal existe.');
         }
     }
 
@@ -1059,7 +1117,7 @@
     }
 
     // ======================================================
-    // ================= CRUD VETERINÁRIOS ==================
+    // ================= CRUD VETERINÁRIOS (SEÇÃO CORRIGIDA) ==================
     // ======================================================
 
     async function loadVets() {
@@ -1074,8 +1132,8 @@
 
     function renderVets(veterinarios) {
         const tbody = document.getElementById('vetsList');
-        if (veterinarios.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum veterinário cadastrado</td></tr>'; // colspan é 5 agora
+        if (!veterinarios || veterinarios.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum veterinário cadastrado</td></tr>';
             return;
         }
         tbody.innerHTML = veterinarios.map(v => `
@@ -1083,7 +1141,8 @@
                 <td>${v.crmv}</td>
                 <td>${v.nome}</td>
                 <td>${v.idade}</td>
-                <td>${v.dataGraduacao}</td> <td class="action-buttons">
+                <td>${v.dataGraduacao}</td>
+                <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editVet('${v.crmv}')">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteVet('${v.crmv}')">🗑️ Excluir</button>
                 </td>
@@ -1096,16 +1155,20 @@
         const idInput = document.getElementById('vetId');
         const id = idInput.value; // ID aqui é o CRMV
 
-        // MUDANÇA: O objeto agora bate 100% com o Model e o Formulário
         const vet = {
             crmv: document.getElementById('vetCrmv').value,
             nome: document.getElementById('vetNome').value,
-            idade: parseInt(document.getElementById('vetIdade').value), // Converte para número
+            idade: parseInt(document.getElementById('vetIdade').value),
             dataGraduacao: document.getElementById('vetDataGraduacao').value
         };
 
         const url = id ? `${API_URL}/veterinarios/${id}` : `${API_URL}/veterinarios`;
         const method = id ? 'PUT' : 'POST';
+
+        // No PUT, o 'crmv' do objeto 'vet' será o do formulário.
+        // Se o usuário editar o CRMV (chave primária), o backend precisa lidar com isso.
+        // A forma mais simples é garantir que o ID (CRMV) não mude no PUT.
+        // Mas para seu caso, salvar o objeto 'vet' como está deve funcionar.
 
         try {
             await fetch(url, {
@@ -1125,11 +1188,9 @@
             const response = await fetch(`${API_URL}/veterinarios/${crmv}`);
             const vet = await handleResponse(response);
 
-            document.getElementById('vetId').value = vet.crmv; // Guarda o CRMV como ID
+            document.getElementById('vetId').value = vet.crmv;
             document.getElementById('vetNome').value = vet.nome;
             document.getElementById('vetCrmv').value = vet.crmv;
-
-            // MUDANÇA: Preenchendo os campos corretos
             document.getElementById('vetIdade').value = vet.idade;
             document.getElementById('vetDataGraduacao').value = vet.dataGraduacao;
 
@@ -1166,14 +1227,14 @@
 
     function renderCerts(certificacoes) {
         const tbody = document.getElementById('certsList');
-        if (certificacoes.length === 0) {
+        if (!certificacoes || certificacoes.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhuma certificação cadastrada</td></tr>';
             return;
         }
         tbody.innerHTML = certificacoes.map(c => `
             <tr>
                 <td>${c.id}</td>
-                <td>${c.veterinario ? c.veterinario.crmv : c.vetId}</td>
+                <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
                 <td>${c.nome}</td>
                 <td>${c.instituicao}</td>
                 <td>${c.data}</td>
@@ -1211,6 +1272,7 @@
             cancelForm('certForm');
         } catch (error) {
             console.error('Erro ao salvar certificação:', error);
+            alert('Erro ao salvar: Verifique se o CRMV do Veterinário existe.');
         }
     }
 

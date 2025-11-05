@@ -12,8 +12,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/animais")
 @CrossOrigin(origins = "*")
-
 public class AnimalController {
+
     @Autowired
     private RepositorioDeAnimal repositorioDeAnimal;
 
@@ -27,35 +27,35 @@ public class AnimalController {
         return repositorioDeAnimal.save(animal);
     }
 
-    @GetMapping("/{rfid}")
-    public ResponseEntity<Animal> buscarAnimalPorRfid(@PathVariable String rfid) {
-        Optional<Animal> animal = repositorioDeAnimal.findById(rfid);
+    @GetMapping("/{id}")
+    public ResponseEntity<Animal> buscarAnimalPorId(@PathVariable int id) {
+        Optional<Animal> animal = repositorioDeAnimal.findById(id);
 
         if (animal.isPresent()) {
             return ResponseEntity.ok(animal.get());
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PutMapping("/{rfid}")
-    public ResponseEntity<Animal> atualizarAnimal(@PathVariable String rfid, @RequestBody Animal animalAtualizado) {
-        if (!repositorioDeAnimal.existsById(rfid)) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Animal> atualizarAnimal(@PathVariable int id, @RequestBody Animal animalAtualizado) {
+        if (!repositorioDeAnimal.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        animalAtualizado.setRfid(rfid);
+        animalAtualizado.setId(id);
         Animal animalSalvo = repositorioDeAnimal.save(animalAtualizado);
         return ResponseEntity.ok(animalSalvo);
     }
 
-    @DeleteMapping("/{rfid}")
-    public ResponseEntity<Void> removerAnimal(@PathVariable String rfid) {
-        if (!repositorioDeAnimal.existsById(rfid)) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> removerAnimal(@PathVariable int id) {
+        if (!repositorioDeAnimal.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
-        repositorioDeAnimal.deleteById(rfid);
+
+        repositorioDeAnimal.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 }

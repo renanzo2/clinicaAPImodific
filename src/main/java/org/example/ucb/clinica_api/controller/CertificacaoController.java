@@ -12,8 +12,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/certificacoes")
 @CrossOrigin(origins = "*")
-
 public class CertificacaoController {
+
     @Autowired
     private RepositorioDeCertificacao repositorioDeCertificacao;
 
@@ -27,36 +27,32 @@ public class CertificacaoController {
         return repositorioDeCertificacao.save(certificacao);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Certificacao> buscarCertificacaoPorId(@PathVariable int id) {
-        Optional<Certificacao> certificacao = repositorioDeCertificacao.findById(id);
-        if (certificacao.isPresent()) {
-            return ResponseEntity.ok(certificacao.get());
-        }else  {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/{numeroRegistro}")
+    public ResponseEntity<Certificacao> buscarCertificacaoPorNumeroRegistro(@PathVariable String numeroRegistro) {
+        Optional<Certificacao> certificacao = repositorioDeCertificacao.findById(numeroRegistro);
+        return certificacao.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Certificacao> atualizarCertificacao(@PathVariable int id, @RequestBody Certificacao certificacaoAtualizada) {
-        if (!repositorioDeCertificacao.existsById(id)) {
+    @PutMapping("/{numeroRegistro}")
+    public ResponseEntity<Certificacao> atualizarCertificacao(@PathVariable String numeroRegistro,
+                                                              @RequestBody Certificacao certificacaoAtualizada) {
+        if (!repositorioDeCertificacao.existsById(numeroRegistro)) {
             return ResponseEntity.notFound().build();
         }
 
-        certificacaoAtualizada.setId(id);
+        certificacaoAtualizada.setNumeroRegistro(numeroRegistro);
         Certificacao certificacaoSalva = repositorioDeCertificacao.save(certificacaoAtualizada);
         return ResponseEntity.ok(certificacaoSalva);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Certificacao> removerCertificacao(@PathVariable int id) {
-        if (!repositorioDeCertificacao.existsById(id)) {
+    @DeleteMapping("/{numeroRegistro}")
+    public ResponseEntity<Void> removerCertificacao(@PathVariable String numeroRegistro) {
+        if (!repositorioDeCertificacao.existsById(numeroRegistro)) {
             return ResponseEntity.notFound().build();
         }
 
-        repositorioDeCertificacao.deleteById(id);
+        repositorioDeCertificacao.deleteById(numeroRegistro);
         return ResponseEntity.ok().build();
     }
-
-
 }
