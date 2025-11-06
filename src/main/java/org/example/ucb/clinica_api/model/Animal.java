@@ -1,11 +1,18 @@
 package org.example.ucb.clinica_api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "animal")
+@Table(name = "Animal") // CORREÇÃO: "animal" -> "Animal"
+// --- ANOTAÇÃO ADICIONADA ---
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
+// -----------------------------
 public class Animal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +33,11 @@ public class Animal {
 
     @ManyToOne
     @JoinColumn(name = "CPF_dono")
-    @JsonBackReference
+    // @JsonBackReference e @JsonManagedReference FORAM REMOVIDOS
     private Dono dono;
 
     @OneToMany(mappedBy = "animal")
-    @JsonBackReference
+    // @JsonBackReference e @JsonManagedReference FORAM REMOVIDOS
     private List<Consulta> consultas;
 
     public Animal() {}
@@ -47,22 +54,16 @@ public class Animal {
     // Getters e Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
-
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
-
     public String getPorte() { return porte; }
     public void setPorte(String porte) { this.porte = porte; }
-
     public int getIdade() { return idade; }
     public void setIdade(int idade) { this.idade = idade; }
-
     public String getEspecie() { return especie; }
     public void setEspecie(String especie) { this.especie = especie; }
-
     public Dono getDono() { return dono; }
     public void setDono(Dono dono) { this.dono = dono; }
-
     public List<Consulta> getConsultas() { return consultas; }
     public void setConsultas(List<Consulta> consultas) { this.consultas = consultas; }
 }

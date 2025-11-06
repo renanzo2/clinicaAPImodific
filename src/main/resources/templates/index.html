@@ -377,17 +377,6 @@
                     </div>
                 </form>
             </div>
-                    <div class="form-group">
-                        <label>Endereço</label>
-                        <input type="text" id="donoEndereco">
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('donoForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
-                    </div>
-                </form>
-            </div>
-
             <table>
                 <thead>
                 <tr><th>ID</th><th>Nome</th><th>CPF</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr>
@@ -538,26 +527,26 @@
                 <form onsubmit="saveTratamento(event)">
                     <input type="hidden" id="tratamentoId">
                     <div class="form-grid">
+
                         <div class="form-group">
-                            <label>Animal (ID) *</label>
-                            <input type="text" id="tratamentoAnimal" required>
+                            <label>ID da Consulta *</label>
+                            <input type="number" id="tratamentoConsultaId" required placeholder="ID da consulta associada">
                         </div>
+
                         <div class="form-group">
-                            <label>Medicamento *</label>
-                            <input type="text" id="tratamentoMed" required>
+                            <label>Usa Antibiótico? *</label>
+                            <select id="tratamentoAntibiotico" required>
+                                <option value="">Selecione...</option>
+                                <option value="true">Sim</option>
+                                <option value="false">Não</option>
+                            </select>
                         </div>
-                        <div class="form-group">
-                            <label>Dosagem *</label>
-                            <input type="text" id="tratamentoDosagem" required>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Descrição do Tratamento *</label>
+                            <textarea id="tratamentoDescricao" required></textarea>
                         </div>
-                        <div class="form-group">
-                            <label>Frequência *</label>
-                            <input type="text" id="tratamentoFreq" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Data Início *</label>
-                            <input type="date" id="tratamentoInicio" required>
-                        </div>
+
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button>
@@ -568,13 +557,18 @@
 
             <table>
                 <thead>
-                <tr><th>ID</th><th>Animal (ID)</th><th>Medicamento</th><th>Dosagem</th><th>Frequência</th><th>Início</th><th>Ações</th></tr>
+                <tr>
+                    <th>ID</th>
+                    <th>ID da Consulta</th>
+                    <th>Descrição</th>
+                    <th>Antibiótico?</th>
+                    <th>Ações</th>
+                </tr>
                 </thead>
                 <tbody id="tratamentosList"></tbody>
             </table>
         </div>
     </div>
-
     <div id="veterinarios" class="page">
         <div class="crud-container">
             <div class="crud-header">
@@ -643,22 +637,32 @@
                 <h3 style="margin-bottom: 20px;">Formulário de Certificação</h3>
                 <form onsubmit="saveCert(event)">
                     <input type="hidden" id="certId">
+
                     <div class="form-grid">
+
+                        <div class="form-group">
+                            <label>Número de Registro * (Chave Primária)</label>
+                            <input type="text" id="certNumeroRegistro" required>
+                        </div>
+
                         <div class="form-group">
                             <label>Veterinário (CRMV) *</label>
-                            <input type="text" id="certVet" required>
+                            <input type="text" id="certVet" required placeholder="CRMV do veterinário">
                         </div>
+
                         <div class="form-group">
-                            <label>Certificação *</label>
-                            <input type="text" id="certNome" required>
+                            <label>ID da Especialidade *</label>
+                            <input type="number" id="certEspecialidadeId" required placeholder="ID da especialidade">
                         </div>
+
                         <div class="form-group">
                             <label>Instituição *</label>
-                            <input type="text" id="certInst" required>
+                            <input type="text" id="certInstituicao" required>
                         </div>
+
                         <div class="form-group">
-                            <label>Data de Conclusão *</label>
-                            <input type="date" id="certData" required>
+                            <label>Data de Obtenção *</label>
+                            <input type="date" id="certDataObtencao" required>
                         </div>
                     </div>
                     <div class="form-actions">
@@ -670,7 +674,14 @@
 
             <table>
                 <thead>
-                <tr><th>ID</th><th>Veterinário (CRMV)</th><th>Certificação</th><th>Instituição</th><th>Data</th><th>Ações</th></tr>
+                <tr>
+                    <th>Nº Registro</th>
+                    <th>Veterinário (CRMV)</th>
+                    <th>Especialidade</th>
+                    <th>Instituição</th>
+                    <th>Data Obtenção</th>
+                    <th>Ações</th>
+                </tr>
                 </thead>
                 <tbody id="certsList"></tbody>
             </table>
@@ -948,9 +959,11 @@
                 <td>${c.id}</td>
                 <td>${c.animal ? c.animal.id : 'N/D'}</td>
                 <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
-                <td>${c.data}</td>
-                <td>${c.hora}</td>
-                <td>${c.tipo}</td>
+
+                <td>${c.dataConsulta || '-'}</td>
+                <td>${c.horaConsulta || '-'}</td>
+
+                <td>${c.tipo || '-'}</td>
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editConsulta(${c.id})">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteConsulta(${c.id})">🗑️ Excluir</button>
@@ -959,6 +972,9 @@
         `).join('');
     }
 
+    // ======================================================
+    // ========= FUNÇÃO saveConsulta (CORRIGIDA) ==========
+    // ======================================================
     async function saveConsulta(e) {
         e.preventDefault();
         const idInput = document.getElementById('consultaId');
@@ -968,8 +984,12 @@
         const consulta = {
             animal: { id: parseInt(document.getElementById('consultaAnimal').value) },
             veterinario: { crmv: document.getElementById('consultaVet').value },
-            data: document.getElementById('consultaData').value,
-            hora: document.getElementById('consultaHora').value,
+
+            // --- CORREÇÃO APLICADA ---
+            dataConsulta: document.getElementById('consultaData').value, // MUDADO DE 'data'
+            horaConsulta: document.getElementById('consultaHora').value, // MUDADO DE 'hora'
+            // --- FIM DA CORREÇÃO ---
+
             tipo: document.getElementById('consultaTipo').value
         };
 
@@ -999,8 +1019,10 @@
             document.getElementById('consultaId').value = consulta.id;
             document.getElementById('consultaAnimal').value = consulta.animal ? consulta.animal.id : '';
             document.getElementById('consultaVet').value = consulta.veterinario ? consulta.veterinario.crmv : '';
-            document.getElementById('consultaData').value = consulta.data;
-            document.getElementById('consultaHora').value = consulta.hora;
+
+            // Popula os campos com os nomes corretos
+            document.getElementById('consultaData').value = consulta.dataConsulta;
+            document.getElementById('consultaHora').value = consulta.horaConsulta;
             document.getElementById('consultaTipo').value = consulta.tipo;
 
             document.getElementById('consultaForm').classList.add('active');
@@ -1020,13 +1042,14 @@
         }
     }
 
+
     // ======================================================
-    // ================== CRUD TRATAMENTOS ==================
+    // ================== CRUD TRATAMENTOS (CORRIGIDO) ==================
     // ======================================================
 
     async function loadTratamentos() {
         try {
-            const response = await fetch(`${API_URL}/tratamentos`); // Assumindo endpoint
+            const response = await fetch(`${API_URL}/tratamentos`);
             const tratamentos = await handleResponse(response);
             renderTratamentos(tratamentos);
         } catch (error) {
@@ -1037,17 +1060,16 @@
     function renderTratamentos(tratamentos) {
         const tbody = document.getElementById('tratamentosList');
         if (!tratamentos || tratamentos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum tratamento cadastrado</td></tr>';
+            // Colspan atualizado para 5 colunas
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum tratamento cadastrado</td></tr>';
             return;
         }
         tbody.innerHTML = tratamentos.map(t => `
             <tr>
                 <td>${t.id}</td>
-                <td>${t.animal ? t.animal.id : 'N/D'}</td>
-                <td>${t.medicamento}</td>
-                <td>${t.dosagem}</td>
-                <td>${t.frequencia}</td>
-                <td>${t.dataInicio}</td>
+                <td>${t.consulta ? t.consulta.id : 'N/D'}</td>
+                <td>${t.descricao || '-'}</td>
+                <td>${t.antibiotico ? 'Sim' : 'Não'}</td>
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editTratamento(${t.id})">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteTratamento(${t.id})">🗑️ Excluir</button>
@@ -1061,17 +1083,18 @@
         const idInput = document.getElementById('tratamentoId');
         const id = idInput.value;
 
+        // Objeto 'tratamento' agora reflete o backend (Tratamento.java)
         const tratamento = {
-            animal: { id: parseInt(document.getElementById('tratamentoAnimal').value) },
-            medicamento: document.getElementById('tratamentoMed').value,
-            dosagem: document.getElementById('tratamentoDosagem').value,
-            frequencia: document.getElementById('tratamentoFreq').value,
-            dataInicio: document.getElementById('tratamentoInicio').value
+            // O backend espera um objeto aninhado 'consulta' com a Primary Key 'id'
+            consulta: { id: parseInt(document.getElementById('tratamentoConsultaId').value) },
+            descricao: document.getElementById('tratamentoDescricao').value,
+            // Converte a string 'true'/'false' do select para um booleano real
+            antibiotico: document.getElementById('tratamentoAntibiotico').value === 'true'
         };
 
         const url = id ? `${API_URL}/tratamentos/${id}` : `${API_URL}/tratamentos`;
         const method = id ? 'PUT' : 'POST';
-        if(id) tratamento.id = parseInt(id);
+        if(id) tratamento.id = parseInt(id); // Adiciona o ID se for um PUT
 
         try {
             await fetch(url, {
@@ -1083,7 +1106,8 @@
             cancelForm('tratamentoForm');
         } catch (error) {
             console.error('Erro ao salvar tratamento:', error);
-            alert('Erro ao salvar: Verifique se o ID do Animal existe.');
+            // Mensagem de erro atualizada
+            alert('Erro ao salvar: Verifique se o ID da Consulta existe.');
         }
     }
 
@@ -1092,12 +1116,12 @@
             const response = await fetch(`${API_URL}/tratamentos/${id}`);
             const tratamento = await handleResponse(response);
 
+            // Popula o formulário CORRIGIDO
             document.getElementById('tratamentoId').value = tratamento.id;
-            document.getElementById('tratamentoAnimal').value = tratamento.animal ? tratamento.animal.id : '';
-            document.getElementById('tratamentoMed').value = tratamento.medicamento;
-            document.getElementById('tratamentoDosagem').value = tratamento.dosagem;
-            document.getElementById('tratamentoFreq').value = tratamento.frequencia;
-            document.getElementById('tratamentoInicio').value = tratamento.dataInicio;
+            document.getElementById('tratamentoConsultaId').value = tratamento.consulta ? tratamento.consulta.id : '';
+            document.getElementById('tratamentoDescricao').value = tratamento.descricao;
+            // Converte o booleano do backend para a string esperada pelo select
+            document.getElementById('tratamentoAntibiotico').value = tratamento.antibiotico ? 'true' : 'false';
 
             document.getElementById('tratamentoForm').classList.add('active');
         } catch (error) {
@@ -1217,7 +1241,7 @@
 
     async function loadCerts() {
         try {
-            const response = await fetch(`${API_URL}/certificacoes`); // Assumindo endpoint
+            const response = await fetch(`${API_URL}/certificacoes`);
             const certificacoes = await handleResponse(response);
             renderCerts(certificacoes);
         } catch (error) {
@@ -1231,16 +1255,18 @@
             tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhuma certificação cadastrada</td></tr>';
             return;
         }
+
+        // Renderiza os campos corretos da entidade Certificacao.java
         tbody.innerHTML = certificacoes.map(c => `
             <tr>
-                <td>${c.id}</td>
+                <td>${c.numeroRegistro}</td>
                 <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
-                <td>${c.nome}</td>
-                <td>${c.instituicao}</td>
-                <td>${c.data}</td>
+                <td>${c.especialidade ? c.especialidade.nome : 'N/D'}</td>
+                <td>${c.instituicaoCertificadora || '-'}</td>
+                <td>${c.dataObtencao || '-'}</td>
                 <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editCert(${c.id})">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCert(${c.id})">🗑️ Excluir</button>
+                    <button class="btn btn-warning btn-sm" onclick="editCert('${c.numeroRegistro}')">✏️ Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCert('${c.numeroRegistro}')">🗑️ Excluir</button>
                 </td>
             </tr>
         `).join('');
@@ -1248,19 +1274,28 @@
 
     async function saveCert(e) {
         e.preventDefault();
-        const idInput = document.getElementById('certId');
-        const id = idInput.value;
+        // O 'certId' (hidden) guarda o 'numeroRegistro' original se estivermos editando
+        const id = document.getElementById('certId').value;
 
+        // Pega o 'numeroRegistro' do campo de texto (que pode ser novo ou editado)
+        const numeroRegistroDoForm = document.getElementById('certNumeroRegistro').value;
+
+        // Monta o objeto JSON que o Certificacao.java espera
         const cert = {
+            numeroRegistro: numeroRegistroDoForm,
+            dataObtencao: document.getElementById('certDataObtencao').value,
+            instituicaoCertificadora: document.getElementById('certInstituicao').value,
             veterinario: { crmv: document.getElementById('certVet').value },
-            nome: document.getElementById('certNome').value,
-            instituicao: document.getElementById('certInst').value,
-            data: document.getElementById('certData').value
+            especialidade: { id: parseInt(document.getElementById('certEspecialidadeId').value) }
         };
 
+        // Se 'id' (o hidden) existir, é um PUT (edição) e usamos a rota com o ID original
+        // Se 'id' não existir, é um POST (criação)
         const url = id ? `${API_URL}/certificacoes/${id}` : `${API_URL}/certificacoes`;
         const method = id ? 'PUT' : 'POST';
-        if(id) cert.id = parseInt(id);
+
+        // O 'id' (PK) no seu backend não é 'id', é 'numeroRegistro'.
+        // O backend (CertificacaoController) já espera o objeto 'cert' completo.
 
         try {
             await fetch(url, {
@@ -1272,20 +1307,27 @@
             cancelForm('certForm');
         } catch (error) {
             console.error('Erro ao salvar certificação:', error);
-            alert('Erro ao salvar: Verifique se o CRMV do Veterinário existe.');
+            alert('Erro ao salvar: Verifique se o CRMV e o ID da Especialidade existem.');
         }
     }
 
-    async function editCert(id) {
+    async function editCert(numeroRegistro) {
         try {
-            const response = await fetch(`${API_URL}/certificacoes/${id}`);
+            const response = await fetch(`${API_URL}/certificacoes/${numeroRegistro}`);
             const cert = await handleResponse(response);
 
-            document.getElementById('certId').value = cert.id;
+            // Guarda o ID original (PK) no campo hidden
+            document.getElementById('certId').value = cert.numeroRegistro;
+
+            // Popula o formulário com os dados corretos
+            document.getElementById('certNumeroRegistro').value = cert.numeroRegistro;
             document.getElementById('certVet').value = cert.veterinario ? cert.veterinario.crmv : '';
-            document.getElementById('certNome').value = cert.nome;
-            document.getElementById('certInst').value = cert.instituicao;
-            document.getElementById('certData').value = cert.data;
+            document.getElementById('certEspecialidadeId').value = cert.especialidade ? cert.especialidade.id : '';
+            document.getElementById('certInstituicao').value = cert.instituicaoCertificadora;
+            document.getElementById('certDataObtencao').value = cert.dataObtencao;
+
+            // IMPORTANTE: Impede que o usuário edite a Chave Primária (PK) durante a edição
+            document.getElementById('certNumeroRegistro').readOnly = true;
 
             document.getElementById('certForm').classList.add('active');
         } catch (error) {
@@ -1293,10 +1335,11 @@
         }
     }
 
-    async function deleteCert(id) {
+    async function deleteCert(numeroRegistro) {
         if (confirm('Tem certeza que deseja excluir esta certificação?')) {
             try {
-                await fetch(`${API_URL}/certificacoes/${id}`, { method: 'DELETE' });
+                // Usa a PK 'numeroRegistro' para deletar
+                await fetch(`${API_URL}/certificacoes/${numeroRegistro}`, { method: 'DELETE' });
                 loadCerts();
             } catch (error) {
                 console.error('Erro ao deletar certificação:', error);
@@ -1304,8 +1347,22 @@
         }
     }
 
-    // --- INICIALIZAÇÃO ---
-    // Renderiza todas as tabelas quando a página carrega
+    // Sobrescreva também a função cancelForm para reabilitar o campo da PK
+    function cancelForm(formId) {
+        const formElement = document.getElementById(formId);
+        formElement.classList.remove('active');
+        formElement.querySelector('form').reset();
+
+        const hiddenId = formElement.querySelector('input[type="hidden"]');
+        if (hiddenId) {
+            hiddenId.value = '';
+        }
+
+        // Se estivermos cancelando o form de certificação, reabilita o campo da PK
+        if (formId === 'certForm') {
+            document.getElementById('certNumeroRegistro').readOnly = false;
+        }
+    }
     function renderAll() {
         loadDonos();
         loadAnimais();
@@ -1314,7 +1371,6 @@
         loadVets();
         loadCerts();
     }
-
     // Chama o renderAll assim que o DOM (HTML) estiver pronto
     document.addEventListener('DOMContentLoaded', renderAll);
 

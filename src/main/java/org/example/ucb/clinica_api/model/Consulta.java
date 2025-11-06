@@ -1,100 +1,96 @@
 package org.example.ucb.clinica_api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalTime; // Para guardar a hora
+import java.time.LocalTime;
 import java.util.List;
 
-@Entity // 1. Diz que é uma tabela
-@Table(name = "consulta") // 2. O nome da tabela no banco
+@Entity
+@Table(name = "consulta")
+// --- ANOTAÇÃO ADICIONADA ---
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
+// -----------------------------
 public class Consulta {
 
-    @Id // 3. Chave Primária
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 4. É AUTO_INCREMENT
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private LocalDate dataConsulta; // Use LocalDate para a data
-    private LocalTime horaConsulta; // Use LocalTime para a hora
+    private LocalDate dataConsulta;
+    private LocalTime horaConsulta;
     private String diagnostico;
+
+    // (Lembre-se de adicionar o campo 'tipo' aqui e no seu SQL
+    // se o seu frontend estiver enviando, como no index.html que corrigimos)
+    // private String tipo;
 
     // --- Relacionamentos ---
 
-    // 5. MUITAS Consultas podem pertencer a UM Animal
     @ManyToOne
     @JoinColumn(name = "id_animal")
-    @JsonBackReference// O nome da sua coluna FK que aponta para Animal
+    // @JsonBackReference FOI REMOVIDO
     private Animal animal;
 
-    // 6. MUITAS Consultas podem pertencer a UM Veterinario
     @ManyToOne
     @JoinColumn(name = "CRMV_veterinario")
-    @JsonBackReference// O nome da sua coluna FK que aponta para Veterinario
+    // @JsonBackReference FOI REMOVIDO
     private Veterinario veterinario;
 
-    // 7. UMA Consulta pode ter MUITOS Tratamentos
     @OneToMany(mappedBy = "consulta")
+    // @JsonManagedReference FOI REMOVIDO
     private List<Tratamento> tratamentos;
 
-    // 8. OBRIGATÓRIO: Construtor vazio
+    // OBRIGATÓRIO: Construtor vazio
     public Consulta() {}
 
     // --- Getters e Setters ---
-    // (Adicione aqui todos os getters e setters para os campos)
-
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
-
     public LocalDate getDataConsulta() {
         return dataConsulta;
     }
-
     public void setDataConsulta(LocalDate dataConsulta) {
         this.dataConsulta = dataConsulta;
     }
-
     public LocalTime getHoraConsulta() {
         return horaConsulta;
     }
-
     public void setHoraConsulta(LocalTime horaConsulta) {
         this.horaConsulta = horaConsulta;
     }
-
     public String getDiagnostico() {
         return diagnostico;
     }
-
     public void setDiagnostico(String diagnostico) {
         this.diagnostico = diagnostico;
     }
-
     public Animal getAnimal() {
         return animal;
     }
-
     public void setAnimal(Animal animal) {
         this.animal = animal;
     }
-
     public Veterinario getVeterinario() {
         return veterinario;
     }
-
     public void setVeterinario(Veterinario veterinario) {
         this.veterinario = veterinario;
     }
-
     public List<Tratamento> getTratamentos() {
         return tratamentos;
     }
-
     public void setTratamentos(List<Tratamento> tratamentos) {
         this.tratamentos = tratamentos;
     }
+
+    // (Getters/Setters para 'tipo' se você o adicionou)
 }

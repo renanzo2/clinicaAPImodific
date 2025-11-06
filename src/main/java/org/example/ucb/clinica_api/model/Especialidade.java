@@ -1,11 +1,18 @@
 package org.example.ucb.clinica_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
 import jakarta.persistence.*;
-
 import java.util.List;
 
 @Entity
-@Table(name = "especialidade")
+@Table(name = "Especialidade") // CORREÇÃO: "especialidade" -> "Especialidade"
+// --- ANOTAÇÃO ADICIONADA ---
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id"
+)
+// -----------------------------
 public class Especialidade {
 
     @Id
@@ -17,6 +24,7 @@ public class Especialidade {
     private String nome;
 
     @OneToMany(mappedBy = "especialidade")
+    // @JsonManagedReference FOI REMOVIDO
     private List<Certificacao> certificacoes;
 
     // OBRIGATÓRIO: Construtor vazio
@@ -39,4 +47,7 @@ public class Especialidade {
     public void setNome(String nome) {
         this.nome = nome;
     }
+    // Getter/Setter para certificacoes estava faltando no original
+    public List<Certificacao> getCertificacoes() { return certificacoes; }
+    public void setCertificacoes(List<Certificacao> certificacoes) { this.certificacoes = certificacoes; }
 }

@@ -1,41 +1,46 @@
 package org.example.ucb.clinica_api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "veterinario") // 1. Diz que o nome da tabela no SQL é "veterinario" (com 'v' minúsculo)
+@Table(name = "veterinario")
+// --- ANOTAÇÃO ADICIONADA ---
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "crmv"
+)
+// -----------------------------
 public class Veterinario {
 
     @Id
-    @Column(name = "CRMV") // 2. "DE-PARA": O campo 'crmv' no Java é a coluna 'CRMV' (maiúsculo) no SQL
+    @Column(name = "CRMV")
     private String crmv;
 
-    @Column(name = "nome") // 3. "DE-PARA" (Boa prática, mesmo sendo igual)
+    @Column(name = "nome")
     private String nome;
 
-    @Column(name = "idade") // 4. "DE-PARA"
+    @Column(name = "idade")
     private int idade;
 
-    @Column(name = "data_graduacao") // 5. "DE-PARA" (O mais importante!)
-    private LocalDate dataGraduacao; //    Campo 'dataGraduacao' no Java -> Coluna 'data_graduacao' no SQL
-
-    // --- RELACIONAMENTOS ---
-    // (O 'mappedBy' aponta para o nome do *campo Java* na outra classe)
+    @Column(name = "data_graduacao")
+    private LocalDate dataGraduacao;
 
     @OneToMany(mappedBy = "veterinario")
-    @JsonBackReference
+    // @JsonBackReference e @JsonManagedReference FORAM REMOVIDOS
     private List<Consulta> consultas;
 
     @OneToMany(mappedBy = "veterinario")
+    // @JsonManagedReference FOI REMOVIDO
     private List<Certificacao> certificacoes;
 
-    // Construtor vazio (Obrigatório)
+    // Construtor vazio
     public Veterinario() {}
 
-    // Construtor principal (Obrigatório para o seu DAO)
+    // Construtor principal
     public Veterinario(String crmv, String nome, int idade, LocalDate dataGraduacao) {
         this.crmv = crmv;
         this.nome = nome;
@@ -44,8 +49,6 @@ public class Veterinario {
     }
 
     // --- Getters e Setters ---
-    // (Não precisa mexer aqui)
-
     public String getCrmv() { return crmv; }
     public void setCrmv(String crmv) { this.crmv = crmv; }
     public String getNome() { return nome; }
