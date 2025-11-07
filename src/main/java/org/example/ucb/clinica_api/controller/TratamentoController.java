@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID; // Import para gerar UUID
 
 @RestController
 @RequestMapping("/api/tratamentos")
 @CrossOrigin(origins = "*")
-
 public class TratamentoController {
     @Autowired
     private RepositorioDeTratamento repositorioDeTratamento;
@@ -24,11 +24,15 @@ public class TratamentoController {
 
     @PostMapping
     public Tratamento salvarTratamento(@RequestBody Tratamento tratamento){
+        // Como o ID é um UUID (VARCHAR(36)), ele deve ser gerado antes de salvar
+        if (tratamento.getId() == null || tratamento.getId().isEmpty()) {
+            tratamento.setId(UUID.randomUUID().toString());
+        }
         return repositorioDeTratamento.save(tratamento);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Tratamento> buscarTratamentoPorID(@PathVariable int id){
+    public ResponseEntity<Tratamento> buscarTratamentoPorID(@PathVariable String id){ // MUDADO DE int
         Optional<Tratamento> tratamento = repositorioDeTratamento.findById(id);
 
         if(tratamento.isPresent()){
@@ -39,7 +43,7 @@ public class TratamentoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Tratamento> atualizarTratamento(@PathVariable int id, @RequestBody Tratamento tratamentoAtualizado){
+    public ResponseEntity<Tratamento> atualizarTratamento(@PathVariable String id, @RequestBody Tratamento tratamentoAtualizado){ // MUDADO DE int
         if(!repositorioDeTratamento.findById(id).isPresent()){
             return ResponseEntity.notFound().build();
         }
@@ -49,7 +53,7 @@ public class TratamentoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Tratamento> removerTratamento(@PathVariable int id){
+    public ResponseEntity<Tratamento> removerTratamento(@PathVariable String id){ // MUDADO DE int
         if(!repositorioDeTratamento.findById(id).isPresent()){
             return ResponseEntity.notFound().build();
         }

@@ -24,11 +24,13 @@ public class AnimalController {
 
     @PostMapping
     public Animal adicionarAnimal(@RequestBody Animal animal) {
+        // O RFID (ex: 'PET-0001') deve ser enviado pelo frontend
+        // ou gerado aqui (ex: com a Function 'fnc_gerar_proximo_rfid_animal()')
         return repositorioDeAnimal.save(animal);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Animal> buscarAnimalPorId(@PathVariable int id) {
+    public ResponseEntity<Animal> buscarAnimalPorId(@PathVariable String id) { // MUDADO DE int
         Optional<Animal> animal = repositorioDeAnimal.findById(id);
 
         if (animal.isPresent()) {
@@ -39,18 +41,18 @@ public class AnimalController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Animal> atualizarAnimal(@PathVariable int id, @RequestBody Animal animalAtualizado) {
+    public ResponseEntity<Animal> atualizarAnimal(@PathVariable String id, @RequestBody Animal animalAtualizado) { // MUDADO DE int
         if (!repositorioDeAnimal.existsById(id)) {
             return ResponseEntity.notFound().build();
         }
 
-        animalAtualizado.setId(id);
+        animalAtualizado.setRfid(id); // MUDADO DE setId
         Animal animalSalvo = repositorioDeAnimal.save(animalAtualizado);
         return ResponseEntity.ok(animalSalvo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removerAnimal(@PathVariable int id) {
+    public ResponseEntity<Void> removerAnimal(@PathVariable String id) { // MUDADO DE int
         if (!repositorioDeAnimal.existsById(id)) {
             return ResponseEntity.notFound().build();
         }

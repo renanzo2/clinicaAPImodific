@@ -1,23 +1,23 @@
 package org.example.ucb.clinica_api.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
-import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "Animal") // CORREÇÃO: "animal" -> "Animal"
-// --- ANOTAÇÃO ADICIONADA ---
+@Table(name = "Animal")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
+        property = "rfid" // MUDADO DE "id"
 )
-// -----------------------------
 public class Animal {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ID")
-    private Integer id;
+    @Column(name = "RFID") // MUDADO DE "ID"
+    private String rfid; // MUDADO DE Integer id
+
+    // @GeneratedValue FOI REMOVIDO
 
     @Column(name = "Nome")
     private String nome;
@@ -33,17 +33,15 @@ public class Animal {
 
     @ManyToOne
     @JoinColumn(name = "CPF_dono")
-    // @JsonBackReference e @JsonManagedReference FORAM REMOVIDOS
     private Dono dono;
 
     @OneToMany(mappedBy = "animal")
-    // @JsonBackReference e @JsonManagedReference FORAM REMOVIDOS
     private List<Consulta> consultas;
 
     public Animal() {}
 
-    public Animal(Integer id, String nome, String porte, int idade, String especie, Dono dono) {
-        this.id = id;
+    public Animal(String rfid, String nome, String porte, int idade, String especie, Dono dono) {
+        this.rfid = rfid;
         this.nome = nome;
         this.porte = porte;
         this.idade = idade;
@@ -51,9 +49,10 @@ public class Animal {
         this.dono = dono;
     }
 
-    // Getters e Setters
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    // Getters e Setters ATUALIZADOS
+    public String getRfid() { return rfid; }
+    public void setRfid(String rfid) { this.rfid = rfid; }
+
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
     public String getPorte() { return porte; }

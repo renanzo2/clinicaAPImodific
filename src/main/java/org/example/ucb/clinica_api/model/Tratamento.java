@@ -1,62 +1,42 @@
 package org.example.ucb.clinica_api.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
-import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tratamento")
-// --- ANOTAÇÃO ADICIONADA ---
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id"
 )
-// -----------------------------
 public class Tratamento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "id") // Coluna 'id' agora é VARCHAR(36)
+    private String id; // MUDADO DE Integer
 
-    // CORREÇÃO: Mapeia 'descricao' para 'descricao_tratamento' no SQL
+    // @GeneratedValue FOI REMOVIDO
+
     @Column(name = "descricao_tratamento")
     private String descricao;
 
     private boolean antibiotico;
 
-    // --- Relacionamentos ---
-
     @ManyToOne
-    @JoinColumn(name = "id_consulta")
-    // @JsonBackReference FOI REMOVIDO
+    @JoinColumn(name = "id_consulta") // Esta FK agora aponta para a PK VARCHAR(36) de Consulta
     private Consulta consulta;
 
-    // OBRIGATÓRIO: Construtor vazio
     public Tratamento() {}
 
-    // --- Getters e Setters ---
-    public Integer getId() {
-        return id;
-    }
-    public void setId(Integer id) {
-        this.id = id;
-    }
-    public String getDescricao() {
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-    public boolean isAntibiotico() {
-        return antibiotico;
-    }
-    public void setAntibiotico(boolean antibiotico) {
-        this.antibiotico = antibiotico;
-    }
-    public Consulta getConsulta() {
-        return consulta;
-    }
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
-    }
+    // --- Getters e Setters ATUALIZADOS ---
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public boolean isAntibiotico() { return antibiotico; }
+    public void setAntibiotico(boolean antibiotico) { this.antibiotico = antibiotico; }
+    public Consulta getConsulta() { return consulta; }
+    public void setConsulta(Consulta consulta) { this.consulta = consulta; }
 }
