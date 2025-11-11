@@ -2,7 +2,6 @@ package org.example.ucb.clinica_api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.example.ucb.clinica_api.control.RepositorioDeDono;

@@ -292,6 +292,123 @@
             color: #6b7280;
         }
 
+        /* ========= INÍCIO: ESTILOS ADICIONADOS PARA O MODAL (FICHA TÉCNICA) ========= */
+        .modal-overlay {
+            display: none; /* Começa escondido */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex; /* Mostra o modal */
+        }
+        .modal-content {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 900px; /* Largura máxima da ficha */
+            max-height: 90vh; /* Altura máxima */
+            overflow-y: auto; /* Permite rolar se o conteúdo for grande */
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        .modal-header h2 {
+            font-size: 1.8rem;
+            color: #1f2937;
+        }
+        .close-btn {
+            font-size: 2.5rem;
+            color: #9ca3af;
+            background: none;
+            border: none;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .modal-body {
+            padding: 10px 0;
+        }
+
+        /* Estilos para os blocos de informação da ficha */
+        .ficha-grid {
+            display: grid;
+            /* Cria 2 colunas de tamanho igual */
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        .ficha-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+        .ficha-item strong {
+            display: block;
+            color: #667eea; /* Roxo da interface */
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .ficha-item span {
+            font-size: 1.1rem;
+            color: #374151;
+            word-wrap: break-word;
+        }
+        .historico-titulo {
+            font-size: 1.5rem;
+            color: #1f2937;
+            border-top: 2px solid #e5e7eb;
+            padding-top: 25px;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
+        .consulta-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .consulta-header {
+            background: #f9fafb;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        .consulta-header strong {
+            font-size: 1.2rem;
+            color: #374151;
+        }
+        .consulta-body {
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .tratamento-card {
+            grid-column: 1 / -1; /* Ocupa as 2 colunas */
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        /* ========= FIM: ESTILOS ADICIONADOS PARA O MODAL ========= */
+
+
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.5rem;
@@ -328,6 +445,12 @@
             <div class="card nav-link" data-page="veterinarios"><div class="card-icon">🩺</div><h3>Equipe Veterinária</h3><p>Gerencie os veterinários e suas especialidades</p></div>
             <div class="card nav-link" data-page="tratamentos"><div class="card-icon">💉</div><h3>Controle de Tratamentos</h3><p>Gerencie medicações e procedimentos</p></div>
             <div class="card nav-link" data-page="certificacoes"><div class="card-icon">🏆</div><h3>Certificações</h3><p>Registre qualificações da equipe</p></div>
+
+            <div class="card" onclick="triggerSync()" style="background: #fffbef; border: 2px solid #f59e0b;">
+                <div class="card-icon" style="background: #f59e0b;">🔄</div>
+                <h3>Sincronizar Fichas (Admin)</h3>
+                <p>Atualiza o banco NoSQL (MongoDB) com dados do MySQL</p>
+            </div>
         </div>
     </div>
 
@@ -705,8 +828,17 @@
             </table>
         </div>
     </div>
+</div> <div id="fichaModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>🐾 Ficha Técnica do Animal (NoSQL)</h2>
+            <button class="close-btn" onclick="hideFicha()">&times;</button>
+        </div>
+        <div id="fichaModalBody" class="modal-body">
+            <p>Carregando dados...</p>
+        </div>
+    </div>
 </div>
-
 <script>
     const API_URL = 'http://localhost:8080/api';
 
@@ -902,7 +1034,9 @@
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editAnimal('${a.rfid}')">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteAnimal('${a.rfid}')">🗑️ Excluir</button>
-                </td>
+
+                    <button class="btn btn-secondary btn-sm" onclick="showFicha('${a.rfid}')">📋 Ver Ficha</button>
+                    </td>
             </tr>
         `).join('');
     }
@@ -993,7 +1127,7 @@
     function renderConsultas(consultas) {
         const tbody = document.getElementById('consultasList');
         if (!consultas || consultas.length === 0) {
-            // tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhuma consulta cadastrada</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhuma consulta cadastrada</td></tr>';
             return;
         }
         tbody.innerHTML = consultas.map(c => `
@@ -1369,6 +1503,142 @@
             }
         }
     }
+
+    // ======================================================
+    // =================== JS ADICIONADO: FICHA TÉCNICA (MongoDB) ==================
+    // ======================================================
+
+    /**
+     * Busca os dados da Ficha no endpoint /api/fichas/{rfid} e mostra o modal
+     */
+    async function showFicha(rfid) {
+        const modal = document.getElementById('fichaModal');
+        const body = document.getElementById('fichaModalBody');
+        body.innerHTML = '<p>Carregando...</p>';
+        modal.classList.add('active'); // Mostra o modal
+
+        try {
+            // Chama o FichaAnimalController
+            const response = await fetch(`${API_URL}/fichas/${rfid}`);
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Ficha não encontrada no MongoDB. Sincronize o banco de dados primeiro (Home > Sincronizar Fichas) e tente novamente.');
+                }
+                throw new Error('Erro ao buscar ficha. Status: ' + response.status);
+            }
+
+            const ficha = await handleResponse(response);
+            renderFicha(ficha); // Chama a função para renderizar o HTML
+        } catch (error) {
+            console.error('Erro ao carregar ficha:', error);
+            body.innerHTML = `<p style="color: red; font-weight: bold;">${error.message}</p>`;
+        }
+    }
+
+    /**
+     * Esconde o modal da Ficha Técnica
+     */
+    function hideFicha() {
+        document.getElementById('fichaModal').classList.remove('active');
+        document.getElementById('fichaModalBody').innerHTML = '';
+    }
+
+    /**
+     * Constrói o HTML da Ficha Técnica com base nos dados do MongoDB
+     */
+    function renderFicha(ficha) {
+        const body = document.getElementById('fichaModalBody');
+
+        const dono = ficha.dono || {};
+        const historico = ficha.historicoConsultas || [];
+
+        // Renderiza os dados do Animal e do Dono (Embed)
+        body.innerHTML = `
+            <div class="ficha-grid">
+                <div class="ficha-item"><strong>RFID</strong> <span>${ficha.rfid}</span></div>
+                <div class="ficha-item"><strong>Nome do Animal</strong> <span>${ficha.nomeAnimal || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Espécie</strong> <span>${ficha.especie || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Idade</strong> <span>${ficha.idade}</span></div>
+                <div class="ficha-item"><strong>Porte</strong> <span>${ficha.porte || 'N/D'}</span></div>
+            </div>
+
+            <h3 class="historico-titulo">Informações do Dono</h3>
+            <div class="ficha-grid">
+                <div class="ficha-item"><strong>Dono (CPF)</strong> <span>${dono.cpf || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Dono (Nome)</strong> <span>${dono.nomeDono || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Dono (Telefone)</strong> <span>${dono.telefone || 'N/D'}</span></div>
+            </div>
+
+            <h3 class="historico-titulo">Histórico de Consultas (${historico.length})</h3>
+            <div id="historico-lista">
+                ${historico.length === 0 ? '<p class="empty-state">Nenhum histórico de consulta encontrado.</p>' :
+                    historico.map(consulta => `
+                    <div class="consulta-card">
+                        <div class="consulta-header">
+                            <strong>Consulta ID (MySQL):</strong> ${consulta.consultaId}
+                        </div>
+                        <div class="consulta-body">
+                            <div class="ficha-item"><strong>Data</strong> <span>${consulta.dataConsulta || 'N/D'}</span></div>
+                            <div class="ficha-item"><strong>Hora</strong> <span>${consulta.horaConsulta || 'N/D'}</span></div>
+                            <div class="ficha-item"><strong>Veterinário</strong> <span>${consulta.nomeVeterinario || 'N/D'}</span></div>
+                            <div class="ficha-item" style="grid-column: 1 / -1;">
+                                <strong>Diagnóstico</strong>
+                                <span>${consulta.diagnostico || 'N/D'}</span>
+                            </div>
+
+                            ${renderTratamento(consulta.tratamento)}
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    /**
+     * Helper para renderizar o sub-documento de Tratamento
+     */
+    function renderTratamento(tratamento) {
+        if (!tratamento) {
+            return '<div class="tratamento-card"><p>Nenhum tratamento associado a esta consulta.</p></div>';
+        }
+        return `
+            <div class="tratamento-card">
+                <strong>Tratamento (ID: ${tratamento.tratamentoId})</strong>
+                <p style="margin-top: 5px;">${tratamento.descricao || 'Sem descrição.'}</p>
+                <p style="margin-top: 5px;"><strong>Usa Antibiótico:</strong> ${tratamento.antibiotico ? 'Sim' : 'Não'}</p>
+            </div>
+        `;
+    }
+
+    /**
+     * Função para disparar a sincronização (Admin)
+     */
+    async function triggerSync() {
+        if (!confirm('Isso irá apagar e recriar todas as Fichas no MongoDB. Deseja continuar? (Requer login de ADMIN)')) return;
+
+        const syncCard = document.querySelector('.card[onclick="triggerSync()"]');
+        if(syncCard) syncCard.innerHTML = '<div class="card-icon">🔄</div><h3>Sincronizando...</h3><p>Aguarde, isso pode levar um momento...</p>';
+
+        try {
+            const response = await fetch(`${API_URL}/admin/sync-mongo`); // Chama o SyncController
+            if (!response.ok) {
+                 const errorText = await response.text();
+                throw new Error('Falha na sincronização: ' + errorText);
+            }
+            const message = await response.text();
+            alert('Sincronização concluída!\n' + message);
+        } catch (error) {
+            console.error('Erro ao sincronizar:', error);
+            alert('Erro ao sincronizar: ' + error.message + '\n\n(Verifique se você está logado como ADMIN e se o backend está rodando.)');
+        } finally {
+            if(syncCard) syncCard.innerHTML = '<div class="card-icon" style="background: #f59e0b;">🔄</div><h3>Sincronizar Fichas (Admin)</h3><p>Atualiza o banco NoSQL (MongoDB) com dados do MySQL</p>';
+        }
+    }
+
+    // ======================================================
+    // =================== FIM DAS ADIÇÕES JS ==================
+    // ======================================================
 
 
     // --- INICIALIZAÇÃO ---
