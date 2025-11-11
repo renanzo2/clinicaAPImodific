@@ -1,23 +1,18 @@
 package org.example.ucb.clinica_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "Animal")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "rfid" // MUDADO DE "id"
-)
 public class Animal {
 
     @Id
     @Column(name = "RFID") // MUDADO DE "ID"
     private String rfid; // MUDADO DE Integer id
-
-    // @GeneratedValue FOI REMOVIDO
 
     @Column(name = "Nome")
     private String nome;
@@ -36,6 +31,7 @@ public class Animal {
     private Dono dono;
 
     @OneToMany(mappedBy = "animal")
+    @JsonIgnore
     private List<Consulta> consultas;
 
     public Animal() {}

@@ -1,6 +1,7 @@
 package org.example.ucb.clinica_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo; // IMPORT ADICIONADO
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators; // IMPORT ADICIONADO
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -8,12 +9,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "Dono")
-// --- ANOTAÇÃO ADICIONADA ---
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "cpf"
-)
-// -----------------------------
 public class Dono {
 
     @Id
@@ -36,7 +31,7 @@ public class Dono {
     private String email;
 
     @OneToMany(mappedBy = "dono")
-    // @JsonManagedReference FOI REMOVIDO
+    @JsonIgnore
     private List<Animal> animais;
 
     // Construtor vazio

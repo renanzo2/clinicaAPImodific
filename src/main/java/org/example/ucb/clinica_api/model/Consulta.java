@@ -1,6 +1,7 @@
 package org.example.ucb.clinica_api.model;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -10,10 +11,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "consulta")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
 public class Consulta {
 
     @Id
@@ -36,8 +33,13 @@ public class Consulta {
     @JoinColumn(name = "CRMV_veterinario")
     private Veterinario veterinario;
 
+    @Column(name = "tipo")
+    private String tipo;
+
     @OneToMany(mappedBy = "consulta")
+    @JsonIgnore
     private List<Tratamento> tratamentos;
+
 
     public Consulta() {}
 
@@ -63,6 +65,12 @@ public class Consulta {
     }
     public void setAnimal(Animal animal) {
         this.animal = animal;
+    }
+    public String getTipo() {
+        return tipo;
+    }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
     public Veterinario getVeterinario() {
         return veterinario;

@@ -6,10 +6,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tratamento")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "id"
-)
 public class Tratamento {
 
     @Id

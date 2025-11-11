@@ -499,6 +499,11 @@
                                 <option value="Retorno">Retorno</option>
                             </select>
                         </div>
+
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label>Diagnóstico *</label>
+                            <textarea id="consultaDiagnostico" required></textarea>
+                        </div>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" onclick="cancelForm('consultaForm')">Cancelar</button>
@@ -509,13 +514,21 @@
 
             <table>
                 <thead>
-                <tr><th>ID (UUID)</th><th>Animal (RFID)</th><th>Veterinário (CRMV)</th><th>Data</th><th>Horário</th><th>Tipo</th><th>Ações</th></tr>
+                <tr>
+                    <th>ID (UUID)</th>
+                    <th>Animal (RFID)</th>
+                    <th>Veterinário (CRMV)</th>
+                    <th>Diagnóstico</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                    <th>Tipo</th>
+                    <th>Ações</th>
+                </tr>
                 </thead>
                 <tbody id="consultasList"></tbody>
             </table>
         </div>
     </div>
-
     <div id="tratamentos" class="page">
         <div class="crud-container">
             <div class="crud-header">
@@ -980,14 +993,15 @@
     function renderConsultas(consultas) {
         const tbody = document.getElementById('consultasList');
         if (!consultas || consultas.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhuma consulta cadastrada</td></tr>';
+            // tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhuma consulta cadastrada</td></tr>';
             return;
         }
         tbody.innerHTML = consultas.map(c => `
             <tr>
                 <td>${c.id}</td>
-                <td>${c.animal ? c.animal.rfid : 'N/D'}</td> <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
-                <td>${c.dataConsulta || '-'}</td>
+                <td>${c.animal ? c.animal.rfid : 'N/D'}</td>
+                <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
+                <td>${c.diagnostico || '-'}</td> <td>${c.dataConsulta || '-'}</td>
                 <td>${c.horaConsulta || '-'}</td>
                 <td>${c.tipo || '-'}</td>
                 <td class="action-buttons">
@@ -1009,7 +1023,8 @@
             veterinario: { crmv: document.getElementById('consultaVet').value },
             dataConsulta: document.getElementById('consultaData').value,
             horaConsulta: document.getElementById('consultaHora').value,
-            tipo: document.getElementById('consultaTipo').value
+            tipo: document.getElementById('consultaTipo').value,
+            diagnostico: document.getElementById('consultaDiagnostico').value // <-- ALTERAÇÃO AQUI
         };
 
         const url = id ? `${API_URL}/consultas/${id}` : `${API_URL}/consultas`;
@@ -1045,6 +1060,7 @@
             document.getElementById('consultaData').value = consulta.dataConsulta;
             document.getElementById('consultaHora').value = consulta.horaConsulta;
             document.getElementById('consultaTipo').value = consulta.tipo;
+            document.getElementById('consultaDiagnostico').value = consulta.diagnostico; // <-- ALTERAÇÃO AQUI
 
             document.getElementById('consultaForm').classList.add('active');
         } catch (error) {

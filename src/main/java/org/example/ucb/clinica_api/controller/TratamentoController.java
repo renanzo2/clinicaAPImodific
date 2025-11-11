@@ -53,12 +53,12 @@ public class TratamentoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Tratamento> removerTratamento(@PathVariable String id){ // MUDADO DE int
+    public ResponseEntity<Void> removerTratamento(@PathVariable String id){ // <-- MUDANÇA AQUI
         if(!repositorioDeTratamento.findById(id).isPresent()){
             return ResponseEntity.notFound().build();
         }
 
         repositorioDeTratamento.deleteById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build(); // Agora combina com a assinatura
     }
 }

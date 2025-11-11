@@ -47,12 +47,12 @@ public class CertificacaoController {
     }
 
     @DeleteMapping("/{numeroRegistro}")
-    public ResponseEntity<Void> removerCertificacao(@PathVariable String numeroRegistro) {
+    public ResponseEntity<Void> removerCertificacao(@PathVariable String numeroRegistro) { // <-- MUDE PARA Void
         if (!repositorioDeCertificacao.existsById(numeroRegistro)) {
             return ResponseEntity.notFound().build();
         }
 
         repositorioDeCertificacao.deleteById(numeroRegistro);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build(); // <-- MUDE DE .ok() PARA .noContent()
     }
 }
