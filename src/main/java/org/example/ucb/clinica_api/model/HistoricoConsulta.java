@@ -7,6 +7,7 @@ public class HistoricoConsulta {
 
     private String consultaId;
     private String diagnostico;
+    private String tipo;
     private LocalDate dataConsulta;
     private LocalTime horaConsulta;
     private String nomeVeterinario;
@@ -18,6 +19,8 @@ public class HistoricoConsulta {
     public void setConsultaId(String consultaId) { this.consultaId = consultaId; }
     public String getDiagnostico() { return diagnostico; }
     public void setDiagnostico(String diagnostico) { this.diagnostico = diagnostico; }
+    public String getTipo() { return tipo; }
+    public void setTipo(String tipo) { this.tipo = tipo; }
     public LocalDate getDataConsulta() { return dataConsulta; }
     public void setDataConsulta(LocalDate dataConsulta) { this.dataConsulta = dataConsulta; }
     public LocalTime getHoraConsulta() { return horaConsulta; }

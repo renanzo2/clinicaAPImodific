@@ -52,6 +52,7 @@ public class SyncService {
                 histConsulta.setDiagnostico(consultaSql.getDiagnostico());
                 histConsulta.setDataConsulta(consultaSql.getDataConsulta());
                 histConsulta.setHoraConsulta(consultaSql.getHoraConsulta());
+                histConsulta.setTipo(consultaSql.getTipo());
 
                 if (consultaSql.getVeterinario() != null) {
                     histConsulta.setNomeVeterinario(consultaSql.getVeterinario().getNome());
