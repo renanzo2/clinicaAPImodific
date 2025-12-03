@@ -60,4 +60,15 @@ public class AnimalController {
         repositorioDeAnimal.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMappging
+    public Animal adicionarAnimal(@RequestBody Animal animal) {
+        //Chama função que gera a id de PET-**** automaticamente
+        String novoRfid = repositorioDeAnimal.gerarProximoRfid();
+
+        //Define o ID no objeto antes do salvamento
+        animal.setRfid(novoRfid);
+
+        return repositorioDeAnimal.save(animal);
+    }
 }
