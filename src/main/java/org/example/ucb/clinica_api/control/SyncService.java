@@ -77,4 +77,66 @@ public class SyncService {
         System.out.println("Conexão concluída! " + todosAnimaisSql.size() + " documentos salvos no MongoDB");
         System.out.println("====================");
     }
+
+    public void sincronizarAnimalEspecifico(String rfid) {
+
+        //Busca todos os dados do animal no MySQL
+        Animal animalsql = repoAnimalSql.findById(rfid).orElse(null);
+
+        if(animalsql != null) {
+            //Cria/Atualiza o objeto do MongoDB
+            FichaAnimal fichaMongo = new FichaAnimal();
+            fichaMongo.setRfid(animalsql.getRfid());
+            fichaMongo.setNomeAnimal(animalsql.getNome());
+            fichaMongo.setEspecie(animalsql.getEspecie());
+            fichaMongo.setPorte(animalsql.getPorte());
+            fichaMongo.setIdade(animalsql.getIdade());
+
+            Dono donoSql = animalsql.getDono();
+            DonoEmbed donoEmbed = new DonoEmbed();
+            if (donoSql != null) {
+                donoEmbed.setCpf(donoSql.getCpf());
+                donoEmbed.setNomeDono(donoSql.getNome());
+                donoEmbed.setTelefone(donoSql.getTelefone());
+            }
+            fichaMongo.setDono(donoEmbed);
+            //Inicializa lista vazia (animal sem histórico)
+            //caso já exista mapeia
+            List<HistoricoConsulta> historicoMongo = new ArrayList<>();
+            if (animalsql.getConsultas() != null){
+                for (Consulta consultaSql : animalsql.getConsultas()) {
+                    HistoricoConsulta histconsulta = new HistoricoConsulta();
+                    histconsulta.setConsultaId(consultaSql.getId());
+                    histconsulta.setDiagnostico(consultaSql.getDiagnostico());
+                    histconsulta.setDataConsulta(consultaSql.getDataConsulta());
+                    histconsulta.setHoraConsulta(consultaSql.getHoraConsulta());
+                    histconsulta.setTipo(consultaSql.getTipo());
+
+                    if (consultaSql.getVeterinario() != null) {
+                        histconsulta.setNomeVeterinario(consultaSql.getVeterinario().getNome());
+                    }
+                    if (consultaSql.getTratamentos() != null && !consultaSql.getTratamentos().isEmpty()) {
+                        Tratamento tramanetoSql = consultaSql.getTratamentos().get(0);
+                        TratamentoEmbed tratamentoEmbed = new TratamentoEmbed();
+                        tratamentoEmbed.setTratamentoId(tramanetoSql.getId());
+                        tratamentoEmbed.setDescricao(tramanetoSql.getDescricao());
+                        tratamentoEmbed.setAntibiotico(tramanetoSql.isAntibiotico());
+                        histconsulta.setTratamento(tratamentoEmbed);
+                    }
+                    historicoMongo.add(histconsulta);
+                }
+            }fichaMongo.setHistoricoConsultas(historicoMongo);
+
+            //Salva no mongoDB
+            repoFichaMongo.save(fichaMongo);
+            System.out.println("Sincronização automática realizada para o aniaml: " + rfid);
+        }
+    }
+
+    public void removerAnimalMongo(String rfid){
+        if (repoFichaMongo.existsById(rfid)) {
+            repoFichaMongo.deleteById(rfid);
+            System.out.println("Animal removido do MongoDB (" + rfid + ")");
+        }
+    }
 }

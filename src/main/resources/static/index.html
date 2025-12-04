@@ -446,11 +446,6 @@
             <div class="card nav-link" data-page="tratamentos"><div class="card-icon">💉</div><h3>Controle de Tratamentos</h3><p>Gerencie medicações e procedimentos</p></div>
             <div class="card nav-link" data-page="certificacoes"><div class="card-icon">🏆</div><h3>Certificações</h3><p>Registre qualificações da equipe</p></div>
 
-            <div class="card" onclick="triggerSync()" style="background: #fffbef; border: 2px solid #f59e0b;">
-                <div class="card-icon" style="background: #f59e0b;">🔄</div>
-                <h3>Sincronizar Fichas (Admin)</h3>
-                <p>Atualiza o banco NoSQL (MongoDB) com dados do MySQL</p>
-            </div>
         </div>
     </div>
 
@@ -526,8 +521,8 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>RFID * (Chave Primária)</label>
-                            <input type="text" id="animalRfid" required placeholder="Ex: PET-0001">
+                            <label>RFID (Gerado Automaticamente)</label>
+                            <input type="text" id="animalRfid" placeholder="Será gerado ao salvar..." disabled>
                         </div>
                         <div class="form-group">
                             <label>Nome do Animal *</label>
@@ -872,7 +867,7 @@
             document.getElementById('certNumeroRegistro').readOnly = false;
         }
         if (formId === 'animalForm') {
-            document.getElementById('animalRfid').readOnly = false;
+            document.getElementById('animalRfid').value = "";
         }
         if (formId === 'donoForm') {
             document.getElementById('donoCpf').readOnly = false;
@@ -1045,10 +1040,8 @@
         e.preventDefault();
         const idInput = document.getElementById('animalId');
         const id = idInput.value; // ID (RFID) original na edição
-        const rfidDoForm = document.getElementById('animalRfid').value;
 
         const animal = {
-            rfid: rfidDoForm, // Pega o RFID do novo campo
             nome: document.getElementById('animalNome').value,
             especie: document.getElementById('animalEspecie').value,
             idade: parseInt(document.getElementById('animalIdade').value),
@@ -1071,6 +1064,7 @@
             });
             loadAnimais();
             cancelForm('animalForm');
+
         } catch (error) {
             console.error('Erro ao salvar animal:', error);
             alert('Erro ao salvar: Verifique se o CPF do dono e o RFID (único) estão corretos.');
@@ -1609,31 +1603,6 @@
                 <p style="margin-top: 5px;"><strong>Usa Antibiótico:</strong> ${tratamento.antibiotico ? 'Sim' : 'Não'}</p>
             </div>
         `;
-    }
-
-    /**
-     * Função para disparar a sincronização (Admin)
-     */
-    async function triggerSync() {
-        if (!confirm('Isso irá apagar e recriar todas as Fichas no MongoDB. Deseja continuar? (Requer login de ADMIN)')) return;
-
-        const syncCard = document.querySelector('.card[onclick="triggerSync()"]');
-        if(syncCard) syncCard.innerHTML = '<div class="card-icon">🔄</div><h3>Sincronizando...</h3><p>Aguarde, isso pode levar um momento...</p>';
-
-        try {
-            const response = await fetch(`${API_URL}/admin/sync-mongo`); // Chama o SyncController
-            if (!response.ok) {
-                 const errorText = await response.text();
-                throw new Error('Falha na sincronização: ' + errorText);
-            }
-            const message = await response.text();
-            alert('Sincronização concluída!\n' + message);
-        } catch (error) {
-            console.error('Erro ao sincronizar:', error);
-            alert('Erro ao sincronizar: ' + error.message + '\n\n(Verifique se você está logado como ADMIN e se o backend está rodando.)');
-        } finally {
-            if(syncCard) syncCard.innerHTML = '<div class="card-icon" style="background: #f59e0b;">🔄</div><h3>Sincronizar Fichas (Admin)</h3><p>Atualiza o banco NoSQL (MongoDB) com dados do MySQL</p>';
-        }
     }
 
     // ======================================================
