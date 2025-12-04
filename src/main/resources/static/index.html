@@ -4,574 +4,311 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clínica Veterinária - Sistema Administrativo</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        <style>
+        :root {
+            --primary-color: #4f46e5; /* Indigo */
+            --sidebar-width: 260px;
+            --bg-color: #f3f4f6;
+            --text-color: #1f2937;
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Evita rolagem dupla */
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        /* --- SIDEBAR (MENU LATERAL) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #1e1e2d; /* Escuro profissional */
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #818cf8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .nav-link {
-            padding: 12px 25px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
             text-decoration: none;
-            color: #4a5568;
-            font-weight: 600;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            color: #a6a6cc;
+            border-radius: 8px;
             cursor: pointer;
-        }
-
-        .nav-link.btn:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .nav-link.ativo {
-            color: #667eea;
-        }
-
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 60px;
-            padding-top: 40px;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 15px;
-        }
-
-        .hero h2 {
-            font-size: 2rem;
-            color: white;
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 35px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s ease;
-            cursor: pointer;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 60px rgba(103, 126, 234, 0.3);
-        }
-
-        .card-icon {
-            width: 70px;
-            height: 70px;
-            border-radius: 16px;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 32px;
-            background: linear-gradient(135deg, #14b8a6 0%, #06b6d4 100%);
+            gap: 12px;
+            font-size: 0.95rem;
         }
 
-        .card h3 {
-            font-size: 1.5rem;
-            color: #1f2937;
-            margin-bottom: 12px;
-            font-weight: 700;
+        .nav-link:hover, .nav-link.active-menu {
+            background: #2b2b40;
+            color: #fff;
+            transform: translateX(5px);
         }
 
-        .card p {
-            color: #6b7280;
-            line-height: 1.6;
+        /* --- CONTEÚDO PRINCIPAL --- */
+        .main-content {
+            flex: 1;
+            overflow-y: auto; /* Só o conteúdo rola */
+            padding: 30px;
         }
 
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- DASHBOARD CARDS (HOME) --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-card h3 { font-size: 0.9rem; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .number { font-size: 2rem; font-weight: bold; color: var(--text-color); margin-top: 10px; }
+
+        /* --- TABELAS E CRUD --- */
         .crud-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         .crud-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .crud-header h2 {
-            font-size: 2rem;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(103, 126, 234, 0.4);
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-warning {
-            background: #f59e0b;
-            color: white;
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-
-        .form-section {
-            background: #f9fafb;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            display: none;
-        }
-
-        .form-section.active {
-            display: block;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            color: #374151;
-            margin-bottom: 8px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 10px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-family: inherit;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        thead th {
-            padding: 15px;
-            text-align: left;
-            color: white;
-            font-weight: 600;
-        }
-
-        tbody tr {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 1px solid #e5e7eb;
         }
 
-        tbody tr:hover {
-            background: #f9fafb;
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        thead { background: #f9fafb; }
+        th { text-align: left; padding: 15px; color: #6b7280; font-size: 0.85rem; text-transform: uppercase; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e5e7eb; font-size: 0.95rem; }
+        tr:hover { background-color: #f9fafb; }
+
+        /* --- BOTÕES --- */
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-primary:hover { background: #4338ca; }
+        .btn-secondary { background: #e5e7eb; color: #374151; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+
+        /* --- FORMULÁRIOS --- */
+        .form-section {
+display: none; /* Escondido por padrão */
+            position: fixed; /* Flutua na tela */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centraliza exato */
+            z-index: 2000; /* Fica acima de tudo */
+
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 600px; /* Largura máxima */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+            /* Cria o fundo escuro atrás do modal */
+            box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
         }
 
-        tbody td {
-            padding: 15px;
-            color: #374151;
+        .form-section.active {
+            display: block; /* Aparece quando tem a classe active */
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .action-buttons {
-            display: flex;
-            gap: 8px;
+        /* Animação bonitinha de entrada */
+        @keyframes popIn {
+            from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 0.875rem;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
-        }
-
-        /* ========= INÍCIO: ESTILOS ADICIONADOS PARA O MODAL (FICHA TÉCNICA) ========= */
-        .modal-overlay {
-            display: none; /* Começa escondido */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-        .modal-overlay.active {
-            display: flex; /* Mostra o modal */
-        }
-        .modal-content {
-            background: #fff;
-            border-radius: 20px;
-            padding: 30px 40px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 900px; /* Largura máxima da ficha */
-            max-height: 90vh; /* Altura máxima */
-            overflow-y: auto; /* Permite rolar se o conteúdo for grande */
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #e5e7eb;
-            padding-bottom: 20px;
-            margin-bottom: 25px;
-        }
-        .modal-header h2 {
-            font-size: 1.8rem;
-            color: #1f2937;
-        }
-        .close-btn {
-            font-size: 2.5rem;
-            color: #9ca3af;
-            background: none;
-            border: none;
-            cursor: pointer;
-            line-height: 1;
-        }
-        .modal-body {
-            padding: 10px 0;
-        }
-
-        /* Estilos para os blocos de informação da ficha */
-        .ficha-grid {
+        /* Ajuste do grid para o modal */
+        .form-grid {
             display: grid;
-            /* Cria 2 colunas de tamanho igual */
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr; /* Sempre 2 colunas no desktop */
             gap: 20px;
             margin-bottom: 25px;
+            max-height: 70vh; /* Se for muito grande, cria rolagem interna */
+            overflow-y: auto;
+            padding-right: 10px;
         }
-        .ficha-item {
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-        }
-        .ficha-item strong {
-            display: block;
-            color: #667eea; /* Roxo da interface */
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-        .ficha-item span {
-            font-size: 1.1rem;
-            color: #374151;
-            word-wrap: break-word;
-        }
-        .historico-titulo {
-            font-size: 1.5rem;
-            color: #1f2937;
-            border-top: 2px solid #e5e7eb;
-            padding-top: 25px;
-            margin-top: 25px;
-            margin-bottom: 20px;
-        }
-        .consulta-card {
-            border: 2px solid #e5e7eb;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-        .consulta-header {
-            background: #f9fafb;
-            padding: 15px 20px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-        .consulta-header strong {
-            font-size: 1.2rem;
-            color: #374151;
-        }
-        .consulta-body {
-            padding: 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-        .tratamento-card {
-            grid-column: 1 / -1; /* Ocupa as 2 colunas */
-            background: #f3f4f6;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 10px;
-        }
-        /* ========= FIM: ESTILOS ADICIONADOS PARA O MODAL ========= */
 
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            table {
-                font-size: 0.875rem;
-            }
-
-            thead th, tbody td {
-                padding: 10px;
-            }
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; } /* 1 coluna no celular */
         }
     </style>
 </head>
 <body>
-<div class="container">
+
+<nav class="sidebar">
+    <h2>🐾 Clínica Vet</h2>
+
+    <div class="nav-link active-menu" data-page="home">
+        <span>🏠</span> Dashboard
+    </div>
+    <div class="nav-link" data-page="donos">
+        <span>👥</span> Gestão de Donos
+    </div>
+    <div class="nav-link" data-page="animais">
+        <span>🐕</span> Animais
+    </div>
+    <div class="nav-link" data-page="consultas">
+        <span>📅</span> Consultas
+    </div>
+    <div class="nav-link" data-page="tratamentos">
+        <span>💉</span> Tratamentos
+    </div>
+    <div class="nav-link" data-page="veterinarios">
+        <span>🩺</span> Veterinários
+    </div>
+    <div class="nav-link" data-page="certificacoes">
+        <span>🏆</span> Certificações
+    </div>
+</nav>
+
+<main class="main-content">
 
     <div id="home" class="page active">
-        <div class="hero">
-            <h1>🐾 Clínica Veterinária</h1>
-            <h2>Sistema Administrativo</h2>
-            <p>Gerencie todos os aspectos da sua clínica veterinária de forma simples e eficiente</p>
-        </div>
+        <h1>Visão Geral</h1>
+        <p style="color: #6b7280;">Bem-vindo ao sistema de gestão administrativa.</p>
 
-        <div class="cards-grid">
-            <div class="card nav-link" data-page="donos"><div class="card-icon">👥</div><h3>Gestão de Donos</h3><p>Cadastre e gerencie todos os tutores dos animais</p></div>
-            <div class="card nav-link" data-page="animais"><div class="card-icon">🐕</div><h3>Registro de Animais</h3><p>Controle completo dos pets atendidos na clínica</p></div>
-            <div class="card nav-link" data-page="consultas"><div class="card-icon">📅</div><h3>Agendamento de Consultas</h3><p>Organize e acompanhe todas as consultas</p></div>
-            <div class="card nav-link" data-page="veterinarios"><div class="card-icon">🩺</div><h3>Equipe Veterinária</h3><p>Gerencie os veterinários e suas especialidades</p></div>
-            <div class="card nav-link" data-page="tratamentos"><div class="card-icon">💉</div><h3>Controle de Tratamentos</h3><p>Gerencie medicações e procedimentos</p></div>
-            <div class="card nav-link" data-page="certificacoes"><div class="card-icon">🏆</div><h3>Certificações</h3><p>Registre qualificações da equipe</p></div>
-
+        <div class="dashboard-grid">
+            <div class="stat-card" style="border-left-color: #4f46e5;">
+                <h3>Total de Animais</h3>
+                <div class="number" id="dashTotalAnimais">--</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #10b981;">
+                <h3>Consultas Realizadas</h3>
+                <div class="number" id="dashTotalConsultas">--</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #f59e0b;">
+                <h3>Veterinários Ativos</h3>
+                <div class="number" id="dashTotalVets">--</div>
+            </div>
+            <div class="stat-card" style="border-left-color: #ef4444;">
+                <h3>Donos Cadastrados</h3>
+                <div class="number" id="dashTotalDonos">--</div>
+            </div>
         </div>
     </div>
 
     <div id="donos" class="page">
         <div class="crud-container">
             <div class="crud-header">
-                <h2>👥 Gestão de Donos</h2>
-                <div>
-                    <button class="btn btn-secondary nav-link" data-page="home">🏠 Voltar</button>
-                    <button class="btn btn-primary" onclick="toggleForm('donoForm')">➕ Novo Dono</button>
-                </div>
+                <h2>Gestão de Donos</h2>
+                <button class="btn btn-primary" onclick="toggleForm('donoForm')">➕ Novo Dono</button>
             </div>
-
             <div id="donoForm" class="form-section">
-                <h3 style="margin-bottom: 20px;">Formulário de Dono</h3>
+                <h3>Cadastro de Dono</h3>
                 <form onsubmit="saveDono(event)">
                     <input type="hidden" id="donoId">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nome Completo *</label>
-                            <input type="text" id="donoNome" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CPF * (Chave Primária)</label>
-                            <input type="text" id="donoCpf" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Telefone</label>
-                            <input type="tel" id="donoTelefone">
-                        </div>
-                        <div class="form-group">
-                            <label>E-mail</label>
-                            <input type="email" id="donoEmail">
-                        </div>
-                        <div class="form-group">
-                            <label>Endereço</label>
-                            <input type="text" id="donoEndereco">
-                        </div>
-                        <div class="form-group">
-                            <label>Data de Nascimento</label>
-                            <input type="date" id="donoDataNascimento">
-                        </div>
+                        <div class="form-group"><label>CPF *</label><input type="text" id="donoCpf" required></div>
+                        <div class="form-group"><label>Nome Completo *</label><input type="text" id="donoNome" required></div>
+                        <div class="form-group"><label>Telefone</label><input type="tel" id="donoTelefone"></div>
+                        <div class="form-group"><label>E-mail</label><input type="email" id="donoEmail"></div>
+                        <div class="form-group"><label>Endereço</label><input type="text" id="donoEndereco"></div>
+                        <div class="form-group"><label>Data Nascimento</label><input type="date" id="donoDataNascimento"></div>
                     </div>
-                    <div class="form-actions">
+                    <div class="form-actions" style="display:flex; justify-content:flex-end; gap:10px;">
                         <button type="button" class="btn btn-secondary" onclick="cancelForm('donoForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
+                        <button type="submit" class="btn btn-success">Salvar</button>
                     </div>
                 </form>
             </div>
-            <table>
-                <thead>
-                <tr><th>ID (CPF)</th><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr>
-                </thead>
-                <tbody id="donosList"></tbody>
-            </table>
         </div>
+        <table>
+            <thead>
+            <tr>
+                <th>CPF</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+            <tbody id="donosList">
+            </tbody>
+        </table>
     </div>
 
     <div id="animais" class="page">
         <div class="crud-container">
             <div class="crud-header">
-                <h2>🐕 Registro de Animais</h2>
-                <div>
-                    <button class="btn btn-secondary nav-link" data-page="home">🏠 Voltar</button>
-                    <button class="btn btn-primary" onclick="toggleForm('animalForm')">➕ Novo Animal</button>
-                </div>
+                <h2>Registro de Animais</h2>
+                <button class="btn btn-primary" onclick="toggleForm('animalForm')">➕ Novo Animal</button>
             </div>
-
             <div id="animalForm" class="form-section">
-                <h3 style="margin-bottom: 20px;">Formulário de Animal</h3>
+                <h3>Cadastro de Animal</h3>
                 <form onsubmit="saveAnimal(event)">
                     <input type="hidden" id="animalId">
-
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>RFID (Gerado Automaticamente)</label>
-                            <input type="text" id="animalRfid" placeholder="Será gerado ao salvar..." disabled>
+                            <label>RFID (Automático)</label>
+                            <input type="text" id="animalRfid" placeholder="Gerado pelo sistema..." disabled>
                         </div>
-                        <div class="form-group">
-                            <label>Nome do Animal *</label>
-                            <input type="text" id="animalNome" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Espécie *</label>
+                        <div class="form-group"><label>Nome *</label><input type="text" id="animalNome" required></div>
+                        <div class="form-group"><label>Espécie *</label>
                             <select id="animalEspecie" required>
                                 <option value="">Selecione...</option>
                                 <option value="Cachorro">Cachorro</option>
                                 <option value="Gato">Gato</option>
                                 <option value="Jibóia">Jibóia</option>
                                 <option value="Coelho">Coelho</option>
-                                <option value="Pássaro">Pássaro</option>
                                 <option value="Outro">Outro</option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label>Idade *</label>
-                            <input type="number" id="animalIdade" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Porte (Pequeno, Médio, Grande) *</label>
-                            <input type="text" id="animalPorte" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CPF do Dono *</label>
-                            <input type="text" id="animalDonoCpf" required placeholder="Digite o CPF do dono já cadastrado">
-                        </div>
+                        <div class="form-group"><label>Idade *</label><input type="number" id="animalIdade" required></div>
+                        <div class="form-group"><label>Porte *</label><input type="text" id="animalPorte" required></div>
+                        <div class="form-group"><label>CPF do Dono *</label><input type="text" id="animalDonoCpf" required></div>
                     </div>
-                    <div class="form-actions">
+                    <div class="form-actions" style="display:flex; justify-content:flex-end; gap:10px;">
                         <button type="button" class="btn btn-secondary" onclick="cancelForm('animalForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
+                        <button type="submit" class="btn btn-success">Salvar</button>
                     </div>
                 </form>
             </div>
-
             <table>
-                <thead>
-                <tr>
-                    <th>ID (RFID)</th>
-                    <th>Nome</th>
-                    <th>Espécie</th>
-                    <th>Idade</th>
-                    <th>Porte</th>
-                    <th>CPF do Dono</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
+                <thead><tr><th>RFID</th><th>Nome</th><th>Espécie</th><th>Dono</th><th>Ações</th></tr></thead>
                 <tbody id="animaisList"></tbody>
             </table>
         </div>
@@ -580,269 +317,117 @@
     <div id="consultas" class="page">
         <div class="crud-container">
             <div class="crud-header">
-                <h2>📅 Agendamento de Consultas</h2>
-                <div>
-                    <button class="btn btn-secondary nav-link" data-page="home">🏠 Voltar</button>
-                    <button class="btn btn-primary" onclick="toggleForm('consultaForm')">➕ Nova Consulta</button>
-                </div>
+                <h2>Consultas Agendadas</h2>
+                <button class="btn btn-primary" onclick="toggleForm('consultaForm')">➕ Nova Consulta</button>
             </div>
-
             <div id="consultaForm" class="form-section">
-                <h3 style="margin-bottom: 20px;">Formulário de Consulta</h3>
                 <form onsubmit="saveConsulta(event)">
                     <input type="hidden" id="consultaId">
                     <div class="form-grid">
-                        <div class="form-group">
-                            <label>Animal (RFID) *</label>
-                            <input type="text" id="consultaAnimal" required placeholder="Ex: PET-0001">
-                        </div>
-                        <div class="form-group">
-                            <label>Veterinário (CRMV) *</label>
-                            <input type="text" id="consultaVet" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Data *</label>
-                            <input type="date" id="consultaData" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Horário *</label>
-                            <input type="time" id="consultaHora" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Tipo *</label>
-                            <select id="consultaTipo" required>
-                                <option value="">Selecione...</option>
-                                <option value="Rotina">Rotina</option>
-                                <option value="Emergência">Emergência</option>
-                                <option value="Retorno">Retorno</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Diagnóstico *</label>
-                            <textarea id="consultaDiagnostico" required></textarea>
-                        </div>
+                        <div class="form-group"><label>Animal (RFID)</label><input type="text" id="consultaAnimal" required></div>
+                        <div class="form-group"><label>Veterinário (CRMV)</label><input type="text" id="consultaVet" required></div>
+                        <div class="form-group"><label>Data</label><input type="date" id="consultaData" required></div>
+                        <div class="form-group"><label>Hora</label><input type="time" id="consultaHora" required></div>
+                        <div class="form-group"><label>Tipo</label><select id="consultaTipo"><option>Rotina</option><option>Emergência</option></select></div>
+                        <div class="form-group" style="grid-column:1/-1"><label>Diagnóstico</label><textarea id="consultaDiagnostico"></textarea></div>
                     </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('consultaForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
-                    </div>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelForm('consultaForm')">Cancelar</button>
                 </form>
             </div>
-
             <table>
-                <thead>
-                <tr>
-                    <th>ID (UUID)</th>
-                    <th>Animal (RFID)</th>
-                    <th>Veterinário (CRMV)</th>
-                    <th>Diagnóstico</th>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Tipo</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
+                <thead><tr><th>Data/Hora</th><th>Animal</th><th>Vet</th><th>Tipo</th><th>Ações</th></tr></thead>
                 <tbody id="consultasList"></tbody>
             </table>
         </div>
     </div>
-    <div id="tratamentos" class="page">
-        <div class="crud-container">
-            <div class="crud-header">
-                <h2>💉 Controle de Tratamentos</h2>
-                <div>
-                    <button class="btn btn-secondary nav-link" data-page="home">🏠 Voltar</button>
-                    <button class="btn btn-primary" onclick="toggleForm('tratamentoForm')">➕ Novo Tratamento</button>
+
+    <div id="tratamentos" class="page"><div class="crud-container"><h2>Tratamentos</h2><p>Área de tratamentos...</p>
+        <div class="crud-header"> <button class="btn btn-primary" onclick="toggleForm('tratamentoForm')">➕ Novo Tratamento</button> </div>
+        <div id="tratamentoForm" class="form-section">
+            <form onsubmit="saveTratamento(event)">
+                <input type="hidden" id="tratamentoId">
+                <div class="form-grid">
+                    <div class="form-group"><label>ID Consulta</label><input type="text" id="tratamentoConsultaId" required></div>
+                    <div class="form-group"><label>Antibiótico?</label><select id="tratamentoAntibiotico"><option value="true">Sim</option><option value="false">Não</option></select></div>
+                    <div class="form-group"><label>Descrição</label><textarea id="tratamentoDescricao"></textarea></div>
                 </div>
-            </div>
-
-            <div id="tratamentoForm" class="form-section">
-                <h3 style="margin-bottom: 20px;">Formulário de Tratamento</h3>
-                <form onsubmit="saveTratamento(event)">
-                    <input type="hidden" id="tratamentoId">
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label>ID da Consulta (UUID) *</label>
-                            <input type="text" id="tratamentoConsultaId" required placeholder="ID (UUID) da consulta associada">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Usa Antibiótico? *</label>
-                            <select id="tratamentoAntibiotico" required>
-                                <option value="">Selecione...</option>
-                                <option value="true">Sim</option>
-                                <option value="false">Não</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" style="grid-column: 1 / -1;">
-                            <label>Descrição do Tratamento *</label>
-                            <textarea id="tratamentoDescricao" required></textarea>
-                        </div>
-
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
-                    </div>
-                </form>
-            </div>
-
-            <table>
-                <thead>
-                <tr>
-                    <th>ID (UUID)</th>
-                    <th>ID da Consulta</th>
-                    <th>Descrição</th>
-                    <th>Antibiótico?</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
-                <tbody id="tratamentosList"></tbody>
-            </table>
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button>
+            </form>
         </div>
-    </div>
+        <table><thead><tr><th>ID</th><th>Consulta</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="tratamentosList"></tbody></table>
+    </div></div>
 
-    <div id="veterinarios" class="page">
-        <div class="crud-container">
-            <div class="crud-header">
-                <h2>🩺 Cadastro de Veterinários</h2>
-                <div>
-                    <button class="btn btn-secondary nav-link" data-page="home">🏠 Voltar</button>
-                    <button class="btn btn-primary" onclick="toggleForm('vetForm')">➕ Novo Veterinário</button>
+    <div id="veterinarios" class="page"><div class="crud-container"><h2>Veterinários</h2>
+        <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('vetForm')">➕ Novo Vet</button></div>
+        <div id="vetForm" class="form-section">
+            <form onsubmit="saveVet(event)">
+                <input type="hidden" id="vetId">
+                <div class="form-grid">
+                    <div class="form-group"><label>CRMV</label><input type="text" id="vetCrmv" required></div>
+                    <div class="form-group"><label>Nome</label><input type="text" id="vetNome" required></div>
+                    <div class="form-group"><label>Idade</label><input type="number" id="vetIdade"></div>
+                    <div class="form-group"><label>Graduação</label><input type="date" id="vetDataGraduacao"></div>
                 </div>
-            </div>
-
-            <div id="vetForm" class="form-section">
-                <h3 style="margin-bottom: 20px;">Formulário de Veterinário</h3>
-                <form onsubmit="saveVet(event)">
-                    <input type="hidden" id="vetId">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>Nome Completo *</label>
-                            <input type="text" id="vetNome" required>
-                        </div>
-                        <div class="form-group">
-                            <label>CRMV * (Chave Primária)</label>
-                            <input type="text" id="vetCrmv" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Idade *</label>
-                            <input type="number" id="vetIdade" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Data de Graduação *</label>
-                            <input type="date" id="vetDataGraduacao" required>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('vetForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
-                    </div>
-                </form>
-            </div>
-
-            <table>
-                <thead>
-                <tr>
-                    <th>CRMV</th>
-                    <th>Nome</th>
-                    <th>Idade</th>
-                    <th>Data de Graduação</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
-                <tbody id="vetsList"></tbody>
-            </table>
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelForm('vetForm')">Cancelar</button>
+            </form>
         </div>
-    </div>
+        <table><thead><tr><th>CRMV</th><th>Nome</th><th>Ações</th></tr></thead><tbody id="vetsList"></tbody></table>
+    </div></div>
 
-    <div id="certificacoes" class="page">
-        <div class="crud-container">
-            <div class="crud-header">
-                <h2>🏆 Certificações</h2>
-                <div>
-                    <button class="btn btn-secondary nav-link" data-page="home">🏠 Voltar</button>
-                    <button class="btn btn-primary" onclick="toggleForm('certForm')">➕ Nova Certificação</button>
+    <div id="certificacoes" class="page"><div class="crud-container"><h2>Certificações</h2>
+        <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('certForm')">➕ Nova Certificação</button></div>
+        <div id="certForm" class="form-section">
+            <form onsubmit="saveCert(event)">
+                <input type="hidden" id="certId">
+                <div class="form-grid">
+                    <div class="form-group"><label>Registro</label><input type="text" id="certNumeroRegistro" required></div>
+                    <div class="form-group"><label>Vet (CRMV)</label><input type="text" id="certVet" required></div>
+                    <div class="form-group"><label>Especialidade ID</label><input type="number" id="certEspecialidadeId" required></div>
+                    <div class="form-group"><label>Instituição</label><input type="text" id="certInstituicao"></div>
+                    <div class="form-group"><label>Data</label><input type="date" id="certDataObtencao"></div>
                 </div>
-            </div>
-
-            <div id="certForm" class="form-section">
-                <h3 style="margin-bottom: 20px;">Formulário de Certificação</h3>
-                <form onsubmit="saveCert(event)">
-                    <input type="hidden" id="certId">
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-                            <label>Número de Registro * (Chave Primária)</label>
-                            <input type="text" id="certNumeroRegistro" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Veterinário (CRMV) *</label>
-                            <input type="text" id="certVet" required placeholder="CRMV do veterinário">
-                        </div>
-
-                        <div class="form-group">
-                            <label>ID da Especialidade *</label>
-                            <input type="number" id="certEspecialidadeId" required placeholder="ID da especialidade">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Instituição *</label>
-                            <input type="text" id="certInstituicao" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Data de Obtenção *</label>
-                            <input type="date" id="certDataObtencao" required>
-                        </div>
-                    </div>
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('certForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">💾 Salvar</button>
-                    </div>
-                </form>
-            </div>
-
-            <table>
-                <thead>
-                <tr>
-                    <th>Nº Registro</th>
-                    <th>Veterinário (CRMV)</th>
-                    <th>Especialidade</th>
-                    <th>Instituição</th>
-                    <th>Data Obtenção</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
-                <tbody id="certsList"></tbody>
-            </table>
+                <button type="submit" class="btn btn-success">Salvar</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelForm('certForm')">Cancelar</button>
+            </form>
         </div>
-    </div>
-</div> <div id="fichaModal" class="modal-overlay">
+        <table><thead><tr><th>Registro</th><th>Vet</th><th>Especialidade</th><th>Ações</th></tr></thead><tbody id="certsList"></tbody></table>
+    </div></div>
+
+</main>
+
+<div id="fichaModal" class="modal-overlay">
     <div class="modal-content">
         <div class="modal-header">
-            <h2>🐾 Ficha Técnica do Animal (NoSQL)</h2>
-            <button class="close-btn" onclick="hideFicha()">&times;</button>
+            <h2>🐾 Ficha Técnica</h2>
+            <button class="close-btn" onclick="hideFicha()" style="border:none; background:none; font-size:2rem; cursor:pointer;">&times;</button>
         </div>
-        <div id="fichaModalBody" class="modal-body">
-            <p>Carregando dados...</p>
-        </div>
+        <div id="fichaModalBody"></div>
     </div>
 </div>
+
+
+
 <script>
     const API_URL = 'http://localhost:8080/api';
 
     // --- NAVEGAÇÃO ---
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
-            const page = this.dataset.page;
+            // Remove a classe 'active-menu' de todos os links e adiciona no clicado
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-menu'));
+            this.classList.add('active-menu');
+
+            // Esconde todas as páginas e mostra a certa
+            const pageId = this.dataset.page;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(page).classList.add('active');
+
+            const targetPage = document.getElementById(pageId);
+            if(targetPage) {
+                targetPage.classList.add('active');
+            }
         });
     });
 
@@ -926,6 +511,11 @@
 
     async function saveDono(e) {
         e.preventDefault();
+        //Confirmação de ação
+        if (!confirm("Tem certeza que os dados do DONO estão corretos?")) {
+            return; // Cancela a operação se o usuário clicar em "Cancelar"
+        }
+
         const idInput = document.getElementById('donoId');
         const id = idInput.value; // ID (CPF) original na edição
         const cpfDoForm = document.getElementById('donoCpf').value;
@@ -1038,6 +628,10 @@
 
     async function saveAnimal(e) {
         e.preventDefault();
+                //Confirmação de ação
+        if (!confirm("Tem certeza que os dados do ANIMAL estão corretos?")) {
+            return; // Cancela a operação se o usuário clicar em "Cancelar"
+        }
         const idInput = document.getElementById('animalId');
         const id = idInput.value; // ID (RFID) original na edição
 
@@ -1142,6 +736,10 @@
 
     async function saveConsulta(e) {
         e.preventDefault();
+                //Confirmação de ação
+        if (!confirm("Confirma o agendamento dessa consulta?")) {
+            return; // Cancela a operação se o usuário clicar em "Cancelar"
+        }
         const idInput = document.getElementById('consultaId');
         const id = idInput.value; // ID (UUID) original na edição
 
@@ -1242,6 +840,10 @@
 
     async function saveTratamento(e) {
         e.preventDefault();
+                //Confirmação de ação
+        if (!confirm("Tem certeza que os dados do TRATAMENTO estão corretos?")) {
+            return; // Cancela a operação se o usuário clicar em "Cancelar"
+        }
         const idInput = document.getElementById('tratamentoId');
         const id = idInput.value; // ID (UUID) original na edição
 
@@ -1337,6 +939,10 @@
 
     async function saveVet(e) {
         e.preventDefault();
+                //Confirmação de ação
+        if (!confirm("Tem certeza que os dados do VETERINÁRIO estão corretos?")) {
+            return; // Cancela a operação se o usuário clicar em "Cancelar"
+        }
         const idInput = document.getElementById('vetId');
         const id = idInput.value;
 
@@ -1435,6 +1041,10 @@
 
     async function saveCert(e) {
         e.preventDefault();
+                //Confirmação de ação
+        if (!confirm("Tem certeza que os dados do CERTIFICADO estão corretos?")) {
+            return; // Cancela a operação se o usuário clicar em "Cancelar"
+        }
         const id = document.getElementById('certId').value;
         const numeroRegistroDoForm = document.getElementById('certNumeroRegistro').value;
 
@@ -1550,18 +1160,18 @@
         // Renderiza os dados do Animal e do Dono (Embed)
         body.innerHTML = `
             <div class="ficha-grid">
-                <div class="ficha-item"><strong>RFID</strong> <span>${ficha.rfid}</span></div>
-                <div class="ficha-item"><strong>Nome do Animal</strong> <span>${ficha.nomeAnimal || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Espécie</strong> <span>${ficha.especie || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Idade</strong> <span>${ficha.idade}</span></div>
-                <div class="ficha-item"><strong>Porte</strong> <span>${ficha.porte || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>RFID:</strong> <span>${ficha.rfid}</span></div>
+                <div class="ficha-item"><strong>Nome do Animal:</strong> <span>${ficha.nomeAnimal || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Espécie:</strong> <span>${ficha.especie || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Idade:</strong> <span>${ficha.idade}</span></div>
+                <div class="ficha-item"><strong>Porte:</strong> <span>${ficha.porte || 'N/D'}</span></div>
             </div>
 
             <h3 class="historico-titulo">Informações do Dono</h3>
             <div class="ficha-grid">
-                <div class="ficha-item"><strong>Dono (CPF)</strong> <span>${dono.cpf || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Dono (Nome)</strong> <span>${dono.nomeDono || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Dono (Telefone)</strong> <span>${dono.telefone || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Dono (CPF):</strong> <span>${dono.cpf || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Dono (Nome):</strong> <span>${dono.nomeDono || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Dono (Telefone):</strong> <span>${dono.telefone || 'N/D'}</span></div>
             </div>
 
             <h3 class="historico-titulo">Histórico de Consultas (${historico.length})</h3>
@@ -1570,14 +1180,14 @@
                     historico.map(consulta => `
                     <div class="consulta-card">
                         <div class="consulta-header">
-                            <strong>Consulta ID (MySQL):</strong> ${consulta.consultaId}
+                            <strong>Consulta ID: (${consulta.consultaId})</strong>
                         </div>
                         <div class="consulta-body">
-                            <div class="ficha-item"><strong>Data</strong> <span>${consulta.dataConsulta || 'N/D'}</span></div>
-                            <div class="ficha-item"><strong>Hora</strong> <span>${consulta.horaConsulta || 'N/D'}</span></div>
-                            <div class="ficha-item"><strong>Veterinário</strong> <span>${consulta.nomeVeterinario || 'N/D'}</span></div>
+                            <div class="ficha-item"><strong>Data:</strong> <span>${consulta.dataConsulta || 'N/D'}</span></div>
+                            <div class="ficha-item"><strong>Hora:</strong> <span>${consulta.horaConsulta || 'N/D'}</span></div>
+                            <div class="ficha-item"><strong>Veterinário:</strong> <span>${consulta.nomeVeterinario || 'N/D'}</span></div>
                             <div class="ficha-item" style="grid-column: 1 / -1;">
-                                <strong>Diagnóstico</strong>
+                                <strong>Diagnóstico:</strong>
                                 <span>${consulta.diagnostico || 'N/D'}</span>
                             </div>
 
@@ -1598,11 +1208,28 @@
         }
         return `
             <div class="tratamento-card">
-                <strong>Tratamento (ID: ${tratamento.tratamentoId})</strong>
+                <strong>Tratamento ID: (${tratamento.tratamentoId})</strong>
                 <p style="margin-top: 5px;">${tratamento.descricao || 'Sem descrição.'}</p>
                 <p style="margin-top: 5px;"><strong>Usa Antibiótico:</strong> ${tratamento.antibiotico ? 'Sim' : 'Não'}</p>
             </div>
         `;
+    }
+    function updateDashboard() {
+        // Conta as linhas das tabelas (ou o tamanho dos arrays se você salvar eles em variáveis globais)
+        // Como estamos renderizando direto, podemos pegar do DOM ou fazer um fetch rápido.
+        // Vou fazer um jeito simples pegando do DOM após carregar tudo:
+
+        setTimeout(() => {
+            const qtdAnimais = document.getElementById('animaisList').rows.length;
+            const qtdDonos = document.getElementById('donosList').rows.length;
+            const qtdVets = document.getElementById('vetsList').rows.length;
+            const qtdConsultas = document.getElementById('consultasList').rows.length;
+
+            document.getElementById('dashTotalAnimais').innerText = qtdAnimais || '0';
+            document.getElementById('dashTotalDonos').innerText = qtdDonos || '0';
+            document.getElementById('dashTotalVets').innerText = qtdVets || '0';
+            document.getElementById('dashTotalConsultas').innerText = qtdConsultas || '0';
+        }, 1000); // Espera 1 segundinho pra dar tempo dos fetches terminarem
     }
 
     // ======================================================
@@ -1618,6 +1245,7 @@
         loadTratamentos();
         loadVets();
         loadCerts();
+        updateDashboard();
     }
     // Chama o renderAll assim que o DOM (HTML) estiver pronto
     document.addEventListener('DOMContentLoaded', renderAll);
