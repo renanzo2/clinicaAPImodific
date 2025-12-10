@@ -402,7 +402,7 @@ display: none; /* Escondido por padrão */
     <div class="modal-content">
         <div class="modal-header">
             <h2>🐾 Ficha Técnica</h2>
-            <button class="close-btn" onclick="hideFicha()" style="border:none; background:none; font-size:2rem; cursor:pointer;">&times;</button>
+            <button class="close-btn" onclick="hideFicha()" style="border:none; background:none; font-size:2rem; cursor:pointer;">&times</button>
         </div>
         <div id="fichaModalBody"></div>
     </div>
@@ -511,6 +511,20 @@ display: none; /* Escondido por padrão */
 
     async function saveDono(e) {
         e.preventDefault();
+
+        // Validação de formatação
+        const cpf = document.getElementById('donoCpf').value;
+        const telefone = document.getElementById('donoTelefone').value;
+
+        if (cpf.length < 14) {
+            alert("Por favor, preencha o CPF completo.");
+            return;
+        }
+        if (telefone && telefone.length < 14) {
+            alert("O telefone parece incompleto.");
+            return;
+        }
+
         //Confirmação de ação
         if (!confirm("Tem certeza que os dados do DONO estão corretos?")) {
             return; // Cancela a operação se o usuário clicar em "Cancelar"
@@ -939,6 +953,14 @@ display: none; /* Escondido por padrão */
 
     async function saveVet(e) {
         e.preventDefault();
+
+        //Confirmação de formatação
+        const crmv = document.getElementById('Vetcrmv').value;
+
+        if(crmv.length < 13) {
+            alert("Por favor, preencha o CRMV completo");
+            return;
+        }
                 //Confirmação de ação
         if (!confirm("Tem certeza que os dados do VETERINÁRIO estão corretos?")) {
             return; // Cancela a operação se o usuário clicar em "Cancelar"
@@ -1143,9 +1165,12 @@ display: none; /* Escondido por padrão */
     /**
      * Esconde o modal da Ficha Técnica
      */
-    function hideFicha() {
-        document.getElementById('fichaModal').classList.remove('active');
-        document.getElementById('fichaModalBody').innerHTML = '';
+   function hideFicha() {
+        const modal = document.getElementById('fichaModal');
+        const body = document.getElementById('fichaModalBody');
+
+        if (modal) modal.classList.remove('active');
+        if (body) body.innerHTML = '';
     }
 
     /**
@@ -1231,6 +1256,107 @@ display: none; /* Escondido por padrão */
             document.getElementById('dashTotalConsultas').innerText = qtdConsultas || '0';
         }, 1000); // Espera 1 segundinho pra dar tempo dos fetches terminarem
     }
+    // ======================================================
+    // =================== MÁSCARAS DE INPUT ================
+    // ======================================================
+
+    const masks = {
+        cpf(value) {
+            // Limpa tudo que não é número
+            let r = value.replace(/\D/g, "");
+
+            // Limita a 11 números
+            if (r.length > 11) r = r.slice(0, 11);
+
+            // Aplica formatação progressiva
+            if (r.length > 9) {
+                // 000.000.000-00
+                return r.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4");
+            } else if (r.length > 6) {
+                // 000.000.000
+                return r.replace(/^(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
+            } else if (r.length > 3) {
+                // 000.000
+                return r.replace(/^(\d{3})(\d{0,3})/, "$1.$2");
+            } else {
+                return r;
+            }
+        },
+
+        phone(value) {
+            // Retira tudo que não seja número
+            let r = value.replace(/\D/g, "");
+
+            // Limita a até 11 números
+            if (r.length > 11) r = r.slice(0, 11);
+
+            // Formatação automática
+            if (r.length > 10) {
+                // (61) 91234-5678
+                return r.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+            } else if (r.length > 5) {
+                // (61) 1234-5678
+                return r.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+            } else if (r.length > 2) {
+                // (61) 123...
+                return r.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+            } else {
+                // (61
+                return r.replace(/^(\d*)/, "($1");
+            }
+        },
+
+        crmv(value) {
+            // Se o campo estiver vazio, retorna vazio
+            if (!value) return "";
+
+            // Pega apenas letras e números digitados (remove símbolos antigos)
+            let raw = value.toUpperCase().replace(/[^A-Z0-9]/g, "").replace("CRMV", "");
+
+            // Separa letras de números
+            let uf = raw.replace(/[^A-Z]/g, "").slice(0, 2);
+            let num = raw.replace(/\D/g, "").slice(0, 5);
+
+            // Monta a string final
+            let result = "CRMV-";
+
+            if (uf.length > 0) {
+                result += uf;
+            }
+
+            if (num.length > 0) {
+                // Só adiciona o espaço e número se já tiver as 2 letras da UF
+                if (uf.length === 2) {
+                    result += " " + num;
+                }
+            }
+
+            return result;
+        }
+    };
+
+    // Aplicando as máscaras aos inputs
+    function setupMasks() {
+        const inputsToMask = {
+            'donoCpf': masks.cpf,
+            'donoTelefone': masks.phone,
+            'animalDonoCpf': masks.cpf,   // CORRIGIDO: Aqui deve ser CPF, não CRMV
+            'vetCrmv': masks.crmv,
+            'certVet': masks.crmv
+        };
+
+        for (const [id, maskFunction] of Object.entries(inputsToMask)) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.addEventListener('input', (e) => {
+                    // Aplica a máscara
+                    e.target.value = maskFunction(e.target.value);
+                });
+            }
+        }
+    }
+
+
 
     // ======================================================
     // =================== FIM DAS ADIÇÕES JS ==================
@@ -1239,6 +1365,7 @@ display: none; /* Escondido por padrão */
 
     // --- INICIALIZAÇÃO ---
     function renderAll() {
+        setupMasks();
         loadDonos();
         loadAnimais();
         loadConsultas();
