@@ -175,6 +175,82 @@ display: none; /* Escondido por padrão */
         @media (max-width: 600px) {
             .form-grid { grid-template-columns: 1fr; } /* 1 coluna no celular */
         }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            display: flex;
+            opacity: 1;
+        }
+
+        .model-content{
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: transform 0.2s ease;
+        }
+
+         .modal-overlay.active .modal-content{
+            transform: translateY(0);
+         }
+
+         .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-botton: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+         }
+
+         .ficha-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+         }
+
+         .historico-titulo{
+            margin: 20px 0 10px 0;
+            color; var(--primary-color);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+         }
+
+         .consulta-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            padding: 15px;
+         }
+
+         .tratamento-card {
+            background: #eff6ff;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            border-left: 3px solid #3b82f6;
+         }
     </style>
 </head>
 <body>
@@ -318,14 +394,14 @@ display: none; /* Escondido por padrão */
         <div class="crud-container">
             <div class="crud-header">
                 <h2>Consultas Agendadas</h2>
-                <button class="btn btn-primary" onclick="toggleForm('consultaForm')">➕ Nova Consulta</button>
+                <button class="btn btn-primary" onclick="openNewConsulta()">➕ Nova Consulta</button>
             </div>
             <div id="consultaForm" class="form-section">
                 <form onsubmit="saveConsulta(event)">
                     <input type="hidden" id="consultaId">
                     <div class="form-grid">
-                        <div class="form-group"><label>Animal (RFID)</label><input type="text" id="consultaAnimal" required></div>
-                        <div class="form-group"><label>Veterinário (CRMV)</label><input type="text" id="consultaVet" required></div>
+                        <div class="form-group"><label>Animal (RFID)</label><select id="consultaAnimal" required><option value="">Selecione um animal...</option></select></div>
+                        <div class="form-group"><label>Veterinário (CRMV)</label><select id="consultaVet" required><option value="">Selecion um veterinário...</option></select></div>
                         <div class="form-group"><label>Data</label><input type="date" id="consultaData" required></div>
                         <div class="form-group"><label>Hora</label><input type="time" id="consultaHora" required></div>
                         <div class="form-group"><label>Tipo</label><select id="consultaTipo"><option>Rotina</option><option>Emergência</option></select></div>
@@ -1161,6 +1237,74 @@ display: none; /* Escondido por padrão */
             body.innerHTML = `<p style="color: red; font-weight: bold;">${error.message}</p>`;
         }
     }
+    // Função para popular os selects
+    async function populateConsultaSelects() {
+        try {
+        // Faz as duas requisições ao mesmo tempo
+            const [animaisRes, vetsRes] = await Promise.all([
+                fetch(`${API_URL}/animais`),
+                fetch(`${API_URL}/veterianrios`)
+            ]);
+
+            const animais = await animaisRes.json();;
+            const vets = await vetsRes.json();
+
+            const animalSelect = document.getElementById('consultaAnimal');
+            animalSelect.innerHTML = '<option value="">Selecion um animal...</option>';
+            animais.forEach(a => {
+                // Mostra animal e dono
+                const texto = `${a.nome} (${a.especie}) - Dono: ${a.dono ? a.dono.nome : '?'}`;
+                const option = new Option(texto, a.rfid);
+                animalSelect.add(option);
+            });
+
+            // Preenche o Select de veterináris
+            const vetSelect = document.getElementById('consultaVet');
+            vetSelect.innerHTML = '<option value="">Selecion um veterinário...</option>';
+            vets.forEach(v => {
+                // Mostra nome e CRV do vet
+                const texto = ${v.nome} (${v.crmv})`;
+                const option = new Option(texto, v.crmv);
+                vetSelect.add(option);
+            });
+        } catch (error) {
+            console.error("Erro ao carregar opções: ", error);
+            alert("Erro ao carregar lista de animais ou veterinários.");
+        }
+    }
+
+    async function openNewConsulta() {
+        await populateConsultaSelects();
+        toggleForm('consultaForm');
+    }
+
+    async function editConsulta(id) {
+        try {
+            // Carrega as opções dos selects primeiro e espera terminar
+            await populateConsultaSelect();
+
+            // Busca os dados da consulta
+            const response = await fetch(`${API_URL}/consultas/${id}`);
+            const consulta = await handleResponse(response);
+
+            // Preenche os campos
+            document.getElementById('consultaId').value = consulta.id;
+
+            document.getElementById('consultaAnimal').value = consulta.animal ? consulta.animal.rfid : '';
+            document.getElementById('consultaVet').value = consulta.veterinario ? consulta.veterinario.crmv : '';
+
+            document.getElementById('consultaData').value = consulta.dataConsulta;
+            document.getElementById('consultaHora').value = consulta.horaConsulta;
+            document.getElementById('consultaTipo').value = consulta.tipo;
+            document.getElementById('consultaDiagnostico').value = consulta.diagnostico;
+
+            // Mostra o formulário
+            document.getElementById('consultaForm').classList.add('active');
+        } catch (error) {
+            console.error('Erro ao buscar consulta: ', error);
+        }
+
+
 
     /**
      * Esconde o modal da Ficha Técnica
@@ -1244,17 +1388,22 @@ display: none; /* Escondido por padrão */
         // Como estamos renderizando direto, podemos pegar do DOM ou fazer um fetch rápido.
         // Vou fazer um jeito simples pegando do DOM após carregar tudo:
 
-        setTimeout(() => {
+
             const qtdAnimais = document.getElementById('animaisList').rows.length;
             const qtdDonos = document.getElementById('donosList').rows.length;
             const qtdVets = document.getElementById('vetsList').rows.length;
             const qtdConsultas = document.getElementById('consultasList').rows.length;
 
-            document.getElementById('dashTotalAnimais').innerText = qtdAnimais || '0';
-            document.getElementById('dashTotalDonos').innerText = qtdDonos || '0';
-            document.getElementById('dashTotalVets').innerText = qtdVets || '0';
-            document.getElementById('dashTotalConsultas').innerText = qtdConsultas || '0';
-        }, 1000); // Espera 1 segundinho pra dar tempo dos fetches terminarem
+            const adjustCount = (tbodyId, count) => {
+                const tbody = document.getElementById(tbodyId);
+                if(tbody.querySelector('.empty-state')) return 0;
+                return count;
+            };
+
+            document.getElementById('dashTotalAnimais').innerText = adjustCount('animaisList', qtdAnimais);
+            document.getElementById('dashTotalDonos').innerText = adjustCount('donosList', qtdDonos);
+            document.getElementById('dashTotalVets').innerText = adjustCount('vetsList', qtdVets);
+            document.getElementById('dashTotalConsultas').innerText = adjustCount('consultasList', qtdConsultas);
     }
     // ======================================================
     // =================== MÁSCARAS DE INPUT ================
@@ -1366,12 +1515,15 @@ display: none; /* Escondido por padrão */
     // --- INICIALIZAÇÃO ---
     function renderAll() {
         setupMasks();
-        loadDonos();
-        loadAnimais();
-        loadConsultas();
-        loadTratamentos();
-        loadVets();
-        loadCerts();
+        await Promise.all([
+            loadDonos();
+            loadAnimais();
+            loadConsultas();
+            loadTratamentos();
+            loadVets();
+            loadCerts();
+            ]);
+
         updateDashboard();
     }
     // Chama o renderAll assim que o DOM (HTML) estiver pronto
