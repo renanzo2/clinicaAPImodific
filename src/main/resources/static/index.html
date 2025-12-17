@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clínica Veterinária - Sistema Administrativo</title>
-        <style>
+    <style>
         :root {
             --primary-color: #4f46e5; /* Indigo */
             --sidebar-width: 260px;
@@ -20,13 +20,13 @@
             color: var(--text-color);
             display: flex;
             height: 100vh;
-            overflow: hidden; /* Evita rolagem dupla */
+            overflow: hidden;
         }
 
-        /* --- SIDEBAR (MENU LATERAL) --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: var(--sidebar-width);
-            background: #1e1e2d; /* Escuro profissional */
+            background: #1e1e2d;
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -66,7 +66,7 @@
         /* --- CONTEÚDO PRINCIPAL --- */
         .main-content {
             flex: 1;
-            overflow-y: auto; /* Só o conteúdo rola */
+            overflow-y: auto;
             padding: 30px;
         }
 
@@ -75,7 +75,7 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- DASHBOARD CARDS (HOME) --- */
+        /* --- DASHBOARD --- */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -130,50 +130,124 @@
         .btn-danger { background: #ef4444; color: white; }
         .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
 
-        /* --- FORMULÁRIOS --- */
+        /* --- FORMULÁRIOS (MODAL) --- */
+        .form-section, .modal-overlay {
+            backdrop-filter: blur(5px);
+        }
+
         .form-section {
-display: none; /* Escondido por padrão */
-            position: fixed; /* Flutua na tela */
+            display: none;
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Centraliza exato */
-            z-index: 2000; /* Fica acima de tudo */
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 2000;
 
-            background: white;
-            padding: 30px;
+            background: #ffffff;
+            padding: 0;
             border-radius: 16px;
-            width: 90%;
-            max-width: 600px; /* Largura máxima */
+            width: 95%;
+            max-width: 750px;
+            max-height: 85vh;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-            /* Cria o fundo escuro atrás do modal */
-            box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+            box-shadow:
+            0 25px 50px -12px rgba(0, 0, 0, 0.25),
+            0 0 0 100vmax rgba(0, 0, 0, 0.45);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            pointer-events: none;
+            backdrop-filter: blur(5px);
         }
 
         .form-section.active {
-            display: block; /* Aparece quando tem a classe active */
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+            transform: translate(-50%, -50%) scale(1);
         }
 
-        /* Animação bonitinha de entrada */
+        .form-section h3 {
+            background: #f9fafb;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            color: var(--primary-color);
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-section form {
+            padding: 30px 40px;
+        }
+
+        .form-group {
+            margin-botton: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #374151;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="time"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background-color: #f9fafb;
+            font-size: 0.95rem;
+            color: #1f2937;
+            transition: all 0.2s ease-in-out;
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            background-color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+            transform: translateY(-1px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
         @keyframes popIn {
             from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
             to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
-        /* Ajuste do grid para o modal */
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Sempre 2 colunas no desktop */
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
-            margin-bottom: 25px;
-            max-height: 70vh; /* Se for muito grande, cria rolagem interna */
-            overflow-y: auto;
-            padding-right: 10px;
         }
 
         @media (max-width: 600px) {
-            .form-grid { grid-template-columns: 1fr; } /* 1 coluna no celular */
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        .form-actions {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
         }
 
         .modal-overlay {
@@ -181,104 +255,128 @@ display: none; /* Escondido por padrão */
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 3000;
             justify-content: center;
             align-items: center;
             opacity: 0;
             transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
         }
 
-        .modal-content {
+        .modal-overlay.active {
             display: flex;
             opacity: 1;
         }
 
-        .model-content{
+        .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 700px;
+            padding: 40px;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 900px;
             max-height: 85vh;
-            overflow-overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            transform: translateY(20px);
-            transition: transform 0.2s ease;
+            overflow-y: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.95);
+            transition: transform 0.3S cubic-bezier(0.34, 1.56, 0.64, 1);;
         }
 
-         .modal-overlay.active .modal-content{
-            transform: translateY(0);
-         }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
 
-         .modal-header {
+        .modal-header {
+            background: #1e1e2d;
+            color: white;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-botton: 20px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-         }
+        }
 
-         .ficha-grid {
+        .modal-header h2 {
+            font-size: 1.4rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            color: rgba(255,255,255,0.7);
+            transition: 0.2s;
+        }
+
+        .close-btn:hover { color: white; transform: rotate(90deg); }
+
+        #fichaModalBody {
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+
+        .ficha-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-            margin-bottom: 20px;
-            background: #f9fafb;
-            padding: 15px;
-            border-radius: 8px;
-         }
+            margin-bottom: 25px;
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
 
-         .historico-titulo{
-            margin: 20px 0 10px 0;
-            color; var(--primary-color);
-            border-left: 4px solid var(--primary-color);
-            padding: 15px;
-         }
+        .ficha-item strong {
+            display: block;
+            color: #6b7280;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
 
-         .consulta-card {
+        .ficha-item span {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .historico-titulo {
+            font-size: 1.1rem;
+            color: #4f46e5;
+            margin: 30px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .consulta-card {
             border: 1px solid #e5e7eb;
             border-radius: 8px;
             margin-bottom: 10px;
             padding: 15px;
-         }
+        }
 
-         .tratamento-card {
+        .tratamento-card {
             background: #eff6ff;
             padding: 10px;
             border-radius: 6px;
             margin-top: 10px;
             border-left: 3px solid #3b82f6;
-         }
+        }
     </style>
 </head>
 <body>
 
 <nav class="sidebar">
     <h2>🐾 Clínica Vet</h2>
-
-    <div class="nav-link active-menu" data-page="home">
-        <span>🏠</span> Dashboard
-    </div>
-    <div class="nav-link" data-page="donos">
-        <span>👥</span> Gestão de Donos
-    </div>
-    <div class="nav-link" data-page="animais">
-        <span>🐕</span> Animais
-    </div>
-    <div class="nav-link" data-page="consultas">
-        <span>📅</span> Consultas
-    </div>
-    <div class="nav-link" data-page="tratamentos">
-        <span>💉</span> Tratamentos
-    </div>
-    <div class="nav-link" data-page="veterinarios">
-        <span>🩺</span> Veterinários
-    </div>
-    <div class="nav-link" data-page="certificacoes">
-        <span>🏆</span> Certificações
-    </div>
+    <div class="nav-link active-menu" data-page="home"><span>🏠</span> Dashboard</div>
+    <div class="nav-link" data-page="donos"><span>👥</span> Gestão de Donos</div>
+    <div class="nav-link" data-page="animais"><span>🐕</span> Animais</div>
+    <div class="nav-link" data-page="consultas"><span>📅</span> Consultas</div>
+    <div class="nav-link" data-page="tratamentos"><span>💉</span> Tratamentos</div>
+    <div class="nav-link" data-page="veterinarios"><span>🩺</span> Veterinários</div>
+    <div class="nav-link" data-page="certificacoes"><span>🏆</span> Certificações</div>
 </nav>
 
 <main class="main-content">
@@ -286,7 +384,6 @@ display: none; /* Escondido por padrão */
     <div id="home" class="page active">
         <h1>Visão Geral</h1>
         <p style="color: #6b7280;">Bem-vindo ao sistema de gestão administrativa.</p>
-
         <div class="dashboard-grid">
             <div class="stat-card" style="border-left-color: #4f46e5;">
                 <h3>Total de Animais</h3>
@@ -331,20 +428,11 @@ display: none; /* Escondido por padrão */
                     </div>
                 </form>
             </div>
+            <table>
+                <thead><tr><th>CPF</th><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr></thead>
+                <tbody id="donosList"></tbody>
+            </table>
         </div>
-        <table>
-            <thead>
-            <tr>
-                <th>CPF</th>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>E-mail</th>
-                <th>Ações</th>
-            </tr>
-            </thead>
-            <tbody id="donosList">
-            </tbody>
-        </table>
     </div>
 
     <div id="animais" class="page">
@@ -401,7 +489,7 @@ display: none; /* Escondido por padrão */
                     <input type="hidden" id="consultaId">
                     <div class="form-grid">
                         <div class="form-group"><label>Animal (RFID)</label><select id="consultaAnimal" required><option value="">Selecione um animal...</option></select></div>
-                        <div class="form-group"><label>Veterinário (CRMV)</label><select id="consultaVet" required><option value="">Selecion um veterinário...</option></select></div>
+                        <div class="form-group"><label>Veterinário (CRMV)</label><select id="consultaVet" required><option value="">Selecione um veterinário...</option></select></div>
                         <div class="form-group"><label>Data</label><input type="date" id="consultaData" required></div>
                         <div class="form-group"><label>Hora</label><input type="time" id="consultaHora" required></div>
                         <div class="form-group"><label>Tipo</label><select id="consultaTipo"><option>Rotina</option><option>Emergência</option></select></div>
@@ -418,59 +506,68 @@ display: none; /* Escondido por padrão */
         </div>
     </div>
 
-    <div id="tratamentos" class="page"><div class="crud-container"><h2>Tratamentos</h2><p>Área de tratamentos...</p>
-        <div class="crud-header"> <button class="btn btn-primary" onclick="toggleForm('tratamentoForm')">➕ Novo Tratamento</button> </div>
-        <div id="tratamentoForm" class="form-section">
-            <form onsubmit="saveTratamento(event)">
-                <input type="hidden" id="tratamentoId">
-                <div class="form-grid">
-                    <div class="form-group"><label>ID Consulta</label><input type="text" id="tratamentoConsultaId" required></div>
-                    <div class="form-group"><label>Antibiótico?</label><select id="tratamentoAntibiotico"><option value="true">Sim</option><option value="false">Não</option></select></div>
-                    <div class="form-group"><label>Descrição</label><textarea id="tratamentoDescricao"></textarea></div>
-                </div>
-                <button type="submit" class="btn btn-success">Salvar</button>
-                <button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button>
-            </form>
+    <div id="tratamentos" class="page">
+        <div class="crud-container">
+            <h2>Tratamentos</h2>
+            <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('tratamentoForm')">➕ Novo Tratamento</button></div>
+            <div id="tratamentoForm" class="form-section">
+                <form onsubmit="saveTratamento(event)">
+                    <input type="hidden" id="tratamentoId">
+                    <div class="form-grid">
+                        <div class="form-group"><label>ID Consulta</label><input type="text" id="tratamentoConsultaId" required></div>
+                        <div class="form-group"><label>Antibiótico?</label><select id="tratamentoAntibiotico"><option value="true">Sim</option><option value="false">Não</option></select></div>
+                        <div class="form-group"><label>Descrição</label><textarea id="tratamentoDescricao"></textarea></div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button>
+                </form>
+            </div>
+            <table><thead><tr><th>ID</th><th>Consulta</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="tratamentosList"></tbody></table>
         </div>
-        <table><thead><tr><th>ID</th><th>Consulta</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="tratamentosList"></tbody></table>
-    </div></div>
+    </div>
 
-    <div id="veterinarios" class="page"><div class="crud-container"><h2>Veterinários</h2>
-        <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('vetForm')">➕ Novo Vet</button></div>
-        <div id="vetForm" class="form-section">
-            <form onsubmit="saveVet(event)">
-                <input type="hidden" id="vetId">
-                <div class="form-grid">
-                    <div class="form-group"><label>CRMV</label><input type="text" id="vetCrmv" required></div>
-                    <div class="form-group"><label>Nome</label><input type="text" id="vetNome" required></div>
-                    <div class="form-group"><label>Idade</label><input type="number" id="vetIdade"></div>
-                    <div class="form-group"><label>Graduação</label><input type="date" id="vetDataGraduacao"></div>
-                </div>
-                <button type="submit" class="btn btn-success">Salvar</button>
-                <button type="button" class="btn btn-secondary" onclick="cancelForm('vetForm')">Cancelar</button>
-            </form>
+    <div id="veterinarios" class="page">
+        <div class="crud-container">
+            <h2>Veterinários</h2>
+            <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('vetForm')">➕ Novo Vet</button></div>
+            <div id="vetForm" class="form-section">
+                <form onsubmit="saveVet(event)">
+                    <input type="hidden" id="vetId">
+                    <div class="form-grid">
+                        <div class="form-group"><label>CRMV</label><input type="text" id="vetCrmv" required></div>
+                        <div class="form-group"><label>Nome</label><input type="text" id="vetNome" required></div>
+                        <div class="form-group"><label>Idade</label><input type="number" id="vetIdade"></div>
+                        <div class="form-group"><label>Graduação</label><input type="date" id="vetDataGraduacao"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelForm('vetForm')">Cancelar</button>
+                </form>
+            </div>
+            <table><thead><tr><th>CRMV</th><th>Nome</th><th>Ações</th></tr></thead><tbody id="vetsList"></tbody></table>
         </div>
-        <table><thead><tr><th>CRMV</th><th>Nome</th><th>Ações</th></tr></thead><tbody id="vetsList"></tbody></table>
-    </div></div>
+    </div>
 
-    <div id="certificacoes" class="page"><div class="crud-container"><h2>Certificações</h2>
-        <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('certForm')">➕ Nova Certificação</button></div>
-        <div id="certForm" class="form-section">
-            <form onsubmit="saveCert(event)">
-                <input type="hidden" id="certId">
-                <div class="form-grid">
-                    <div class="form-group"><label>Registro</label><input type="text" id="certNumeroRegistro" required></div>
-                    <div class="form-group"><label>Vet (CRMV)</label><input type="text" id="certVet" required></div>
-                    <div class="form-group"><label>Especialidade ID</label><input type="number" id="certEspecialidadeId" required></div>
-                    <div class="form-group"><label>Instituição</label><input type="text" id="certInstituicao"></div>
-                    <div class="form-group"><label>Data</label><input type="date" id="certDataObtencao"></div>
-                </div>
-                <button type="submit" class="btn btn-success">Salvar</button>
-                <button type="button" class="btn btn-secondary" onclick="cancelForm('certForm')">Cancelar</button>
-            </form>
+    <div id="certificacoes" class="page">
+        <div class="crud-container">
+            <h2>Certificações</h2>
+            <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('certForm')">➕ Nova Certificação</button></div>
+            <div id="certForm" class="form-section">
+                <form onsubmit="saveCert(event)">
+                    <input type="hidden" id="certId">
+                    <div class="form-grid">
+                        <div class="form-group"><label>Registro</label><input type="text" id="certNumeroRegistro" required></div>
+                        <div class="form-group"><label>Vet (CRMV)</label><input type="text" id="certVet" required></div>
+                        <div class="form-group"><label>Especialidade ID</label><input type="number" id="certEspecialidadeId" required></div>
+                        <div class="form-group"><label>Instituição</label><input type="text" id="certInstituicao"></div>
+                        <div class="form-group"><label>Data</label><input type="date" id="certDataObtencao"></div>
+                    </div>
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelForm('certForm')">Cancelar</button>
+                </form>
+            </div>
+            <table><thead><tr><th>Registro</th><th>Vet</th><th>Especialidade</th><th>Ações</th></tr></thead><tbody id="certsList"></tbody></table>
         </div>
-        <table><thead><tr><th>Registro</th><th>Vet</th><th>Especialidade</th><th>Ações</th></tr></thead><tbody id="certsList"></tbody></table>
-    </div></div>
+    </div>
 
 </main>
 
@@ -478,13 +575,11 @@ display: none; /* Escondido por padrão */
     <div class="modal-content">
         <div class="modal-header">
             <h2>🐾 Ficha Técnica</h2>
-            <button class="close-btn" onclick="hideFicha()" style="border:none; background:none; font-size:2rem; cursor:pointer;">&times</button>
+            <button class="close-btn" onclick="hideFicha()" style="border:none; background:none; font-size:2rem; cursor:pointer;">&times;</button>
         </div>
         <div id="fichaModalBody"></div>
     </div>
 </div>
-
-
 
 <script>
     const API_URL = 'http://localhost:8080/api';
@@ -492,52 +587,31 @@ display: none; /* Escondido por padrão */
     // --- NAVEGAÇÃO ---
     document.querySelectorAll('.nav-link').forEach(link => {
         link.addEventListener('click', function() {
-            // Remove a classe 'active-menu' de todos os links e adiciona no clicado
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-menu'));
             this.classList.add('active-menu');
-
-            // Esconde todas as páginas e mostra a certa
             const pageId = this.dataset.page;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
             const targetPage = document.getElementById(pageId);
-            if(targetPage) {
-                targetPage.classList.add('active');
-            }
+            if(targetPage) targetPage.classList.add('active');
         });
     });
 
-    // --- FUNÇÕES GLOBAIS DE FORMULÁRIO (ATUALIZADA) ---
+    // --- FUNÇÕES GLOBAIS DE FORMULÁRIO ---
     function toggleForm(formId) {
         document.getElementById(formId).classList.toggle('active');
     }
 
-    // Função cancelForm ATUALIZADA para lidar com os campos de PK (String)
     function cancelForm(formId) {
         const formElement = document.getElementById(formId);
         formElement.classList.remove('active');
         formElement.querySelector('form').reset();
-
         const hiddenId = formElement.querySelector('input[type="hidden"]');
-        if (hiddenId) {
-            hiddenId.value = '';
-        }
+        if (hiddenId) hiddenId.value = '';
 
-        // Reabilita campos de PK que podem ter sido bloqueados durante a edição
-        if (formId === 'certForm') {
-            document.getElementById('certNumeroRegistro').readOnly = false;
-        }
-        if (formId === 'animalForm') {
-            document.getElementById('animalRfid').value = "";
-        }
-        if (formId === 'donoForm') {
-            document.getElementById('donoCpf').readOnly = false;
-        }
-        if (formId === 'vetForm') {
-            document.getElementById('vetCrmv').readOnly = false;
-        }
-        // Os IDs de Consulta e Tratamento (UUIDs) são gerados pelo backend (como programei),
-        // então não precisam de campo de texto ou de bloqueio.
+        if (formId === 'certForm') document.getElementById('certNumeroRegistro').readOnly = false;
+        if (formId === 'animalForm') document.getElementById('animalRfid').value = "";
+        if (formId === 'donoForm') document.getElementById('donoCpf').readOnly = false;
+        if (formId === 'vetForm') document.getElementById('vetCrmv').readOnly = false;
     }
 
     async function handleResponse(response) {
@@ -545,24 +619,17 @@ display: none; /* Escondido por padrão */
             const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
             throw new Error(errorData.message || `Erro ${response.status}`);
         }
-        if (response.status === 204) {
-            return null;
-        }
+        if (response.status === 204) return null;
         return response.json();
     }
 
-    // ======================================================
-    // =================== CRUD DONOS (JS - CORRIGIDO) =======================
-    // ======================================================
-
+    // ================= CRUD DONOS =================
     async function loadDonos() {
         try {
             const response = await fetch(`${API_URL}/donos`);
             const donos = await handleResponse(response);
             renderDonos(donos);
-        } catch (error) {
-            console.error('Erro ao carregar donos:', error);
-        }
+        } catch (error) { console.error('Erro ao carregar donos:', error); }
     }
 
     function renderDonos(donos) {
@@ -573,10 +640,7 @@ display: none; /* Escondido por padrão */
         }
         tbody.innerHTML = donos.map(dono => `
             <tr>
-                <td>${dono.cpf}</td>
-                <td>${dono.nome}</td>
-                <td>${dono.telefone || '-'}</td>
-                <td>${dono.email || '-'}</td>
+                <td>${dono.cpf}</td><td>${dono.nome}</td><td>${dono.telefone || '-'}</td><td>${dono.email || '-'}</td>
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editDono('${dono.cpf}')">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteDono('${dono.cpf}')">🗑️ Excluir</button>
@@ -587,31 +651,14 @@ display: none; /* Escondido por padrão */
 
     async function saveDono(e) {
         e.preventDefault();
-
-        // Validação de formatação
         const cpf = document.getElementById('donoCpf').value;
-        const telefone = document.getElementById('donoTelefone').value;
-
-        if (cpf.length < 14) {
-            alert("Por favor, preencha o CPF completo.");
-            return;
-        }
-        if (telefone && telefone.length < 14) {
-            alert("O telefone parece incompleto.");
-            return;
-        }
-
-        //Confirmação de ação
-        if (!confirm("Tem certeza que os dados do DONO estão corretos?")) {
-            return; // Cancela a operação se o usuário clicar em "Cancelar"
-        }
+        if (cpf.length < 14) { alert("Por favor, preencha o CPF completo."); return; }
+        if (!confirm("Tem certeza que os dados do DONO estão corretos?")) return;
 
         const idInput = document.getElementById('donoId');
-        const id = idInput.value; // ID (CPF) original na edição
-        const cpfDoForm = document.getElementById('donoCpf').value;
-
+        const id = idInput.value;
         const dono = {
-            cpf: cpfDoForm,
+            cpf: document.getElementById('donoCpf').value,
             nome: document.getElementById('donoNome').value,
             endereco: document.getElementById('donoEndereco').value,
             dataNascimento: document.getElementById('donoDataNascimento').value,
@@ -619,78 +666,46 @@ display: none; /* Escondido por padrão */
             email: document.getElementById('donoEmail').value
         };
 
-        if (!id && !dono.cpf) {
-            alert('Erro: O CPF é obrigatório.');
-            return;
-        }
-
         const url = id ? `${API_URL}/donos/${id}` : `${API_URL}/donos`;
         const method = id ? 'PUT' : 'POST';
-
-        // No PUT, o CPF do objeto deve ser o mesmo da URL
-        if (id) {
-            dono.cpf = id; // Garante que o CPF (PK) não seja alterado no PUT
-        }
+        if (id) dono.cpf = id;
 
         try {
-            const response = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dono)
-            });
-            await handleResponse(response);
-            loadDonos();
-            cancelForm('donoForm');
-        } catch (error) {
-            console.error('Erro ao salvar dono:', error);
-            alert('Erro ao salvar dono: ' + error.message);
-        }
+            await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dono) });
+            loadDonos(); cancelForm('donoForm');
+        } catch (error) { alert('Erro ao salvar dono: ' + error.message); }
     }
 
     async function editDono(cpf) {
         try {
             const response = await fetch(`${API_URL}/donos/${cpf}`);
             const dono = await handleResponse(response);
-
-            document.getElementById('donoId').value = dono.cpf; // Guarda o CPF como ID
+            document.getElementById('donoId').value = dono.cpf;
             document.getElementById('donoNome').value = dono.nome;
             document.getElementById('donoCpf').value = dono.cpf;
             document.getElementById('donoTelefone').value = dono.telefone;
             document.getElementById('donoEmail').value = dono.email;
             document.getElementById('donoEndereco').value = dono.endereco;
             document.getElementById('donoDataNascimento').value = dono.dataNascimento;
-
-            // Bloqueia a edição da PK
             document.getElementById('donoCpf').readOnly = true;
-
             document.getElementById('donoForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar dono:', error);
-        }
+        } catch (error) { console.error(error); }
     }
 
     async function deleteDono(cpf) {
         if (confirm('Tem certeza que deseja excluir este dono?')) {
-            try {
-                await fetch(`${API_URL}/donos/${cpf}`, { method: 'DELETE' });
-                loadDonos();
-            } catch (error) {
-                console.error('Erro ao deletar dono:', error);
-            }
+            await fetch(`${API_URL}/donos/${cpf}`, { method: 'DELETE' });
+            loadDonos();
         }
     }
-    // ======================================================
-    // =================== CRUD ANIMAIS (JS - CORRIGIDO) =====================
-    // ======================================================
 
+    // ================= CRUD ANIMAIS =================
     async function loadAnimais() {
         try {
             const response = await fetch(`${API_URL}/animais`);
             const animais = await handleResponse(response);
             renderAnimais(animais);
-        } catch (error) {
-            console.error('Erro ao carregar animais:', error);
-        }
+        } catch (error) { console.error('Erro ao carregar animais:', error); }
     }
 
     function renderAnimais(animais) {
@@ -701,30 +716,21 @@ display: none; /* Escondido por padrão */
         }
         tbody.innerHTML = animais.map(a => `
             <tr>
-                <td>${a.rfid}</td> <td>${a.nome}</td>
-                <td>${a.especie}</td>
-                <td>${a.idade}</td>
-                <td>${a.porte}</td>
-                <td>${a.dono ? a.dono.cpf : 'N/D'}</td>
+                <td>${a.rfid}</td><td>${a.nome}</td><td>${a.especie}</td><td>${a.idade}</td><td>${a.porte}</td><td>${a.dono ? a.dono.cpf : 'N/D'}</td>
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editAnimal('${a.rfid}')">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteAnimal('${a.rfid}')">🗑️ Excluir</button>
-
                     <button class="btn btn-secondary btn-sm" onclick="showFicha('${a.rfid}')">📋 Ver Ficha</button>
-                    </td>
+                </td>
             </tr>
         `).join('');
     }
 
     async function saveAnimal(e) {
         e.preventDefault();
-                //Confirmação de ação
-        if (!confirm("Tem certeza que os dados do ANIMAL estão corretos?")) {
-            return; // Cancela a operação se o usuário clicar em "Cancelar"
-        }
+        if (!confirm("Tem certeza que os dados do ANIMAL estão corretos?")) return;
         const idInput = document.getElementById('animalId');
-        const id = idInput.value; // ID (RFID) original na edição
-
+        const id = idInput.value;
         const animal = {
             nome: document.getElementById('animalNome').value,
             especie: document.getElementById('animalEspecie').value,
@@ -732,74 +738,46 @@ display: none; /* Escondido por padrão */
             porte: document.getElementById('animalPorte').value,
             dono: { cpf: document.getElementById('animalDonoCpf').value }
         };
-
         const url = id ? `${API_URL}/animais/${id}` : `${API_URL}/animais`;
         const method = id ? 'PUT' : 'POST';
-
-        if(id) {
-            animal.rfid = id; // Garante que o RFID (PK) não seja alterado no PUT
-        }
+        if(id) animal.rfid = id;
 
         try {
-            await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(animal)
-            });
-            loadAnimais();
-            cancelForm('animalForm');
-
-        } catch (error) {
-            console.error('Erro ao salvar animal:', error);
-            alert('Erro ao salvar: Verifique se o CPF do dono e o RFID (único) estão corretos.');
-        }
+            await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(animal) });
+            loadAnimais(); cancelForm('animalForm');
+        } catch (error) { alert('Erro ao salvar animal'); }
     }
 
-    async function editAnimal(rfid) { // MUDADO DE id
+    async function editAnimal(rfid) {
         try {
-            const response = await fetch(`${API_URL}/animais/${rfid}`); // MUDADO DE id
+            const response = await fetch(`${API_URL}/animais/${rfid}`);
             const animal = await handleResponse(response);
-
-            document.getElementById('animalId').value = animal.rfid; // MUDADO DE animal.id
-            document.getElementById('animalRfid').value = animal.rfid; // Popula o novo campo
+            document.getElementById('animalId').value = animal.rfid;
+            document.getElementById('animalRfid').value = animal.rfid;
             document.getElementById('animalNome').value = animal.nome;
             document.getElementById('animalEspecie').value = animal.especie;
             document.getElementById('animalIdade').value = animal.idade;
             document.getElementById('animalPorte').value = animal.porte;
             document.getElementById('animalDonoCpf').value = animal.dono ? animal.dono.cpf : '';
-
-            // Bloqueia a edição da PK
             document.getElementById('animalRfid').readOnly = true;
-
             document.getElementById('animalForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar animal:', error);
-        }
+        } catch (error) { console.error(error); }
     }
 
-    async function deleteAnimal(rfid) { // MUDADO DE id
+    async function deleteAnimal(rfid) {
         if (confirm('Tem certeza que deseja excluir este animal?')) {
-            try {
-                await fetch(`${API_URL}/animais/${rfid}`, { method: 'DELETE' }); // MUDADO DE id
-                loadAnimais();
-            } catch (error) {
-                console.error('Erro ao deletar animal:', error);
-            }
+            await fetch(`${API_URL}/animais/${rfid}`, { method: 'DELETE' });
+            loadAnimais();
         }
     }
 
-    // ======================================================
-    // =================== CRUD CONSULTAS (JS - CORRIGIDO) ===================
-    // ======================================================
-
+    // ================= CRUD CONSULTAS =================
     async function loadConsultas() {
         try {
             const response = await fetch(`${API_URL}/consultas`);
             const consultas = await handleResponse(response);
             renderConsultas(consultas);
-        } catch (error) {
-            console.error('Erro ao carregar consultas:', error);
-        }
+        } catch (error) { console.error('Erro ao carregar consultas:', error); }
     }
 
     function renderConsultas(consultas) {
@@ -810,12 +788,8 @@ display: none; /* Escondido por padrão */
         }
         tbody.innerHTML = consultas.map(c => `
             <tr>
-                <td>${c.id}</td>
-                <td>${c.animal ? c.animal.rfid : 'N/D'}</td>
-                <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
-                <td>${c.diagnostico || '-'}</td> <td>${c.dataConsulta || '-'}</td>
-                <td>${c.horaConsulta || '-'}</td>
-                <td>${c.tipo || '-'}</td>
+                <td>${c.id}</td><td>${c.animal ? c.animal.rfid : 'N/D'}</td><td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
+                <td>${c.diagnostico || '-'}</td><td>${c.dataConsulta || '-'}</td><td>${c.horaConsulta || '-'}</td><td>${c.tipo || '-'}</td>
                 <td class="action-buttons">
                     <button class="btn btn-warning btn-sm" onclick="editConsulta('${c.id}')">✏️ Editar</button>
                     <button class="btn btn-danger btn-sm" onclick="deleteConsulta('${c.id}')">🗑️ Excluir</button>
@@ -824,446 +798,32 @@ display: none; /* Escondido por padrão */
         `).join('');
     }
 
-    async function saveConsulta(e) {
-        e.preventDefault();
-                //Confirmação de ação
-        if (!confirm("Confirma o agendamento dessa consulta?")) {
-            return; // Cancela a operação se o usuário clicar em "Cancelar"
-        }
-        const idInput = document.getElementById('consultaId');
-        const id = idInput.value; // ID (UUID) original na edição
-
-        const consulta = {
-            // O backend espera o objeto animal com sua PK (RFID)
-            animal: { rfid: document.getElementById('consultaAnimal').value }, // MUDADO DE id
-            veterinario: { crmv: document.getElementById('consultaVet').value },
-            dataConsulta: document.getElementById('consultaData').value,
-            horaConsulta: document.getElementById('consultaHora').value,
-            tipo: document.getElementById('consultaTipo').value,
-            diagnostico: document.getElementById('consultaDiagnostico').value // <-- ALTERAÇÃO AQUI
-        };
-
-        const url = id ? `${API_URL}/consultas/${id}` : `${API_URL}/consultas`;
-        const method = id ? 'PUT' : 'POST';
-
-        if(id) {
-            consulta.id = id; // Adiciona o ID (UUID) se for um PUT
-        }
-        // Se for POST, o backend (ConsultaController) vai gerar o UUID
-
-        try {
-            await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(consulta)
-            });
-            loadConsultas();
-            cancelForm('consultaForm');
-        } catch (error) {
-            console.error('Erro ao salvar consulta:', error);
-            alert('Erro ao salvar: Verifique se o RFID do Animal e o CRMV do Veterinário existem.');
-        }
-    }
-
-    async function editConsulta(id) { // ID (UUID) é string
-        try {
-            const response = await fetch(`${API_URL}/consultas/${id}`);
-            const consulta = await handleResponse(response);
-
-            document.getElementById('consultaId').value = consulta.id;
-            document.getElementById('consultaAnimal').value = consulta.animal ? consulta.animal.rfid : ''; // MUDADO DE id
-            document.getElementById('consultaVet').value = consulta.veterinario ? consulta.veterinario.crmv : '';
-            document.getElementById('consultaData').value = consulta.dataConsulta;
-            document.getElementById('consultaHora').value = consulta.horaConsulta;
-            document.getElementById('consultaTipo').value = consulta.tipo;
-            document.getElementById('consultaDiagnostico').value = consulta.diagnostico; // <-- ALTERAÇÃO AQUI
-
-            document.getElementById('consultaForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar consulta:', error);
-        }
-    }
-
-    async function deleteConsulta(id) { // ID (UUID) é string
-        if (confirm('Tem certeza que deseja excluir esta consulta?')) {
-            try {
-                await fetch(`${API_URL}/consultas/${id}`, { method: 'DELETE' });
-                loadConsultas();
-            } catch (error) {
-                console.error('Erro ao deletar consulta:', error);
-            }
-        }
-    }
-
-
-    // ======================================================
-    // ================== CRUD TRATAMENTOS (JS - CORRIGIDO) ==================
-    // ======================================================
-
-    async function loadTratamentos() {
-        try {
-            const response = await fetch(`${API_URL}/tratamentos`);
-            const tratamentos = await handleResponse(response);
-            renderTratamentos(tratamentos);
-        } catch (error) {
-            console.error('Erro ao carregar tratamentos:', error);
-        }
-    }
-
-    function renderTratamentos(tratamentos) {
-        const tbody = document.getElementById('tratamentosList');
-        if (!tratamentos || tratamentos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum tratamento cadastrado</td></tr>';
-            return;
-        }
-        tbody.innerHTML = tratamentos.map(t => `
-            <tr>
-                <td>${t.id}</td> <td>${t.consulta ? t.consulta.id : 'N/D'}</td> <td>${t.descricao || '-'}</td>
-                <td>${t.antibiotico ? 'Sim' : 'Não'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editTratamento('${t.id}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteTratamento('${t.id}')">🗑️ Excluir</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    async function saveTratamento(e) {
-        e.preventDefault();
-                //Confirmação de ação
-        if (!confirm("Tem certeza que os dados do TRATAMENTO estão corretos?")) {
-            return; // Cancela a operação se o usuário clicar em "Cancelar"
-        }
-        const idInput = document.getElementById('tratamentoId');
-        const id = idInput.value; // ID (UUID) original na edição
-
-        const tratamento = {
-            // O backend espera um objeto 'consulta' com a PK 'id' (UUID)
-            consulta: { id: document.getElementById('tratamentoConsultaId').value }, // Não precisa mais de parseInt
-            descricao: document.getElementById('tratamentoDescricao').value,
-            antibiotico: document.getElementById('tratamentoAntibiotico').value === 'true'
-        };
-
-        const url = id ? `${API_URL}/tratamentos/${id}` : `${API_URL}/tratamentos`;
-        const method = id ? 'PUT' : 'POST';
-
-        if(id) {
-            tratamento.id = id; // Adiciona o ID (UUID) se for um PUT
-        }
-        // Se for POST, o backend (TratamentoController) vai gerar o UUID
-
-        try {
-            await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(tratamento)
-            });
-            loadTratamentos();
-            cancelForm('tratamentoForm');
-        } catch (error) {
-            console.error('Erro ao salvar tratamento:', error);
-            alert('Erro ao salvar: Verifique se o ID (UUID) da Consulta existe.');
-        }
-    }
-
-    async function editTratamento(id) { // ID (UUID) é string
-        try {
-            const response = await fetch(`${API_URL}/tratamentos/${id}`);
-            const tratamento = await handleResponse(response);
-
-            document.getElementById('tratamentoId').value = tratamento.id;
-            document.getElementById('tratamentoConsultaId').value = tratamento.consulta ? tratamento.consulta.id : '';
-            document.getElementById('tratamentoDescricao').value = tratamento.descricao;
-            document.getElementById('tratamentoAntibiotico').value = tratamento.antibiotico ? 'true' : 'false';
-
-            document.getElementById('tratamentoForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar tratamento:', error);
-        }
-    }
-
-    async function deleteTratamento(id) { // ID (UUID) é string
-        if (confirm('Tem certeza que deseja excluir este tratamento?')) {
-            try {
-                await fetch(`${API_URL}/tratamentos/${id}`, { method: 'DELETE' });
-                loadTratamentos();
-            } catch (error) {
-                console.error('Erro ao deletar tratamento:', error);
-            }
-        }
-    }
-
-    // ======================================================
-    // ================= CRUD VETERINÁRIOS (JS - SEM MUDANÇAS) ==================
-    // ======================================================
-
-    async function loadVets() {
-        try {
-            const response = await fetch(`${API_URL}/veterinarios`);
-            const veterinarios = await handleResponse(response);
-            renderVets(veterinarios);
-        } catch (error) {
-            console.error('Erro ao carregar veterinários:', error);
-        }
-    }
-
-    function renderVets(veterinarios) {
-        const tbody = document.getElementById('vetsList');
-        if (!veterinarios || veterinarios.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum veterinário cadastrado</td></tr>';
-            return;
-        }
-        tbody.innerHTML = veterinarios.map(v => `
-            <tr>
-                <td>${v.crmv}</td>
-                <td>${v.nome}</td>
-                <td>${v.idade}</td>
-                <td>${v.dataGraduacao}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editVet('${v.crmv}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteVet('${v.crmv}')">🗑️ Excluir</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    async function saveVet(e) {
-        e.preventDefault();
-
-        //Confirmação de formatação
-        const crmv = document.getElementById('Vetcrmv').value;
-
-        if(crmv.length < 13) {
-            alert("Por favor, preencha o CRMV completo");
-            return;
-        }
-                //Confirmação de ação
-        if (!confirm("Tem certeza que os dados do VETERINÁRIO estão corretos?")) {
-            return; // Cancela a operação se o usuário clicar em "Cancelar"
-        }
-        const idInput = document.getElementById('vetId');
-        const id = idInput.value;
-
-        const vet = {
-            crmv: document.getElementById('vetCrmv').value,
-            nome: document.getElementById('vetNome').value,
-            idade: parseInt(document.getElementById('vetIdade').value),
-            dataGraduacao: document.getElementById('vetDataGraduacao').value
-        };
-
-        const url = id ? `${API_URL}/veterinarios/${id}` : `${API_URL}/veterinarios`;
-        const method = id ? 'PUT' : 'POST';
-
-        if(id) {
-            vet.crmv = id; // Garante que a PK não seja alterada no PUT
-        }
-
-        try {
-            await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(vet)
-            });
-            loadVets();
-            cancelForm('vetForm');
-        } catch (error) {
-            console.error('Erro ao salvar veterinário:', error);
-        }
-    }
-
-    async function editVet(crmv) {
-        try {
-            const response = await fetch(`${API_URL}/veterinarios/${crmv}`);
-            const vet = await handleResponse(response);
-
-            document.getElementById('vetId').value = vet.crmv;
-            document.getElementById('vetNome').value = vet.nome;
-            document.getElementById('vetCrmv').value = vet.crmv;
-            document.getElementById('vetIdade').value = vet.idade;
-            document.getElementById('vetDataGraduacao').value = vet.dataGraduacao;
-
-            document.getElementById('vetCrmv').readOnly = true;
-
-            document.getElementById('vetForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar veterinário:', error);
-        }
-    }
-
-    async function deleteVet(crmv) {
-        if (confirm('Tem certeza que deseja excluir este veterinário?')) {
-            try {
-                await fetch(`${API_URL}/veterinarios/${crmv}`, { method: 'DELETE' });
-                loadVets();
-            } catch (error) {
-                console.error('Erro ao deletar veterinário:', error);
-            }
-        }
-    }
-
-    // ======================================================
-    // ================= CRUD CERTIFICAÇÕES (JS - SEM MUDANÇAS) =================
-    // ======================================================
-
-    async function loadCerts() {
-        try {
-            const response = await fetch(`${API_URL}/certificacoes`);
-            const certificacoes = await handleResponse(response);
-            renderCerts(certificacoes);
-        } catch (error) {
-            console.error('Erro ao carregar certificações:', error);
-        }
-    }
-
-    function renderCerts(certificacoes) {
-        const tbody = document.getElementById('certsList');
-        if (!certificacoes || certificacoes.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Nenhuma certificação cadastrada</td></tr>';
-            return;
-        }
-
-        tbody.innerHTML = certificacoes.map(c => `
-            <tr>
-                <td>${c.numeroRegistro}</td>
-                <td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
-                <td>${c.especialidade ? c.especialidade.nome : 'N/D'}</td>
-                <td>${c.instituicaoCertificadora || '-'}</td>
-                <td>${c.dataObtencao || '-'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editCert('${c.numeroRegistro}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCert('${c.numeroRegistro}')">🗑️ Excluir</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    async function saveCert(e) {
-        e.preventDefault();
-                //Confirmação de ação
-        if (!confirm("Tem certeza que os dados do CERTIFICADO estão corretos?")) {
-            return; // Cancela a operação se o usuário clicar em "Cancelar"
-        }
-        const id = document.getElementById('certId').value;
-        const numeroRegistroDoForm = document.getElementById('certNumeroRegistro').value;
-
-        const cert = {
-            numeroRegistro: numeroRegistroDoForm,
-            dataObtencao: document.getElementById('certDataObtencao').value,
-            instituicaoCertificadora: document.getElementById('certInstituicao').value,
-            veterinario: { crmv: document.getElementById('certVet').value },
-            especialidade: { id: parseInt(document.getElementById('certEspecialidadeId').value) }
-        };
-
-        const url = id ? `${API_URL}/certificacoes/${id}` : `${API_URL}/certificacoes`;
-        const method = id ? 'PUT' : 'POST';
-
-        if(id) {
-            cert.numeroRegistro = id; // Garante que a PK não seja alterada no PUT
-        }
-
-        try {
-            await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cert)
-            });
-            loadCerts();
-            cancelForm('certForm');
-        } catch (error) {
-            console.error('Erro ao salvar certificação:', error);
-            alert('Erro ao salvar: Verifique se o CRMV e o ID da Especialidade existem.');
-        }
-    }
-
-    async function editCert(numeroRegistro) {
-        try {
-            const response = await fetch(`${API_URL}/certificacoes/${numeroRegistro}`);
-            const cert = await handleResponse(response);
-
-            document.getElementById('certId').value = cert.numeroRegistro;
-            document.getElementById('certNumeroRegistro').value = cert.numeroRegistro;
-            document.getElementById('certVet').value = cert.veterinario ? cert.veterinario.crmv : '';
-            document.getElementById('certEspecialidadeId').value = cert.especialidade ? cert.especialidade.id : '';
-            document.getElementById('certInstituicao').value = cert.instituicaoCertificadora;
-            document.getElementById('certDataObtencao').value = cert.dataObtencao;
-
-            document.getElementById('certNumeroRegistro').readOnly = true;
-
-            document.getElementById('certForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar certificação:', error);
-        }
-    }
-
-    async function deleteCert(numeroRegistro) {
-        if (confirm('Tem certeza que deseja excluir esta certificação?')) {
-            try {
-                await fetch(`${API_URL}/certificacoes/${numeroRegistro}`, { method: 'DELETE' });
-                loadCerts();
-            } catch (error) {
-                console.error('Erro ao deletar certificação:', error);
-            }
-        }
-    }
-
-    // ======================================================
-    // =================== JS ADICIONADO: FICHA TÉCNICA (MongoDB) ==================
-    // ======================================================
-
-    /**
-     * Busca os dados da Ficha no endpoint /api/fichas/{rfid} e mostra o modal
-     */
-    async function showFicha(rfid) {
-        const modal = document.getElementById('fichaModal');
-        const body = document.getElementById('fichaModalBody');
-        body.innerHTML = '<p>Carregando...</p>';
-        modal.classList.add('active'); // Mostra o modal
-
-        try {
-            // Chama o FichaAnimalController
-            const response = await fetch(`${API_URL}/fichas/${rfid}`);
-
-            if (!response.ok) {
-                if (response.status === 404) {
-                    throw new Error('Ficha não encontrada no MongoDB. Sincronize o banco de dados primeiro (Home > Sincronizar Fichas) e tente novamente.');
-                }
-                throw new Error('Erro ao buscar ficha. Status: ' + response.status);
-            }
-
-            const ficha = await handleResponse(response);
-            renderFicha(ficha); // Chama a função para renderizar o HTML
-        } catch (error) {
-            console.error('Erro ao carregar ficha:', error);
-            body.innerHTML = `<p style="color: red; font-weight: bold;">${error.message}</p>`;
-        }
-    }
-    // Função para popular os selects
+    // Função para popular os selects (CORRIGIDA)
     async function populateConsultaSelects() {
         try {
-        // Faz as duas requisições ao mesmo tempo
+            // CORREÇÃO DA URL E DO PROMISE.ALL
             const [animaisRes, vetsRes] = await Promise.all([
                 fetch(`${API_URL}/animais`),
-                fetch(`${API_URL}/veterianrios`)
+                fetch(`${API_URL}/veterinarios`) // URL corrigida
             ]);
 
-            const animais = await animaisRes.json();;
+            const animais = await animaisRes.json();
             const vets = await vetsRes.json();
 
             const animalSelect = document.getElementById('consultaAnimal');
-            animalSelect.innerHTML = '<option value="">Selecion um animal...</option>';
+            animalSelect.innerHTML = '<option value="">Selecione um animal...</option>';
             animais.forEach(a => {
-                // Mostra animal e dono
+                // CORREÇÃO DA CRASE
                 const texto = `${a.nome} (${a.especie}) - Dono: ${a.dono ? a.dono.nome : '?'}`;
                 const option = new Option(texto, a.rfid);
                 animalSelect.add(option);
             });
 
-            // Preenche o Select de veterináris
             const vetSelect = document.getElementById('consultaVet');
-            vetSelect.innerHTML = '<option value="">Selecion um veterinário...</option>';
+            vetSelect.innerHTML = '<option value="">Selecione um veterinário...</option>';
             vets.forEach(v => {
-                // Mostra nome e CRV do vet
-                const texto = ${v.nome} (${v.crmv})`;
+                // CORREÇÃO DA CRASE
+                const texto = `${v.nome} (${v.crmv})`;
                 const option = new Option(texto, v.crmv);
                 vetSelect.add(option);
             });
@@ -1278,257 +838,340 @@ display: none; /* Escondido por padrão */
         toggleForm('consultaForm');
     }
 
+    async function saveConsulta(e) {
+        e.preventDefault();
+        if (!confirm("Confirma o agendamento dessa consulta?")) return;
+        const idInput = document.getElementById('consultaId');
+        const id = idInput.value;
+        const consulta = {
+            animal: { rfid: document.getElementById('consultaAnimal').value },
+            veterinario: { crmv: document.getElementById('consultaVet').value },
+            dataConsulta: document.getElementById('consultaData').value,
+            horaConsulta: document.getElementById('consultaHora').value,
+            tipo: document.getElementById('consultaTipo').value,
+            diagnostico: document.getElementById('consultaDiagnostico').value
+        };
+        const url = id ? `${API_URL}/consultas/${id}` : `${API_URL}/consultas`;
+        const method = id ? 'PUT' : 'POST';
+        if(id) consulta.id = id;
+
+        try {
+            await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(consulta) });
+            loadConsultas(); cancelForm('consultaForm');
+        } catch (error) { alert('Erro ao salvar consulta'); }
+    }
+
     async function editConsulta(id) {
         try {
-            // Carrega as opções dos selects primeiro e espera terminar
-            await populateConsultaSelect();
-
-            // Busca os dados da consulta
+            await populateConsultaSelects(); // Corrigido nome da função (plural)
             const response = await fetch(`${API_URL}/consultas/${id}`);
             const consulta = await handleResponse(response);
 
-            // Preenche os campos
             document.getElementById('consultaId').value = consulta.id;
-
             document.getElementById('consultaAnimal').value = consulta.animal ? consulta.animal.rfid : '';
             document.getElementById('consultaVet').value = consulta.veterinario ? consulta.veterinario.crmv : '';
-
             document.getElementById('consultaData').value = consulta.dataConsulta;
             document.getElementById('consultaHora').value = consulta.horaConsulta;
             document.getElementById('consultaTipo').value = consulta.tipo;
             document.getElementById('consultaDiagnostico').value = consulta.diagnostico;
 
-            // Mostra o formulário
             document.getElementById('consultaForm').classList.add('active');
         } catch (error) {
             console.error('Erro ao buscar consulta: ', error);
         }
+    } // FECHEI A FUNÇÃO AQUI (Estava faltando essa chave)
 
-
-
-    /**
-     * Esconde o modal da Ficha Técnica
-     */
-   function hideFicha() {
-        const modal = document.getElementById('fichaModal');
-        const body = document.getElementById('fichaModalBody');
-
-        if (modal) modal.classList.remove('active');
-        if (body) body.innerHTML = '';
+    async function deleteConsulta(id) {
+        if (confirm('Tem certeza?')) {
+            await fetch(`${API_URL}/consultas/${id}`, { method: 'DELETE' });
+            loadConsultas();
+        }
     }
 
-    /**
-     * Constrói o HTML da Ficha Técnica com base nos dados do MongoDB
-     */
-    function renderFicha(ficha) {
-        const body = document.getElementById('fichaModalBody');
+    // ================= CRUD TRATAMENTOS =================
+    async function loadTratamentos() {
+        try {
+            const response = await fetch(`${API_URL}/tratamentos`);
+            const tratamentos = await handleResponse(response);
+            renderTratamentos(tratamentos);
+        } catch (error) { console.error(error); }
+    }
 
+    function renderTratamentos(tratamentos) {
+        const tbody = document.getElementById('tratamentosList');
+        if (!tratamentos || tratamentos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum tratamento cadastrado</td></tr>'; return;
+        }
+        tbody.innerHTML = tratamentos.map(t => `
+            <tr>
+                <td>${t.id}</td><td>${t.consulta ? t.consulta.id : 'N/D'}</td><td>${t.descricao || '-'}</td><td>${t.antibiotico ? 'Sim' : 'Não'}</td>
+                <td class="action-buttons">
+                    <button class="btn btn-warning btn-sm" onclick="editTratamento('${t.id}')">✏️ Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteTratamento('${t.id}')">🗑️ Excluir</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    async function saveTratamento(e) {
+        e.preventDefault();
+        if (!confirm("Confirma?")) return;
+        const id = document.getElementById('tratamentoId').value;
+        const tratamento = {
+            consulta: { id: document.getElementById('tratamentoConsultaId').value },
+            descricao: document.getElementById('tratamentoDescricao').value,
+            antibiotico: document.getElementById('tratamentoAntibiotico').value === 'true'
+        };
+        const url = id ? `${API_URL}/tratamentos/${id}` : `${API_URL}/tratamentos`;
+        const method = id ? 'PUT' : 'POST';
+        if(id) tratamento.id = id;
+
+        try {
+            await fetch(url, { method: method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(tratamento)});
+            loadTratamentos(); cancelForm('tratamentoForm');
+        } catch (error) { alert('Erro ao salvar tratamento'); }
+    }
+
+    async function editTratamento(id) {
+        try {
+            const response = await fetch(`${API_URL}/tratamentos/${id}`);
+            const tratamento = await handleResponse(response);
+            document.getElementById('tratamentoId').value = tratamento.id;
+            document.getElementById('tratamentoConsultaId').value = tratamento.consulta ? tratamento.consulta.id : '';
+            document.getElementById('tratamentoDescricao').value = tratamento.descricao;
+            document.getElementById('tratamentoAntibiotico').value = tratamento.antibiotico ? 'true' : 'false';
+            document.getElementById('tratamentoForm').classList.add('active');
+        } catch(e) { console.error(e); }
+    }
+
+    async function deleteTratamento(id) {
+        if(confirm('Excluir?')) { await fetch(`${API_URL}/tratamentos/${id}`, {method:'DELETE'}); loadTratamentos(); }
+    }
+
+    // ================= CRUD VETERINÁRIOS =================
+    async function loadVets() {
+        try {
+            const response = await fetch(`${API_URL}/veterinarios`);
+            const veterinarios = await handleResponse(response);
+            renderVets(veterinarios);
+        } catch (error) { console.error(error); }
+    }
+
+    function renderVets(veterinarios) {
+        const tbody = document.getElementById('vetsList');
+        if (!veterinarios || veterinarios.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum vet cadastrado</td></tr>'; return;
+        }
+        tbody.innerHTML = veterinarios.map(v => `
+            <tr>
+                <td>${v.crmv}</td><td>${v.nome}</td><td>${v.idade}</td><td>${v.dataGraduacao}</td>
+                <td class="action-buttons">
+                    <button class="btn btn-warning btn-sm" onclick="editVet('${v.crmv}')">✏️ Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteVet('${v.crmv}')">🗑️ Excluir</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    async function saveVet(e) {
+        e.preventDefault();
+        const crmv = document.getElementById('vetCrmv').value;
+        if(crmv.length < 13) { alert("Preencha o CRMV"); return; }
+        if (!confirm("Confirma?")) return;
+        const id = document.getElementById('vetId').value;
+        const vet = {
+            crmv: crmv,
+            nome: document.getElementById('vetNome').value,
+            idade: parseInt(document.getElementById('vetIdade').value),
+            dataGraduacao: document.getElementById('vetDataGraduacao').value
+        };
+        const url = id ? `${API_URL}/veterinarios/${id}` : `${API_URL}/veterinarios`;
+        const method = id ? 'PUT' : 'POST';
+        if(id) vet.crmv = id;
+
+        await fetch(url, { method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(vet) });
+        loadVets(); cancelForm('vetForm');
+    }
+
+    async function editVet(crmv) {
+        try {
+            const res = await fetch(`${API_URL}/veterinarios/${crmv}`);
+            const vet = await handleResponse(res);
+            document.getElementById('vetId').value = vet.crmv;
+            document.getElementById('vetNome').value = vet.nome;
+            document.getElementById('vetCrmv').value = vet.crmv;
+            document.getElementById('vetIdade').value = vet.idade;
+            document.getElementById('vetDataGraduacao').value = vet.dataGraduacao;
+            document.getElementById('vetCrmv').readOnly = true;
+            document.getElementById('vetForm').classList.add('active');
+        } catch(e) { console.error(e); }
+    }
+
+    async function deleteVet(crmv) {
+        if(confirm('Excluir?')) { await fetch(`${API_URL}/veterinarios/${crmv}`, {method:'DELETE'}); loadVets(); }
+    }
+
+    // ================= CRUD CERTIFICAÇÕES =================
+    async function loadCerts() {
+        try {
+            const response = await fetch(`${API_URL}/certificacoes`);
+            renderCerts(await handleResponse(response));
+        } catch (error) { console.error(error); }
+    }
+
+    function renderCerts(certificacoes) {
+        const tbody = document.getElementById('certsList');
+        if (!certificacoes || certificacoes.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Vazio</td></tr>'; return;
+        }
+        tbody.innerHTML = certificacoes.map(c => `
+            <tr>
+                <td>${c.numeroRegistro}</td><td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td><td>${c.especialidade ? c.especialidade.nome : 'N/D'}</td>
+                <td>${c.instituicaoCertificadora || '-'}</td><td>${c.dataObtencao || '-'}</td>
+                <td class="action-buttons">
+                    <button class="btn btn-warning btn-sm" onclick="editCert('${c.numeroRegistro}')">✏️ Editar</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteCert('${c.numeroRegistro}')">🗑️ Excluir</button>
+                </td>
+            </tr>`).join('');
+    }
+
+    async function saveCert(e) {
+        e.preventDefault();
+        if(!confirm("Confirma?")) return;
+        const id = document.getElementById('certId').value;
+        const cert = {
+            numeroRegistro: document.getElementById('certNumeroRegistro').value,
+            dataObtencao: document.getElementById('certDataObtencao').value,
+            instituicaoCertificadora: document.getElementById('certInstituicao').value,
+            veterinario: { crmv: document.getElementById('certVet').value },
+            especialidade: { id: parseInt(document.getElementById('certEspecialidadeId').value) }
+        };
+        const url = id ? `${API_URL}/certificacoes/${id}` : `${API_URL}/certificacoes`;
+        const method = id ? 'PUT' : 'POST';
+        if(id) cert.numeroRegistro = id;
+
+        try {
+            await fetch(url, { method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(cert) });
+            loadCerts(); cancelForm('certForm');
+        } catch(e) { alert('Erro ao salvar cert'); }
+    }
+
+    async function editCert(num) {
+        const res = await fetch(`${API_URL}/certificacoes/${num}`);
+        const cert = await handleResponse(res);
+        document.getElementById('certId').value = cert.numeroRegistro;
+        document.getElementById('certNumeroRegistro').value = cert.numeroRegistro;
+        document.getElementById('certVet').value = cert.veterinario ? cert.veterinario.crmv : '';
+        document.getElementById('certEspecialidadeId').value = cert.especialidade ? cert.especialidade.id : '';
+        document.getElementById('certInstituicao').value = cert.instituicaoCertificadora;
+        document.getElementById('certDataObtencao').value = cert.dataObtencao;
+        document.getElementById('certNumeroRegistro').readOnly = true;
+        document.getElementById('certForm').classList.add('active');
+    }
+
+    async function deleteCert(num) {
+        if(confirm('Excluir?')) { await fetch(`${API_URL}/certificacoes/${num}`, {method:'DELETE'}); loadCerts(); }
+    }
+
+    // ================= FICHA TÉCNICA (MongoDB) =================
+    async function showFicha(rfid) {
+        const modal = document.getElementById('fichaModal');
+        const body = document.getElementById('fichaModalBody');
+        body.innerHTML = '<p>Carregando...</p>';
+        modal.classList.add('active');
+
+        try {
+            const response = await fetch(`${API_URL}/fichas/${rfid}`);
+            if (!response.ok) {
+                if (response.status === 404) throw new Error('Ficha não encontrada. Sincronize o MongoDB.');
+                throw new Error('Erro ao buscar ficha.');
+            }
+            const ficha = await handleResponse(response);
+            renderFicha(ficha);
+        } catch (error) {
+            console.error('Erro:', error);
+            body.innerHTML = `<p style="color: red; font-weight: bold;">${error.message}</p>`;
+        }
+    }
+
+    function hideFicha() {
+        document.getElementById('fichaModal').classList.remove('active');
+        document.getElementById('fichaModalBody').innerHTML = '';
+    }
+
+    function renderFicha(ficha) {
         const dono = ficha.dono || {};
         const historico = ficha.historicoConsultas || [];
+        const body = document.getElementById('fichaModalBody');
 
-        // Renderiza os dados do Animal e do Dono (Embed)
         body.innerHTML = `
             <div class="ficha-grid">
                 <div class="ficha-item"><strong>RFID:</strong> <span>${ficha.rfid}</span></div>
-                <div class="ficha-item"><strong>Nome do Animal:</strong> <span>${ficha.nomeAnimal || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Nome:</strong> <span>${ficha.nomeAnimal || 'N/D'}</span></div>
                 <div class="ficha-item"><strong>Espécie:</strong> <span>${ficha.especie || 'N/D'}</span></div>
                 <div class="ficha-item"><strong>Idade:</strong> <span>${ficha.idade}</span></div>
                 <div class="ficha-item"><strong>Porte:</strong> <span>${ficha.porte || 'N/D'}</span></div>
             </div>
-
-            <h3 class="historico-titulo">Informações do Dono</h3>
+            <h3 class="historico-titulo">Dono</h3>
             <div class="ficha-grid">
-                <div class="ficha-item"><strong>Dono (CPF):</strong> <span>${dono.cpf || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Dono (Nome):</strong> <span>${dono.nomeDono || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Dono (Telefone):</strong> <span>${dono.telefone || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Nome:</strong> <span>${dono.nomeDono || 'N/D'}</span></div>
+                <div class="ficha-item"><strong>Telefone:</strong> <span>${dono.telefone || 'N/D'}</span></div>
             </div>
-
-            <h3 class="historico-titulo">Histórico de Consultas (${historico.length})</h3>
+            <h3 class="historico-titulo">Histórico (${historico.length})</h3>
             <div id="historico-lista">
-                ${historico.length === 0 ? '<p class="empty-state">Nenhum histórico de consulta encontrado.</p>' :
-                    historico.map(consulta => `
+                ${historico.length === 0 ? '<p class="empty-state">Sem histórico.</p>' :
+                    historico.map(c => `
                     <div class="consulta-card">
-                        <div class="consulta-header">
-                            <strong>Consulta ID: (${consulta.consultaId})</strong>
-                        </div>
+                        <strong>Consulta ID: ${c.consultaId}</strong>
                         <div class="consulta-body">
-                            <div class="ficha-item"><strong>Data:</strong> <span>${consulta.dataConsulta || 'N/D'}</span></div>
-                            <div class="ficha-item"><strong>Hora:</strong> <span>${consulta.horaConsulta || 'N/D'}</span></div>
-                            <div class="ficha-item"><strong>Veterinário:</strong> <span>${consulta.nomeVeterinario || 'N/D'}</span></div>
-                            <div class="ficha-item" style="grid-column: 1 / -1;">
-                                <strong>Diagnóstico:</strong>
-                                <span>${consulta.diagnostico || 'N/D'}</span>
-                            </div>
-
-                            ${renderTratamento(consulta.tratamento)}
+                            <p><strong>Data:</strong> ${c.dataConsulta || 'N/D'} - <strong>Vet:</strong> ${c.nomeVeterinario || 'N/D'}</p>
+                            <p><strong>Diagnóstico:</strong> ${c.diagnostico || 'N/D'}</p>
+                            ${c.tratamento ? `<div class="tratamento-card"><p><strong>Tratamento:</strong> ${c.tratamento.descricao}</p></div>` : ''}
                         </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
+                    </div>`).join('')}
+            </div>`;
     }
 
-    /**
-     * Helper para renderizar o sub-documento de Tratamento
-     */
-    function renderTratamento(tratamento) {
-        if (!tratamento) {
-            return '<div class="tratamento-card"><p>Nenhum tratamento associado a esta consulta.</p></div>';
-        }
-        return `
-            <div class="tratamento-card">
-                <strong>Tratamento ID: (${tratamento.tratamentoId})</strong>
-                <p style="margin-top: 5px;">${tratamento.descricao || 'Sem descrição.'}</p>
-                <p style="margin-top: 5px;"><strong>Usa Antibiótico:</strong> ${tratamento.antibiotico ? 'Sim' : 'Não'}</p>
-            </div>
-        `;
-    }
+    // ================= DASHBOARD & UTILS =================
     function updateDashboard() {
-        // Conta as linhas das tabelas (ou o tamanho dos arrays se você salvar eles em variáveis globais)
-        // Como estamos renderizando direto, podemos pegar do DOM ou fazer um fetch rápido.
-        // Vou fazer um jeito simples pegando do DOM após carregar tudo:
-
-
-            const qtdAnimais = document.getElementById('animaisList').rows.length;
-            const qtdDonos = document.getElementById('donosList').rows.length;
-            const qtdVets = document.getElementById('vetsList').rows.length;
-            const qtdConsultas = document.getElementById('consultasList').rows.length;
-
-            const adjustCount = (tbodyId, count) => {
-                const tbody = document.getElementById(tbodyId);
-                if(tbody.querySelector('.empty-state')) return 0;
-                return count;
-            };
-
-            document.getElementById('dashTotalAnimais').innerText = adjustCount('animaisList', qtdAnimais);
-            document.getElementById('dashTotalDonos').innerText = adjustCount('donosList', qtdDonos);
-            document.getElementById('dashTotalVets').innerText = adjustCount('vetsList', qtdVets);
-            document.getElementById('dashTotalConsultas').innerText = adjustCount('consultasList', qtdConsultas);
+        const count = (id) => {
+            const rows = document.getElementById(id).getElementsByTagName('tr');
+            if (rows.length === 1 && rows[0].querySelector('.empty-state')) return 0;
+            return rows.length;
+        };
+        document.getElementById('dashTotalAnimais').innerText = count('animaisList');
+        document.getElementById('dashTotalDonos').innerText = count('donosList');
+        document.getElementById('dashTotalVets').innerText = count('vetsList');
+        document.getElementById('dashTotalConsultas').innerText = count('consultasList');
     }
-    // ======================================================
-    // =================== MÁSCARAS DE INPUT ================
-    // ======================================================
 
     const masks = {
-        cpf(value) {
-            // Limpa tudo que não é número
-            let r = value.replace(/\D/g, "");
-
-            // Limita a 11 números
-            if (r.length > 11) r = r.slice(0, 11);
-
-            // Aplica formatação progressiva
-            if (r.length > 9) {
-                // 000.000.000-00
-                return r.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, "$1.$2.$3-$4");
-            } else if (r.length > 6) {
-                // 000.000.000
-                return r.replace(/^(\d{3})(\d{3})(\d{0,3})/, "$1.$2.$3");
-            } else if (r.length > 3) {
-                // 000.000
-                return r.replace(/^(\d{3})(\d{0,3})/, "$1.$2");
-            } else {
-                return r;
-            }
-        },
-
-        phone(value) {
-            // Retira tudo que não seja número
-            let r = value.replace(/\D/g, "");
-
-            // Limita a até 11 números
-            if (r.length > 11) r = r.slice(0, 11);
-
-            // Formatação automática
-            if (r.length > 10) {
-                // (61) 91234-5678
-                return r.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
-            } else if (r.length > 5) {
-                // (61) 1234-5678
-                return r.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
-            } else if (r.length > 2) {
-                // (61) 123...
-                return r.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
-            } else {
-                // (61
-                return r.replace(/^(\d*)/, "($1");
-            }
-        },
-
-        crmv(value) {
-            // Se o campo estiver vazio, retorna vazio
-            if (!value) return "";
-
-            // Pega apenas letras e números digitados (remove símbolos antigos)
-            let raw = value.toUpperCase().replace(/[^A-Z0-9]/g, "").replace("CRMV", "");
-
-            // Separa letras de números
-            let uf = raw.replace(/[^A-Z]/g, "").slice(0, 2);
-            let num = raw.replace(/\D/g, "").slice(0, 5);
-
-            // Monta a string final
-            let result = "CRMV-";
-
-            if (uf.length > 0) {
-                result += uf;
-            }
-
-            if (num.length > 0) {
-                // Só adiciona o espaço e número se já tiver as 2 letras da UF
-                if (uf.length === 2) {
-                    result += " " + num;
-                }
-            }
-
-            return result;
-        }
+        cpf(v) { v=v.replace(/\D/g,""); if(v.length>11) v=v.slice(0,11); if(v.length>9) return v.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/,"$1.$2.$3-$4"); return v; },
+        phone(v) { v=v.replace(/\D/g,""); if(v.length>11) v=v.slice(0,11); if(v.length>10) return v.replace(/^(\d{2})(\d{5})(\d{4}).*/,"($1) $2-$3"); return v; },
+        crmv(v) { if(!v)return ""; let r=v.toUpperCase().replace(/[^A-Z0-9]/g,"").replace("CRMV",""); let uf=r.replace(/[^A-Z]/g,"").slice(0,2); let n=r.replace(/\D/g,"").slice(0,5); return "CRMV-" + (uf.length>0?uf:"") + (uf.length===2&&n.length>0?" "+n:""); }
     };
 
-    // Aplicando as máscaras aos inputs
     function setupMasks() {
-        const inputsToMask = {
-            'donoCpf': masks.cpf,
-            'donoTelefone': masks.phone,
-            'animalDonoCpf': masks.cpf,   // CORRIGIDO: Aqui deve ser CPF, não CRMV
-            'vetCrmv': masks.crmv,
-            'certVet': masks.crmv
-        };
-
-        for (const [id, maskFunction] of Object.entries(inputsToMask)) {
-            const input = document.getElementById(id);
-            if (input) {
-                input.addEventListener('input', (e) => {
-                    // Aplica a máscara
-                    e.target.value = maskFunction(e.target.value);
-                });
-            }
+        const ids = {'donoCpf':masks.cpf, 'donoTelefone':masks.phone, 'animalDonoCpf':masks.cpf, 'vetCrmv':masks.crmv, 'certVet':masks.crmv};
+        for(const [id, fn] of Object.entries(ids)) {
+            const el = document.getElementById(id);
+            if(el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
         }
     }
 
-
-
-    // ======================================================
-    // =================== FIM DAS ADIÇÕES JS ==================
-    // ======================================================
-
-
-    // --- INICIALIZAÇÃO ---
-    function renderAll() {
+    async function renderAll() {
         setupMasks();
+        // CORREÇÃO: Usando vírgulas dentro do array, não ponto e vírgula
         await Promise.all([
-            loadDonos();
-            loadAnimais();
-            loadConsultas();
-            loadTratamentos();
-            loadVets();
-            loadCerts();
-            ]);
-
+            loadDonos(),
+            loadAnimais(),
+            loadConsultas(),
+            loadTratamentos(),
+            loadVets(),
+            loadCerts()
+        ]);
         updateDashboard();
     }
-    // Chama o renderAll assim que o DOM (HTML) estiver pronto
-    document.addEventListener('DOMContentLoaded', renderAll);
 
+    document.addEventListener('DOMContentLoaded', renderAll);
 </script>
 </body>
 </html>
