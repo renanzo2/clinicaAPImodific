@@ -668,7 +668,6 @@
 
         const url = id ? `${API_URL}/donos/${id}` : `${API_URL}/donos`;
         const method = id ? 'PUT' : 'POST';
-        if (id) dono.cpf = id;
 
         try {
             await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dono) });
@@ -687,7 +686,6 @@
             document.getElementById('donoEmail').value = dono.email;
             document.getElementById('donoEndereco').value = dono.endereco;
             document.getElementById('donoDataNascimento').value = dono.dataNascimento;
-            document.getElementById('donoCpf').readOnly = true;
             document.getElementById('donoForm').classList.add('active');
         } catch (error) { console.error(error); }
     }
