@@ -21,3 +21,14 @@ ALTER TABLE consulta
 ADD CONSTRAINT Fk_Animal_Consulta
 FOREIGN KEY (id_animal) REFERENCES Animal(RFID)
 ON DELETE CASCADE;
+
+
+INSERT INTO grupos_usuarios (idgrupo, nome_grupo, descricao) VALUES
+(1, 'ADMIN', 'Acesso total ao sistema'),
+(2, 'FUNCIONARIO', 'Acessso restrito (leitura e escrita)');
+
+INSERT INTO usuarios (id_usuario, login, senha, nome_completo, id_grupo, ativo) VALUES
+(UUID(), 'admin', '****', 'Administrador do Sistema', 1, 1);
+
+INSERT INTO usuarios (id_usuario, login, senha, nome_completo, id_grupo, ativo) VALUES
+(UUID(), 'funcionario', '*******', 'Funcionario Padrão', 2, 1);
