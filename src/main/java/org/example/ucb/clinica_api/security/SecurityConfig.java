@@ -113,4 +113,23 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    public SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        //Libera o endpoint de login e arquivos estáticos
+                        .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers("/index.html", "/", "/static/**").permitAll()
+                        // Permissao de DELETE para administradores
+                        .requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")
+                        // Qualquer outra requisição além dessas precisam de estar logado
+                        .anyRequest().authenticated()
+                )
+                .addFilterAfter(tenantFilter(), BasicAuthenticationFilter.class)
+                .httpBasic(Customizer.withDefaults());
+
+        return http.build();
+    }
 }

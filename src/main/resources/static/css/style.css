@@ -1,0 +1,25 @@
+:root {
+    --primary-color: #4f46e5;
+    --sidebar-width: 260px;
+    --bg-color: #f3f4f6;
+    --text-color: #1f2937;
+    --danger-color: #ef4444
+}
+
+/*-- RESET & BASE --*/
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/*-- ESTRUTURA PRINCIPAL DO APP -- (Sidebar + Main) --*/
+#app-screen {
+    display: none;
+    height: 100vh;
+    width: 100%;
+}

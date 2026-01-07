@@ -18,9 +18,75 @@
             font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            display: flex;
             height: 100vh;
             overflow: hidden;
+        }
+
+        /* --- TELA DE LOGIN --- */
+        #login-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+        }
+
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #f9fafb;
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-card button:hover { background: #4338ca; }
+
+        .error-msg {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* --- TELA DA APLICAÇÃO (Sidebar + Main) --- */
+        #app-screen {
+            display: none; /* Oculto por padrão */
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Ajuste para quando a div app-screen estiver visível */
+        #app-screen.active {
+            display: flex;
         }
 
         /* --- SIDEBAR --- */
@@ -63,11 +129,20 @@
             transform: translateX(5px);
         }
 
+        .logout-btn {
+            margin-top: auto;
+            background: #ef4444;
+            color: white;
+            text-align: center;
+        }
+        .logout-btn:hover { background: #dc2626; color: white; }
+
         /* --- CONTEÚDO PRINCIPAL --- */
         .main-content {
             flex: 1;
             overflow-y: auto;
             padding: 30px;
+            position: relative;
         }
 
         .page { display: none; animation: fadeIn 0.3s ease; }
@@ -149,14 +224,11 @@
             width: 95%;
             max-width: 750px;
             max-height: 85vh;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            box-shadow:
-            0 25px 50px -12px rgba(0, 0, 0, 0.25),
-            0 0 0 100vmax rgba(0, 0, 0, 0.45);
+            overflow-y: auto; /* Adicionado scroll */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 100vmax rgba(0, 0, 0, 0.45);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             opacity: 0;
             pointer-events: none;
-            backdrop-filter: blur(5px);
         }
 
         .form-section.active {
@@ -177,406 +249,246 @@
             gap: 10px;
         }
 
-        .form-section form {
-            padding: 30px 40px;
-        }
-
-        .form-group {
-            margin-botton: 20px;
-            position: relative;
-        }
+        .form-section form { padding: 30px 40px; }
+        .form-group { margin-bottom: 20px; position: relative; } /* Correção de typo margin-botton */
 
         .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #374151;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
+            display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: #374151; text-transform: uppercase;
         }
 
-        input[type="text"],
-        input[type="number"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        input[type="time"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background-color: #f9fafb;
-            font-size: 0.95rem;
-            color: #1f2937;
-            transition: all 0.2s ease-in-out;
-            outline: none;
+        input, select, textarea {
+            width: 100%; padding: 12px 16px; border: 1px solid #d1d5db; border-radius: 8px; background-color: #f9fafb;
+            font-size: 0.95rem; color: #1f2937; outline: none; transition: all 0.2s;
         }
 
         input:focus, select:focus, textarea:focus {
-            background-color: #fff;
-            border-color: var(--primary-color);
+            background-color: #fff; border-color: var(--primary-color);
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-            transform: translateY(-1px);
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: translate(-50%, -40%) scale(0.95); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .form-grid { grid-template-columns: 1fr; }
-        }
+        textarea { resize: vertical; min-height: 100px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
 
         .form-actions {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
+            margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; display: flex; justify-content: flex-end; gap: 12px;
         }
 
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 3000;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(4px);
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5);
+            z-index: 3000; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
         }
 
-        .modal-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
+        .modal-overlay.active { display: flex; opacity: 1; }
 
         .modal-content {
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            width: 95%;
-            max-width: 900px;
-            max-height: 85vh;
-            overflow-y: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            display: flex;
-            flex-direction: column;
-            transform: scale(0.95);
-            transition: transform 0.3S cubic-bezier(0.34, 1.56, 0.64, 1);;
+            background: white; padding: 40px; border-radius: 16px; width: 95%; max-width: 900px; max-height: 85vh;
+            overflow-y: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: flex; flex-direction: column;
+            transform: scale(0.95); transition: transform 0.3s;
         }
+        .modal-overlay.active .modal-content { transform: scale(1); }
 
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-header {
-            background: #1e1e2d;
-            color: white;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h2 {
-            font-size: 1.4rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .close-btn {
-            color: rgba(255,255,255,0.7);
-            transition: 0.2s;
-        }
-
+        .modal-header { background: #1e1e2d; color: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; }
+        .close-btn { color: rgba(255,255,255,0.7); cursor: pointer; border:none; background:none; font-size:2rem; }
         .close-btn:hover { color: white; transform: rotate(90deg); }
-
-        #fichaModalBody {
-            padding: 30px 40px;
-            overflow-y: auto;
-        }
+        #fichaModalBody { padding: 30px 40px; overflow-y: auto; }
 
         .ficha-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
-            background: #f3f4f6;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;
+            background: #f3f4f6; padding: 20px; border-radius: 12px; border: 1px solid #e5e7eb;
         }
-
-        .ficha-item strong {
-            display: block;
-            color: #6b7280;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .ficha-item span {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #1f2937;
-        }
-
-        .historico-titulo {
-            font-size: 1.1rem;
-            color: #4f46e5;
-            margin: 30px 0 15px 0;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .consulta-card {
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            padding: 15px;
-        }
-
-        .tratamento-card {
-            background: #eff6ff;
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
-            border-left: 3px solid #3b82f6;
-        }
+        .ficha-item strong { display: block; color: #6b7280; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 4px; }
+        .ficha-item span { font-size: 1.1rem; font-weight: 500; color: #1f2937; }
+        .historico-titulo { font-size: 1.1rem; color: #4f46e5; margin: 30px 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid #e5e7eb; }
+        .consulta-card { border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 10px; padding: 15px; }
+        .tratamento-card { background: #eff6ff; padding: 10px; border-radius: 6px; margin-top: 10px; border-left: 3px solid #3b82f6; }
     </style>
 </head>
 <body>
 
-<nav class="sidebar">
-    <h2>🐾 Clínica Vet</h2>
-    <div class="nav-link active-menu" data-page="home"><span>🏠</span> Dashboard</div>
-    <div class="nav-link" data-page="donos"><span>👥</span> Gestão de Donos</div>
-    <div class="nav-link" data-page="animais"><span>🐕</span> Animais</div>
-    <div class="nav-link" data-page="consultas"><span>📅</span> Consultas</div>
-    <div class="nav-link" data-page="tratamentos"><span>💉</span> Tratamentos</div>
-    <div class="nav-link" data-page="veterinarios"><span>🩺</span> Veterinários</div>
-    <div class="nav-link" data-page="certificacoes"><span>🏆</span> Certificações</div>
-</nav>
+<div id="login-screen">
+    <div class="login-card">
+        <h2>🔒 Clínica Vet Login</h2>
+        <p class="error-msg" id="loginError">Usuário ou senha inválidos.</p>
+        <form onsubmit="realizarLogin(event)">
+            <input type="text" id="loginUser" placeholder="Usuário" required>
+            <input type="password" id="loginPass" placeholder="Senha" required>
+            <button type="submit">ENTRAR</button>
+        </form>
+    </div>
+</div>
 
-<main class="main-content">
+<div id="app-screen">
+    <nav class="sidebar">
+        <h2>🐾 Clínica Vet</h2>
+        <div class="nav-link active-menu" data-page="home"><span>🏠</span> Dashboard</div>
+        <div class="nav-link" data-page="donos"><span>👥</span> Gestão de Donos</div>
+        <div class="nav-link" data-page="animais"><span>🐕</span> Animais</div>
+        <div class="nav-link" data-page="consultas"><span>📅</span> Consultas</div>
+        <div class="nav-link" data-page="tratamentos"><span>💉</span> Tratamentos</div>
+        <div class="nav-link" data-page="veterinarios"><span>🩺</span> Veterinários</div>
+        <div class="nav-link" data-page="certificacoes"><span>🏆</span> Certificações</div>
 
-    <div id="home" class="page active">
-        <h1>Visão Geral</h1>
-        <p style="color: #6b7280;">Bem-vindo ao sistema de gestão administrativa.</p>
-        <div class="dashboard-grid">
-            <div class="stat-card" style="border-left-color: #4f46e5;">
-                <h3>Total de Animais</h3>
-                <div class="number" id="dashTotalAnimais">--</div>
+        <div class="nav-link logout-btn" onclick="fazerLogout()"><span>🚪</span> Sair</div>
+    </nav>
+
+    <main class="main-content">
+        <div id="home" class="page active">
+            <h1>Visão Geral</h1>
+            <p style="color: #6b7280;">Bem-vindo ao sistema de gestão administrativa.</p>
+            <div class="dashboard-grid">
+                <div class="stat-card" style="border-left-color: #4f46e5;"><h3>Total de Animais</h3><div class="number" id="dashTotalAnimais">--</div></div>
+                <div class="stat-card" style="border-left-color: #10b981;"><h3>Consultas Realizadas</h3><div class="number" id="dashTotalConsultas">--</div></div>
+                <div class="stat-card" style="border-left-color: #f59e0b;"><h3>Veterinários Ativos</h3><div class="number" id="dashTotalVets">--</div></div>
+                <div class="stat-card" style="border-left-color: #ef4444;"><h3>Donos Cadastrados</h3><div class="number" id="dashTotalDonos">--</div></div>
             </div>
-            <div class="stat-card" style="border-left-color: #10b981;">
-                <h3>Consultas Realizadas</h3>
-                <div class="number" id="dashTotalConsultas">--</div>
-            </div>
-            <div class="stat-card" style="border-left-color: #f59e0b;">
-                <h3>Veterinários Ativos</h3>
-                <div class="number" id="dashTotalVets">--</div>
-            </div>
-            <div class="stat-card" style="border-left-color: #ef4444;">
-                <h3>Donos Cadastrados</h3>
-                <div class="number" id="dashTotalDonos">--</div>
+            <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 12px;">
+                <h3>⚙️ Área Administrativa</h3>
+                <p>Sincronização manual com MongoDB para Fichas Técnicas.</p>
+                <button class="btn btn-primary" onclick="syncMongo()">🔄 Sincronizar Agora</button>
             </div>
         </div>
-    </div>
 
-    <div id="donos" class="page">
-        <div class="crud-container">
-            <div class="crud-header">
-                <h2>Gestão de Donos</h2>
-                <button class="btn btn-primary" onclick="toggleForm('donoForm')">➕ Novo Dono</button>
-            </div>
-            <div id="donoForm" class="form-section">
-                <h3>Cadastro de Dono</h3>
-                <form onsubmit="saveDono(event)">
-                    <input type="hidden" id="donoId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>CPF *</label><input type="text" id="donoCpf" required></div>
-                        <div class="form-group"><label>Nome Completo *</label><input type="text" id="donoNome" required></div>
-                        <div class="form-group"><label>Telefone</label><input type="tel" id="donoTelefone"></div>
-                        <div class="form-group"><label>E-mail</label><input type="email" id="donoEmail"></div>
-                        <div class="form-group"><label>Endereço</label><input type="text" id="donoEndereco"></div>
-                        <div class="form-group"><label>Data Nascimento</label><input type="date" id="donoDataNascimento"></div>
-                    </div>
-                    <div class="form-actions" style="display:flex; justify-content:flex-end; gap:10px;">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('donoForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Salvar</button>
-                    </div>
-                </form>
-            </div>
-            <table>
-                <thead><tr><th>CPF</th><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Ações</th></tr></thead>
-                <tbody id="donosList"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="animais" class="page">
-        <div class="crud-container">
-            <div class="crud-header">
-                <h2>Registro de Animais</h2>
-                <button class="btn btn-primary" onclick="toggleForm('animalForm')">➕ Novo Animal</button>
-            </div>
-            <div id="animalForm" class="form-section">
-                <h3>Cadastro de Animal</h3>
-                <form onsubmit="saveAnimal(event)">
-                    <input type="hidden" id="animalId">
-                    <div class="form-grid">
-                        <div class="form-group">
-                            <label>RFID (Automático)</label>
-                            <input type="text" id="animalRfid" placeholder="Gerado pelo sistema..." disabled>
+        <div id="donos" class="page">
+            <div class="crud-container">
+                <div class="crud-header"><h2>Gestão de Donos</h2><button class="btn btn-primary" onclick="toggleForm('donoForm')">➕ Novo Dono</button></div>
+                <div id="donoForm" class="form-section">
+                    <h3>Cadastro de Dono</h3>
+                    <form onsubmit="saveDono(event)">
+                        <input type="hidden" id="donoId">
+                        <div class="form-grid">
+                            <div class="form-group"><label>CPF *</label><input type="text" id="donoCpf" required></div>
+                            <div class="form-group"><label>Nome *</label><input type="text" id="donoNome" required></div>
+                            <div class="form-group"><label>Telefone</label><input type="tel" id="donoTelefone"></div>
+                            <div class="form-group"><label>E-mail</label><input type="email" id="donoEmail"></div>
+                            <div class="form-group"><label>Endereço</label><input type="text" id="donoEndereco"></div>
+                            <div class="form-group"><label>Data Nasc.</label><input type="date" id="donoDataNascimento"></div>
                         </div>
-                        <div class="form-group"><label>Nome *</label><input type="text" id="animalNome" required></div>
-                        <div class="form-group"><label>Espécie *</label>
-                            <select id="animalEspecie" required>
-                                <option value="">Selecione...</option>
-                                <option value="Cachorro">Cachorro</option>
-                                <option value="Gato">Gato</option>
-                                <option value="Jibóia">Jibóia</option>
-                                <option value="Coelho">Coelho</option>
-                                <option value="Outro">Outro</option>
-                            </select>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="cancelForm('donoForm')">Cancelar</button>
+                            <button type="submit" class="btn btn-success">Salvar</button>
                         </div>
-                        <div class="form-group"><label>Idade *</label><input type="number" id="animalIdade" required></div>
-                        <div class="form-group"><label>Porte *</label><input type="text" id="animalPorte" required></div>
-                        <div class="form-group"><label>CPF do Dono *</label><input type="text" id="animalDonoCpf" required></div>
-                    </div>
-                    <div class="form-actions" style="display:flex; justify-content:flex-end; gap:10px;">
-                        <button type="button" class="btn btn-secondary" onclick="cancelForm('animalForm')">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Salvar</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <table><thead><tr><th>CPF</th><th>Nome</th><th>Telefone</th><th>Ações</th></tr></thead><tbody id="donosList"></tbody></table>
             </div>
-            <table>
-                <thead><tr><th>RFID</th><th>Nome</th><th>Espécie</th><th>Dono</th><th>Ações</th></tr></thead>
-                <tbody id="animaisList"></tbody>
-            </table>
         </div>
-    </div>
 
-    <div id="consultas" class="page">
-        <div class="crud-container">
-            <div class="crud-header">
-                <h2>Consultas Agendadas</h2>
-                <button class="btn btn-primary" onclick="openNewConsulta()">➕ Nova Consulta</button>
+        <div id="animais" class="page">
+            <div class="crud-container">
+                <div class="crud-header"><h2>Animais</h2><button class="btn btn-primary" onclick="toggleForm('animalForm')">➕ Novo Animal</button></div>
+                <div id="animalForm" class="form-section">
+                    <h3>Cadastro de Animal</h3>
+                    <form onsubmit="saveAnimal(event)">
+                        <input type="hidden" id="animalId">
+                        <div class="form-grid">
+                            <div class="form-group"><label>RFID</label><input type="text" id="animalRfid" placeholder="Auto..." disabled></div>
+                            <div class="form-group"><label>Nome *</label><input type="text" id="animalNome" required></div>
+                            <div class="form-group"><label>Espécie *</label>
+                                <select id="animalEspecie" required>
+                                    <option value="Cachorro">Cachorro</option><option value="Gato">Gato</option>
+                                    <option value="Coelho">Coelho</option><option value="Jibóia">Jibóia</option><option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label>Idade</label><input type="number" id="animalIdade" required></div>
+                            <div class="form-group"><label>Porte</label><input type="text" id="animalPorte" required></div>
+                            <div class="form-group"><label>CPF Dono *</label><input type="text" id="animalDonoCpf" required></div>
+                        </div>
+                        <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="cancelForm('animalForm')">Cancelar</button><button type="submit" class="btn btn-success">Salvar</button></div>
+                    </form>
+                </div>
+                <table><thead><tr><th>RFID</th><th>Nome</th><th>Espécie</th><th>Dono</th><th>Ações</th></tr></thead><tbody id="animaisList"></tbody></table>
             </div>
-            <div id="consultaForm" class="form-section">
-                <form onsubmit="saveConsulta(event)">
-                    <input type="hidden" id="consultaId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>Animal (RFID)</label><select id="consultaAnimal" required><option value="">Selecione um animal...</option></select></div>
-                        <div class="form-group"><label>Veterinário (CRMV)</label><select id="consultaVet" required><option value="">Selecione um veterinário...</option></select></div>
-                        <div class="form-group"><label>Data</label><input type="date" id="consultaData" required></div>
-                        <div class="form-group"><label>Hora</label><input type="time" id="consultaHora" required></div>
-                        <div class="form-group"><label>Tipo</label><select id="consultaTipo"><option>Rotina</option><option>Emergência</option></select></div>
-                        <div class="form-group" style="grid-column:1/-1"><label>Diagnóstico</label><textarea id="consultaDiagnostico"></textarea></div>
-                    </div>
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="cancelForm('consultaForm')">Cancelar</button>
-                </form>
-            </div>
-            <table>
-                <thead><tr><th>Data/Hora</th><th>Animal</th><th>Vet</th><th>Tipo</th><th>Ações</th></tr></thead>
-                <tbody id="consultasList"></tbody>
-            </table>
         </div>
-    </div>
 
-    <div id="tratamentos" class="page">
-        <div class="crud-container">
-            <h2>Tratamentos</h2>
-            <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('tratamentoForm')">➕ Novo Tratamento</button></div>
-            <div id="tratamentoForm" class="form-section">
-                <form onsubmit="saveTratamento(event)">
-                    <input type="hidden" id="tratamentoId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>ID Consulta</label><input type="text" id="tratamentoConsultaId" required></div>
-                        <div class="form-group"><label>Antibiótico?</label><select id="tratamentoAntibiotico"><option value="true">Sim</option><option value="false">Não</option></select></div>
-                        <div class="form-group"><label>Descrição</label><textarea id="tratamentoDescricao"></textarea></div>
-                    </div>
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button>
-                </form>
+        <div id="consultas" class="page">
+            <div class="crud-container">
+                <div class="crud-header"><h2>Consultas</h2><button class="btn btn-primary" onclick="openNewConsulta()">➕ Nova Consulta</button></div>
+                <div id="consultaForm" class="form-section">
+                    <h3>Consulta</h3>
+                    <form onsubmit="saveConsulta(event)">
+                        <input type="hidden" id="consultaId">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Animal</label><select id="consultaAnimal" required></select></div>
+                            <div class="form-group"><label>Veterinário</label><select id="consultaVet" required></select></div>
+                            <div class="form-group"><label>Data</label><input type="date" id="consultaData" required></div>
+                            <div class="form-group"><label>Hora</label><input type="time" id="consultaHora" required></div>
+                            <div class="form-group"><label>Tipo</label><select id="consultaTipo"><option>Rotina</option><option>Emergência</option></select></div>
+                            <div class="form-group" style="grid-column:1/-1"><label>Diagnóstico</label><textarea id="consultaDiagnostico"></textarea></div>
+                        </div>
+                        <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="cancelForm('consultaForm')">Cancelar</button><button type="submit" class="btn btn-success">Salvar</button></div>
+                    </form>
+                </div>
+                <table><thead><tr><th>Data</th><th>Animal</th><th>Vet</th><th>Tipo</th><th>Ações</th></tr></thead><tbody id="consultasList"></tbody></table>
             </div>
-            <table><thead><tr><th>ID</th><th>Consulta</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="tratamentosList"></tbody></table>
         </div>
-    </div>
 
-    <div id="veterinarios" class="page">
-        <div class="crud-container">
-            <h2>Veterinários</h2>
-            <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('vetForm')">➕ Novo Vet</button></div>
-            <div id="vetForm" class="form-section">
-                <form onsubmit="saveVet(event)">
-                    <input type="hidden" id="vetId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>CRMV</label><input type="text" id="vetCrmv" required></div>
-                        <div class="form-group"><label>Nome</label><input type="text" id="vetNome" required></div>
-                        <div class="form-group"><label>Idade</label><input type="number" id="vetIdade"></div>
-                        <div class="form-group"><label>Graduação</label><input type="date" id="vetDataGraduacao"></div>
-                    </div>
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="cancelForm('vetForm')">Cancelar</button>
-                </form>
+        <div id="tratamentos" class="page">
+            <div class="crud-container">
+                <div class="crud-header"><h2>Tratamentos</h2><button class="btn btn-primary" onclick="toggleForm('tratamentoForm')">➕ Novo Tratamento</button></div>
+                <div id="tratamentoForm" class="form-section">
+                    <h3>Tratamento</h3>
+                    <form onsubmit="saveTratamento(event)">
+                        <input type="hidden" id="tratamentoId">
+                        <div class="form-grid">
+                            <div class="form-group"><label>ID Consulta</label><input type="text" id="tratamentoConsultaId" required></div>
+                            <div class="form-group"><label>Antibiótico?</label><select id="tratamentoAntibiotico"><option value="true">Sim</option><option value="false">Não</option></select></div>
+                            <div class="form-group"><label>Descrição</label><textarea id="tratamentoDescricao"></textarea></div>
+                        </div>
+                        <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="cancelForm('tratamentoForm')">Cancelar</button><button type="submit" class="btn btn-success">Salvar</button></div>
+                    </form>
+                </div>
+                <table><thead><tr><th>ID</th><th>Consulta</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="tratamentosList"></tbody></table>
             </div>
-            <table><thead><tr><th>CRMV</th><th>Nome</th><th>Ações</th></tr></thead><tbody id="vetsList"></tbody></table>
         </div>
-    </div>
 
-    <div id="certificacoes" class="page">
-        <div class="crud-container">
-            <h2>Certificações</h2>
-            <div class="crud-header"><button class="btn btn-primary" onclick="toggleForm('certForm')">➕ Nova Certificação</button></div>
-            <div id="certForm" class="form-section">
-                <form onsubmit="saveCert(event)">
-                    <input type="hidden" id="certId">
-                    <div class="form-grid">
-                        <div class="form-group"><label>Registro</label><input type="text" id="certNumeroRegistro" required></div>
-                        <div class="form-group"><label>Vet (CRMV)</label><input type="text" id="certVet" required></div>
-                        <div class="form-group"><label>Especialidade ID</label><input type="number" id="certEspecialidadeId" required></div>
-                        <div class="form-group"><label>Instituição</label><input type="text" id="certInstituicao"></div>
-                        <div class="form-group"><label>Data</label><input type="date" id="certDataObtencao"></div>
-                    </div>
-                    <button type="submit" class="btn btn-success">Salvar</button>
-                    <button type="button" class="btn btn-secondary" onclick="cancelForm('certForm')">Cancelar</button>
-                </form>
+        <div id="veterinarios" class="page">
+            <div class="crud-container">
+                <div class="crud-header"><h2>Veterinários</h2><button class="btn btn-primary" onclick="toggleForm('vetForm')">➕ Novo Vet</button></div>
+                <div id="vetForm" class="form-section">
+                    <h3>Veterinário</h3>
+                    <form onsubmit="saveVet(event)">
+                        <input type="hidden" id="vetId">
+                        <div class="form-grid">
+                            <div class="form-group"><label>CRMV</label><input type="text" id="vetCrmv" required></div>
+                            <div class="form-group"><label>Nome</label><input type="text" id="vetNome" required></div>
+                            <div class="form-group"><label>Idade</label><input type="number" id="vetIdade"></div>
+                            <div class="form-group"><label>Graduação</label><input type="date" id="vetDataGraduacao"></div>
+                        </div>
+                        <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="cancelForm('vetForm')">Cancelar</button><button type="submit" class="btn btn-success">Salvar</button></div>
+                    </form>
+                </div>
+                <table><thead><tr><th>CRMV</th><th>Nome</th><th>Ações</th></tr></thead><tbody id="vetsList"></tbody></table>
             </div>
-            <table><thead><tr><th>Registro</th><th>Vet</th><th>Especialidade</th><th>Ações</th></tr></thead><tbody id="certsList"></tbody></table>
         </div>
-    </div>
 
-</main>
+        <div id="certificacoes" class="page">
+            <div class="crud-container">
+                <div class="crud-header"><h2>Certificações</h2><button class="btn btn-primary" onclick="toggleForm('certForm')">➕ Nova Cert.</button></div>
+                <div id="certForm" class="form-section">
+                    <h3>Certificação</h3>
+                    <form onsubmit="saveCert(event)">
+                        <input type="hidden" id="certId">
+                        <div class="form-grid">
+                            <div class="form-group"><label>Registro</label><input type="text" id="certNumeroRegistro" required></div>
+                            <div class="form-group"><label>Vet (CRMV)</label><input type="text" id="certVet" required></div>
+                            <div class="form-group"><label>Espec. ID</label><input type="number" id="certEspecialidadeId" required></div>
+                            <div class="form-group"><label>Instituição</label><input type="text" id="certInstituicao"></div>
+                            <div class="form-group"><label>Data</label><input type="date" id="certDataObtencao"></div>
+                        </div>
+                        <div class="form-actions"><button type="button" class="btn btn-secondary" onclick="cancelForm('certForm')">Cancelar</button><button type="submit" class="btn btn-success">Salvar</button></div>
+                    </form>
+                </div>
+                <table><thead><tr><th>Registro</th><th>Vet</th><th>Ações</th></tr></thead><tbody id="certsList"></tbody></table>
+            </div>
+        </div>
+
+    </main>
+</div>
 
 <div id="fichaModal" class="modal-overlay">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2>🐾 Ficha Técnica</h2>
-            <button class="close-btn" onclick="hideFicha()" style="border:none; background:none; font-size:2rem; cursor:pointer;">&times;</button>
-        </div>
+        <div class="modal-header"><h2>🐾 Ficha Técnica</h2><button class="close-btn" onclick="hideFicha()">&times;</button></div>
         <div id="fichaModalBody"></div>
     </div>
 </div>
@@ -584,264 +496,268 @@
 <script>
     const API_URL = 'http://localhost:8080/api';
 
+    // --- AUTENTICAÇÃO E LOGIN ---
+
+    function checkLogin() {
+        const creds = localStorage.getItem('clinica_creds');
+        if (creds) {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'flex';
+            renderAll(); // Carrega os dados
+        } else {
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('app-screen').style.display = 'none';
+        }
+    }
+
+    async function realizarLogin(e) {
+        e.preventDefault();
+        const user = document.getElementById('loginUser').value;
+        const pass = document.getElementById('loginPass').value;
+        const errorMsg = document.getElementById('loginError');
+
+        try {
+            // Tenta logar via POST (para validar senha no backend)
+            const response = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ login: user, senha: pass })
+            });
+
+            if (response.ok) {
+                // Se OK, cria o token Basic Auth e salva
+                const creds = btoa(`${user}:${pass}`);
+                localStorage.setItem('clinica_creds', creds);
+                localStorage.setItem('clinica_user', user);
+                errorMsg.style.display = 'none';
+                checkLogin();
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        } catch (error) {
+            console.error(error);
+            errorMsg.innerText = "Erro ao conectar com servidor.";
+            errorMsg.style.display = 'block';
+        }
+    }
+
+    function fazerLogout() {
+        localStorage.removeItem('clinica_creds');
+        localStorage.removeItem('clinica_user');
+        window.location.reload();
+    }
+
+    // Função auxiliar para injetar Headers de Autenticação em todos os fetchs
+    function getAuthHeaders() {
+        const creds = localStorage.getItem('clinica_creds');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Basic ${creds}`
+        };
+    }
+
     // --- NAVEGAÇÃO ---
-    document.querySelectorAll('.nav-link').forEach(link => {
+    document.querySelectorAll('.nav-link[data-page]').forEach(link => {
         link.addEventListener('click', function() {
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active-menu'));
             this.classList.add('active-menu');
-            const pageId = this.dataset.page;
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const targetPage = document.getElementById(pageId);
-            if(targetPage) targetPage.classList.add('active');
+            const pId = this.dataset.page;
+            const target = document.getElementById(pId);
+            if(target) target.classList.add('active');
         });
     });
 
-    // --- FUNÇÕES GLOBAIS DE FORMULÁRIO ---
-    function toggleForm(formId) {
-        document.getElementById(formId).classList.toggle('active');
+    // --- HELPERS ---
+    function toggleForm(id) { document.getElementById(id).classList.add('active'); }
+    function cancelForm(id) {
+        const f = document.getElementById(id);
+        f.classList.remove('active');
+        f.querySelector('form').reset();
+        const h = f.querySelector('input[type="hidden"]');
+        if(h) h.value = '';
+        // Reseta campos readonly específicos
+        if(id === 'donoForm') document.getElementById('donoCpf').readOnly = false;
+        if(id === 'vetForm') document.getElementById('vetCrmv').readOnly = false;
+        if(id === 'certForm') document.getElementById('certNumeroRegistro').readOnly = false;
+        if(id === 'animalForm') document.getElementById('animalRfid').readOnly = true;
     }
 
-    function cancelForm(formId) {
-        const formElement = document.getElementById(formId);
-        formElement.classList.remove('active');
-        formElement.querySelector('form').reset();
-        const hiddenId = formElement.querySelector('input[type="hidden"]');
-        if (hiddenId) hiddenId.value = '';
-
-        if (formId === 'certForm') document.getElementById('certNumeroRegistro').readOnly = false;
-        if (formId === 'animalForm') document.getElementById('animalRfid').value = "";
-        if (formId === 'donoForm') document.getElementById('donoCpf').readOnly = false;
-        if (formId === 'vetForm') document.getElementById('vetCrmv').readOnly = false;
-    }
-
-    async function handleResponse(response) {
-        if (!response.ok) {
-            const errorData = await response.json().catch(() => ({ message: 'Erro desconhecido' }));
-            throw new Error(errorData.message || `Erro ${response.status}`);
+    async function handleResponse(res) {
+        if (!res.ok) {
+            if(res.status === 401 || res.status === 403) {
+                alert("Sessão expirada ou sem permissão. Faça login novamente.");
+                fazerLogout();
+                return null;
+            }
+            const data = await res.json().catch(()=>({message:'Erro desconhecido'}));
+            throw new Error(data.message || res.status);
         }
-        if (response.status === 204) return null;
-        return response.json();
+        if(res.status === 204) return null;
+        return res.json();
     }
 
-    // ================= CRUD DONOS =================
+    // ================= CRUD (Funções Atualizadas com Auth) =================
+
+    // DONOS
     async function loadDonos() {
         try {
-            const response = await fetch(`${API_URL}/donos`);
-            const donos = await handleResponse(response);
-            renderDonos(donos);
-        } catch (error) { console.error('Erro ao carregar donos:', error); }
+            const res = await fetch(`${API_URL}/donos`, { headers: getAuthHeaders() });
+            renderDonos(await handleResponse(res));
+        } catch(e) { console.error(e); }
     }
-
-    function renderDonos(donos) {
-        const tbody = document.getElementById('donosList');
-        if (!donos || donos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum dono cadastrado</td></tr>';
-            return;
-        }
-        tbody.innerHTML = donos.map(dono => `
+    function renderDonos(list) {
+        const tb = document.getElementById('donosList');
+        if(!list || list.length === 0) { tb.innerHTML='<tr><td colspan="4">Vazio</td></tr>'; return; }
+        tb.innerHTML = list.map(d => `
             <tr>
-                <td>${dono.cpf}</td><td>${dono.nome}</td><td>${dono.telefone || '-'}</td><td>${dono.email || '-'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editDono('${dono.cpf}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteDono('${dono.cpf}')">🗑️ Excluir</button>
+                <td>${d.cpf}</td><td>${d.nome}</td><td>${d.telefone||'-'}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editDono('${d.cpf}')">✏️</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteDono('${d.cpf}')">🗑️</button>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`).join('');
     }
-
     async function saveDono(e) {
         e.preventDefault();
-        const cpf = document.getElementById('donoCpf').value;
-        if (cpf.length < 14) { alert("Por favor, preencha o CPF completo."); return; }
-        if (!confirm("Tem certeza que os dados do DONO estão corretos?")) return;
-
-        const idInput = document.getElementById('donoId');
-        const id = idInput.value;
-        const dono = {
+        const id = document.getElementById('donoId').value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/donos/${id}` : `${API_URL}/donos`;
+        const body = {
             cpf: document.getElementById('donoCpf').value,
             nome: document.getElementById('donoNome').value,
-            endereco: document.getElementById('donoEndereco').value,
-            dataNascimento: document.getElementById('donoDataNascimento').value,
             telefone: document.getElementById('donoTelefone').value,
-            email: document.getElementById('donoEmail').value
+            email: document.getElementById('donoEmail').value,
+            endereco: document.getElementById('donoEndereco').value,
+            dataNascimento: document.getElementById('donoDataNascimento').value
         };
-
-        const url = id ? `${API_URL}/donos/${id}` : `${API_URL}/donos`;
-        const method = id ? 'PUT' : 'POST';
-
         try {
-            await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dono) });
+            await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) });
             loadDonos(); cancelForm('donoForm');
-        } catch (error) { alert('Erro ao salvar dono: ' + error.message); }
+        } catch(err) { alert('Erro: ' + err.message); }
     }
-
     async function editDono(cpf) {
-        try {
-            const response = await fetch(`${API_URL}/donos/${cpf}`);
-            const dono = await handleResponse(response);
-            document.getElementById('donoId').value = dono.cpf;
-            document.getElementById('donoNome').value = dono.nome;
-            document.getElementById('donoCpf').value = dono.cpf;
-            document.getElementById('donoTelefone').value = dono.telefone;
-            document.getElementById('donoEmail').value = dono.email;
-            document.getElementById('donoEndereco').value = dono.endereco;
-            document.getElementById('donoDataNascimento').value = dono.dataNascimento;
-            document.getElementById('donoForm').classList.add('active');
-        } catch (error) { console.error(error); }
+        const res = await fetch(`${API_URL}/donos/${cpf}`, { headers: getAuthHeaders() });
+        const d = await handleResponse(res);
+        document.getElementById('donoId').value = d.cpf;
+        document.getElementById('donoCpf').value = d.cpf;
+        document.getElementById('donoCpf').readOnly = true;
+        document.getElementById('donoNome').value = d.nome;
+        document.getElementById('donoTelefone').value = d.telefone;
+        document.getElementById('donoEmail').value = d.email;
+        document.getElementById('donoEndereco').value = d.endereco;
+        document.getElementById('donoDataNascimento').value = d.dataNascimento;
+        document.getElementById('donoForm').classList.add('active');
     }
-
     async function deleteDono(cpf) {
-        if (confirm('Tem certeza que deseja excluir este dono?')) {
-            await fetch(`${API_URL}/donos/${cpf}`, { method: 'DELETE' });
+        if(confirm('Excluir?')) {
+            await fetch(`${API_URL}/donos/${cpf}`, { method: 'DELETE', headers: getAuthHeaders() });
             loadDonos();
         }
     }
 
-    // ================= CRUD ANIMAIS =================
+    // ANIMAIS
     async function loadAnimais() {
         try {
-            const response = await fetch(`${API_URL}/animais`);
-            const animais = await handleResponse(response);
-            renderAnimais(animais);
-        } catch (error) { console.error('Erro ao carregar animais:', error); }
+            const res = await fetch(`${API_URL}/animais`, { headers: getAuthHeaders() });
+            renderAnimais(await handleResponse(res));
+        } catch(e) { console.error(e); }
     }
-
-    function renderAnimais(animais) {
-        const tbody = document.getElementById('animaisList');
-        if (!animais || animais.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum animal cadastrado</td></tr>';
-            return;
-        }
-        tbody.innerHTML = animais.map(a => `
+    function renderAnimais(list) {
+        const tb = document.getElementById('animaisList');
+        if(!list || list.length===0) { tb.innerHTML='<tr><td colspan="5">Vazio</td></tr>'; return; }
+        tb.innerHTML = list.map(a => `
             <tr>
-                <td>${a.rfid}</td><td>${a.nome}</td><td>${a.especie}</td><td>${a.idade}</td><td>${a.porte}</td><td>${a.dono ? a.dono.cpf : 'N/D'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editAnimal('${a.rfid}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteAnimal('${a.rfid}')">🗑️ Excluir</button>
-                    <button class="btn btn-secondary btn-sm" onclick="showFicha('${a.rfid}')">📋 Ver Ficha</button>
+                <td>${a.rfid}</td><td>${a.nome}</td><td>${a.especie}</td><td>${a.dono?a.dono.nome:'-'}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editAnimal('${a.rfid}')">✏️</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteAnimal('${a.rfid}')">🗑️</button>
+                    <button class="btn btn-secondary btn-sm" onclick="showFicha('${a.rfid}')">📋</button>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`).join('');
     }
-
     async function saveAnimal(e) {
         e.preventDefault();
-        if (!confirm("Tem certeza que os dados do ANIMAL estão corretos?")) return;
-        const idInput = document.getElementById('animalId');
-        const id = idInput.value;
-        const animal = {
+        const id = document.getElementById('animalId').value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/animais/${id}` : `${API_URL}/animais`;
+        const body = {
             nome: document.getElementById('animalNome').value,
             especie: document.getElementById('animalEspecie').value,
-            idade: parseInt(document.getElementById('animalIdade').value),
+            idade: document.getElementById('animalIdade').value,
             porte: document.getElementById('animalPorte').value,
             dono: { cpf: document.getElementById('animalDonoCpf').value }
         };
-        const url = id ? `${API_URL}/animais/${id}` : `${API_URL}/animais`;
-        const method = id ? 'PUT' : 'POST';
-        if(id) animal.rfid = id;
-
+        if(id) body.rfid = id;
         try {
-            await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(animal) });
+            await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) });
             loadAnimais(); cancelForm('animalForm');
-        } catch (error) { alert('Erro ao salvar animal'); }
+        } catch(err) { alert('Erro'); }
     }
-
     async function editAnimal(rfid) {
-        try {
-            const response = await fetch(`${API_URL}/animais/${rfid}`);
-            const animal = await handleResponse(response);
-            document.getElementById('animalId').value = animal.rfid;
-            document.getElementById('animalRfid').value = animal.rfid;
-            document.getElementById('animalNome').value = animal.nome;
-            document.getElementById('animalEspecie').value = animal.especie;
-            document.getElementById('animalIdade').value = animal.idade;
-            document.getElementById('animalPorte').value = animal.porte;
-            document.getElementById('animalDonoCpf').value = animal.dono ? animal.dono.cpf : '';
-            document.getElementById('animalRfid').readOnly = true;
-            document.getElementById('animalForm').classList.add('active');
-        } catch (error) { console.error(error); }
+        const res = await fetch(`${API_URL}/animais/${rfid}`, { headers: getAuthHeaders() });
+        const a = await handleResponse(res);
+        document.getElementById('animalId').value = a.rfid;
+        document.getElementById('animalRfid').value = a.rfid;
+        document.getElementById('animalNome').value = a.nome;
+        document.getElementById('animalEspecie').value = a.especie;
+        document.getElementById('animalIdade').value = a.idade;
+        document.getElementById('animalPorte').value = a.porte;
+        document.getElementById('animalDonoCpf').value = a.dono ? a.dono.cpf : '';
+        document.getElementById('animalForm').classList.add('active');
     }
-
     async function deleteAnimal(rfid) {
-        if (confirm('Tem certeza que deseja excluir este animal?')) {
-            await fetch(`${API_URL}/animais/${rfid}`, { method: 'DELETE' });
+        if(confirm('Excluir?')) {
+            await fetch(`${API_URL}/animais/${rfid}`, { method: 'DELETE', headers: getAuthHeaders() });
             loadAnimais();
         }
     }
 
-    // ================= CRUD CONSULTAS =================
+    // CONSULTAS
     async function loadConsultas() {
         try {
-            const response = await fetch(`${API_URL}/consultas`);
-            const consultas = await handleResponse(response);
-            renderConsultas(consultas);
-        } catch (error) { console.error('Erro ao carregar consultas:', error); }
+            const res = await fetch(`${API_URL}/consultas`, { headers: getAuthHeaders() });
+            renderConsultas(await handleResponse(res));
+        } catch(e) { console.error(e); }
     }
-
-    function renderConsultas(consultas) {
-        const tbody = document.getElementById('consultasList');
-        if (!consultas || consultas.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Nenhuma consulta cadastrada</td></tr>';
-            return;
-        }
-        tbody.innerHTML = consultas.map(c => `
+    function renderConsultas(list) {
+        const tb = document.getElementById('consultasList');
+        if(!list || list.length===0) { tb.innerHTML='<tr><td colspan="5">Vazio</td></tr>'; return; }
+        tb.innerHTML = list.map(c => `
             <tr>
-                <td>${c.id}</td><td>${c.animal ? c.animal.rfid : 'N/D'}</td><td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td>
-                <td>${c.diagnostico || '-'}</td><td>${c.dataConsulta || '-'}</td><td>${c.horaConsulta || '-'}</td><td>${c.tipo || '-'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editConsulta('${c.id}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteConsulta('${c.id}')">🗑️ Excluir</button>
+                <td>${c.dataConsulta||'-'}</td><td>${c.animal?c.animal.nome:'-'}</td><td>${c.veterinario?c.veterinario.nome:'-'}</td><td>${c.tipo||'-'}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editConsulta('${c.id}')">✏️</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteConsulta('${c.id}')">🗑️</button>
                 </td>
-            </tr>
-        `).join('');
+            </tr>`).join('');
     }
-
-    // Função para popular os selects (CORRIGIDA)
-    async function populateConsultaSelects() {
-        try {
-            // CORREÇÃO DA URL E DO PROMISE.ALL
-            const [animaisRes, vetsRes] = await Promise.all([
-                fetch(`${API_URL}/animais`),
-                fetch(`${API_URL}/veterinarios`) // URL corrigida
-            ]);
-
-            const animais = await animaisRes.json();
-            const vets = await vetsRes.json();
-
-            const animalSelect = document.getElementById('consultaAnimal');
-            animalSelect.innerHTML = '<option value="">Selecione um animal...</option>';
-            animais.forEach(a => {
-                // CORREÇÃO DA CRASE
-                const texto = `${a.nome} (${a.especie}) - Dono: ${a.dono ? a.dono.nome : '?'}`;
-                const option = new Option(texto, a.rfid);
-                animalSelect.add(option);
-            });
-
-            const vetSelect = document.getElementById('consultaVet');
-            vetSelect.innerHTML = '<option value="">Selecione um veterinário...</option>';
-            vets.forEach(v => {
-                // CORREÇÃO DA CRASE
-                const texto = `${v.nome} (${v.crmv})`;
-                const option = new Option(texto, v.crmv);
-                vetSelect.add(option);
-            });
-        } catch (error) {
-            console.error("Erro ao carregar opções: ", error);
-            alert("Erro ao carregar lista de animais ou veterinários.");
-        }
-    }
-
     async function openNewConsulta() {
-        await populateConsultaSelects();
+        await populateSelects();
         toggleForm('consultaForm');
     }
+    async function populateSelects() {
+        try {
+            const [ra, rv] = await Promise.all([
+                fetch(`${API_URL}/animais`, { headers: getAuthHeaders() }),
+                fetch(`${API_URL}/veterinarios`, { headers: getAuthHeaders() })
+            ]);
+            const animais = await ra.json();
+            const vets = await rv.json();
 
+            const sa = document.getElementById('consultaAnimal'); sa.innerHTML='<option value="">Selecione...</option>';
+            animais.forEach(a => sa.add(new Option(`${a.nome} (${a.rfid})`, a.rfid)));
+
+            const sv = document.getElementById('consultaVet'); sv.innerHTML='<option value="">Selecione...</option>';
+            vets.forEach(v => sv.add(new Option(`${v.nome}`, v.crmv)));
+        } catch(e) { console.error(e); }
+    }
     async function saveConsulta(e) {
         e.preventDefault();
-        if (!confirm("Confirma o agendamento dessa consulta?")) return;
-        const idInput = document.getElementById('consultaId');
-        const id = idInput.value;
-        const consulta = {
+        const id = document.getElementById('consultaId').value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/consultas/${id}` : `${API_URL}/consultas`;
+        const body = {
             animal: { rfid: document.getElementById('consultaAnimal').value },
             veterinario: { crmv: document.getElementById('consultaVet').value },
             dataConsulta: document.getElementById('consultaData').value,
@@ -849,327 +765,204 @@
             tipo: document.getElementById('consultaTipo').value,
             diagnostico: document.getElementById('consultaDiagnostico').value
         };
-        const url = id ? `${API_URL}/consultas/${id}` : `${API_URL}/consultas`;
-        const method = id ? 'PUT' : 'POST';
-        if(id) consulta.id = id;
-
+        if(id) body.id = id;
         try {
-            await fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(consulta) });
+            await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) });
             loadConsultas(); cancelForm('consultaForm');
-        } catch (error) { alert('Erro ao salvar consulta'); }
+        } catch(err) { alert('Erro'); }
     }
-
     async function editConsulta(id) {
-        try {
-            await populateConsultaSelects(); // Corrigido nome da função (plural)
-            const response = await fetch(`${API_URL}/consultas/${id}`);
-            const consulta = await handleResponse(response);
-
-            document.getElementById('consultaId').value = consulta.id;
-            document.getElementById('consultaAnimal').value = consulta.animal ? consulta.animal.rfid : '';
-            document.getElementById('consultaVet').value = consulta.veterinario ? consulta.veterinario.crmv : '';
-            document.getElementById('consultaData').value = consulta.dataConsulta;
-            document.getElementById('consultaHora').value = consulta.horaConsulta;
-            document.getElementById('consultaTipo').value = consulta.tipo;
-            document.getElementById('consultaDiagnostico').value = consulta.diagnostico;
-
-            document.getElementById('consultaForm').classList.add('active');
-        } catch (error) {
-            console.error('Erro ao buscar consulta: ', error);
-        }
-    } // FECHEI A FUNÇÃO AQUI (Estava faltando essa chave)
-
+        await populateSelects();
+        const res = await fetch(`${API_URL}/consultas/${id}`, { headers: getAuthHeaders() });
+        const c = await handleResponse(res);
+        document.getElementById('consultaId').value = c.id;
+        document.getElementById('consultaAnimal').value = c.animal?c.animal.rfid:'';
+        document.getElementById('consultaVet').value = c.veterinario?c.veterinario.crmv:'';
+        document.getElementById('consultaData').value = c.dataConsulta;
+        document.getElementById('consultaHora').value = c.horaConsulta;
+        document.getElementById('consultaTipo').value = c.tipo;
+        document.getElementById('consultaDiagnostico').value = c.diagnostico;
+        document.getElementById('consultaForm').classList.add('active');
+    }
     async function deleteConsulta(id) {
-        if (confirm('Tem certeza?')) {
-            await fetch(`${API_URL}/consultas/${id}`, { method: 'DELETE' });
+        if(confirm('Excluir?')) {
+            await fetch(`${API_URL}/consultas/${id}`, { method: 'DELETE', headers: getAuthHeaders() });
             loadConsultas();
         }
     }
 
-    // ================= CRUD TRATAMENTOS =================
-    async function loadTratamentos() {
+    // VETERINARIOS
+    async function loadVets() {
         try {
-            const response = await fetch(`${API_URL}/tratamentos`);
-            const tratamentos = await handleResponse(response);
-            renderTratamentos(tratamentos);
-        } catch (error) { console.error(error); }
+            const res = await fetch(`${API_URL}/veterinarios`, { headers: getAuthHeaders() });
+            renderVets(await handleResponse(res));
+        } catch(e) { console.error(e); }
     }
-
-    function renderTratamentos(tratamentos) {
-        const tbody = document.getElementById('tratamentosList');
-        if (!tratamentos || tratamentos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum tratamento cadastrado</td></tr>'; return;
-        }
-        tbody.innerHTML = tratamentos.map(t => `
+    function renderVets(list) {
+        const tb = document.getElementById('vetsList');
+        if(!list || list.length===0) { tb.innerHTML='<tr><td colspan="3">Vazio</td></tr>'; return; }
+        tb.innerHTML = list.map(v => `
             <tr>
-                <td>${t.id}</td><td>${t.consulta ? t.consulta.id : 'N/D'}</td><td>${t.descricao || '-'}</td><td>${t.antibiotico ? 'Sim' : 'Não'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editTratamento('${t.id}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteTratamento('${t.id}')">🗑️ Excluir</button>
+                <td>${v.crmv}</td><td>${v.nome}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm" onclick="editVet('${v.crmv}')">✏️</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteVet('${v.crmv}')">🗑️</button>
                 </td>
             </tr>`).join('');
     }
+    async function saveVet(e) {
+        e.preventDefault();
+        const id = document.getElementById('vetId').value;
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/veterinarios/${id}` : `${API_URL}/veterinarios`;
+        const body = {
+            crmv: document.getElementById('vetCrmv').value,
+            nome: document.getElementById('vetNome').value,
+            idade: document.getElementById('vetIdade').value,
+            dataGraduacao: document.getElementById('vetDataGraduacao').value
+        };
+        try {
+            await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) });
+            loadVets(); cancelForm('vetForm');
+        } catch(err) { alert('Erro'); }
+    }
+    async function editVet(crmv) {
+        const res = await fetch(`${API_URL}/veterinarios/${crmv}`, { headers: getAuthHeaders() });
+        const v = await handleResponse(res);
+        document.getElementById('vetId').value = v.crmv;
+        document.getElementById('vetCrmv').value = v.crmv;
+        document.getElementById('vetCrmv').readOnly = true;
+        document.getElementById('vetNome').value = v.nome;
+        document.getElementById('vetIdade').value = v.idade;
+        document.getElementById('vetDataGraduacao').value = v.dataGraduacao;
+        document.getElementById('vetForm').classList.add('active');
+    }
+    async function deleteVet(crmv) {
+        if(confirm('Excluir?')) {
+            await fetch(`${API_URL}/veterinarios/${crmv}`, { method: 'DELETE', headers: getAuthHeaders() });
+            loadVets();
+        }
+    }
 
+    // TRATAMENTOS e CERTIFICAÇÕES seguem o mesmo padrão...
+    async function loadTratamentos() {
+        const res = await fetch(`${API_URL}/tratamentos`, { headers: getAuthHeaders() });
+        const list = await handleResponse(res);
+        const tb = document.getElementById('tratamentosList');
+        if(!list || !list.length) { tb.innerHTML='<tr><td colspan="4">Vazio</td></tr>'; return; }
+        tb.innerHTML = list.map(t => `<tr><td>${t.id}</td><td>${t.consulta?t.consulta.id:'-'}</td><td>${t.descricao}</td>
+            <td><button class="btn btn-warning btn-sm" onclick="editTrat('${t.id}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="delTrat('${t.id}')">🗑️</button></td></tr>`).join('');
+    }
     async function saveTratamento(e) {
         e.preventDefault();
-        if (!confirm("Confirma?")) return;
         const id = document.getElementById('tratamentoId').value;
-        const tratamento = {
+        const method = id ? 'PUT' : 'POST';
+        const url = id ? `${API_URL}/tratamentos/${id}` : `${API_URL}/tratamentos`;
+        const body = {
             consulta: { id: document.getElementById('tratamentoConsultaId').value },
             descricao: document.getElementById('tratamentoDescricao').value,
             antibiotico: document.getElementById('tratamentoAntibiotico').value === 'true'
         };
-        const url = id ? `${API_URL}/tratamentos/${id}` : `${API_URL}/tratamentos`;
-        const method = id ? 'PUT' : 'POST';
-        if(id) tratamento.id = id;
-
-        try {
-            await fetch(url, { method: method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(tratamento)});
-            loadTratamentos(); cancelForm('tratamentoForm');
-        } catch (error) { alert('Erro ao salvar tratamento'); }
+        if(id) body.id = id;
+        await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) });
+        loadTratamentos(); cancelForm('tratamentoForm');
+    }
+    async function editTrat(id) {
+        const res = await fetch(`${API_URL}/tratamentos/${id}`, { headers: getAuthHeaders() });
+        const t = await handleResponse(res);
+        document.getElementById('tratamentoId').value = t.id;
+        document.getElementById('tratamentoConsultaId').value = t.consulta?t.consulta.id:'';
+        document.getElementById('tratamentoDescricao').value = t.descricao;
+        document.getElementById('tratamentoAntibiotico').value = t.antibiotico;
+        document.getElementById('tratamentoForm').classList.add('active');
+    }
+    async function delTrat(id) {
+        if(confirm('Excluir?')) { await fetch(`${API_URL}/tratamentos/${id}`, { method: 'DELETE', headers: getAuthHeaders() }); loadTratamentos(); }
     }
 
-    async function editTratamento(id) {
-        try {
-            const response = await fetch(`${API_URL}/tratamentos/${id}`);
-            const tratamento = await handleResponse(response);
-            document.getElementById('tratamentoId').value = tratamento.id;
-            document.getElementById('tratamentoConsultaId').value = tratamento.consulta ? tratamento.consulta.id : '';
-            document.getElementById('tratamentoDescricao').value = tratamento.descricao;
-            document.getElementById('tratamentoAntibiotico').value = tratamento.antibiotico ? 'true' : 'false';
-            document.getElementById('tratamentoForm').classList.add('active');
-        } catch(e) { console.error(e); }
-    }
-
-    async function deleteTratamento(id) {
-        if(confirm('Excluir?')) { await fetch(`${API_URL}/tratamentos/${id}`, {method:'DELETE'}); loadTratamentos(); }
-    }
-
-    // ================= CRUD VETERINÁRIOS =================
-    async function loadVets() {
-        try {
-            const response = await fetch(`${API_URL}/veterinarios`);
-            const veterinarios = await handleResponse(response);
-            renderVets(veterinarios);
-        } catch (error) { console.error(error); }
-    }
-
-    function renderVets(veterinarios) {
-        const tbody = document.getElementById('vetsList');
-        if (!veterinarios || veterinarios.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhum vet cadastrado</td></tr>'; return;
-        }
-        tbody.innerHTML = veterinarios.map(v => `
-            <tr>
-                <td>${v.crmv}</td><td>${v.nome}</td><td>${v.idade}</td><td>${v.dataGraduacao}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editVet('${v.crmv}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteVet('${v.crmv}')">🗑️ Excluir</button>
-                </td>
-            </tr>`).join('');
-    }
-
-    async function saveVet(e) {
-        e.preventDefault();
-        const crmv = document.getElementById('vetCrmv').value;
-        if(crmv.length < 13) { alert("Preencha o CRMV"); return; }
-        if (!confirm("Confirma?")) return;
-        const id = document.getElementById('vetId').value;
-        const vet = {
-            crmv: crmv,
-            nome: document.getElementById('vetNome').value,
-            idade: parseInt(document.getElementById('vetIdade').value),
-            dataGraduacao: document.getElementById('vetDataGraduacao').value
-        };
-        const url = id ? `${API_URL}/veterinarios/${id}` : `${API_URL}/veterinarios`;
-        const method = id ? 'PUT' : 'POST';
-        if(id) vet.crmv = id;
-
-        await fetch(url, { method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(vet) });
-        loadVets(); cancelForm('vetForm');
-    }
-
-    async function editVet(crmv) {
-        try {
-            const res = await fetch(`${API_URL}/veterinarios/${crmv}`);
-            const vet = await handleResponse(res);
-            document.getElementById('vetId').value = vet.crmv;
-            document.getElementById('vetNome').value = vet.nome;
-            document.getElementById('vetCrmv').value = vet.crmv;
-            document.getElementById('vetIdade').value = vet.idade;
-            document.getElementById('vetDataGraduacao').value = vet.dataGraduacao;
-            document.getElementById('vetCrmv').readOnly = true;
-            document.getElementById('vetForm').classList.add('active');
-        } catch(e) { console.error(e); }
-    }
-
-    async function deleteVet(crmv) {
-        if(confirm('Excluir?')) { await fetch(`${API_URL}/veterinarios/${crmv}`, {method:'DELETE'}); loadVets(); }
-    }
-
-    // ================= CRUD CERTIFICAÇÕES =================
     async function loadCerts() {
-        try {
-            const response = await fetch(`${API_URL}/certificacoes`);
-            renderCerts(await handleResponse(response));
-        } catch (error) { console.error(error); }
+        const res = await fetch(`${API_URL}/certificacoes`, { headers: getAuthHeaders() });
+        const list = await handleResponse(res);
+        const tb = document.getElementById('certsList');
+        if(!list || !list.length) { tb.innerHTML='<tr><td colspan="3">Vazio</td></tr>'; return; }
+        tb.innerHTML = list.map(c => `<tr><td>${c.numeroRegistro}</td><td>${c.veterinario?c.veterinario.nome:'-'}</td>
+            <td><button class="btn btn-warning btn-sm" onclick="editCert('${c.numeroRegistro}')">✏️</button>
+            <button class="btn btn-danger btn-sm" onclick="delCert('${c.numeroRegistro}')">🗑️</button></td></tr>`).join('');
     }
-
-    function renderCerts(certificacoes) {
-        const tbody = document.getElementById('certsList');
-        if (!certificacoes || certificacoes.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="empty-state">Vazio</td></tr>'; return;
-        }
-        tbody.innerHTML = certificacoes.map(c => `
-            <tr>
-                <td>${c.numeroRegistro}</td><td>${c.veterinario ? c.veterinario.crmv : 'N/D'}</td><td>${c.especialidade ? c.especialidade.nome : 'N/D'}</td>
-                <td>${c.instituicaoCertificadora || '-'}</td><td>${c.dataObtencao || '-'}</td>
-                <td class="action-buttons">
-                    <button class="btn btn-warning btn-sm" onclick="editCert('${c.numeroRegistro}')">✏️ Editar</button>
-                    <button class="btn btn-danger btn-sm" onclick="deleteCert('${c.numeroRegistro}')">🗑️ Excluir</button>
-                </td>
-            </tr>`).join('');
-    }
-
     async function saveCert(e) {
         e.preventDefault();
-        if(!confirm("Confirma?")) return;
         const id = document.getElementById('certId').value;
-        const cert = {
-            numeroRegistro: document.getElementById('certNumeroRegistro').value,
-            dataObtencao: document.getElementById('certDataObtencao').value,
-            instituicaoCertificadora: document.getElementById('certInstituicao').value,
-            veterinario: { crmv: document.getElementById('certVet').value },
-            especialidade: { id: parseInt(document.getElementById('certEspecialidadeId').value) }
-        };
-        const url = id ? `${API_URL}/certificacoes/${id}` : `${API_URL}/certificacoes`;
         const method = id ? 'PUT' : 'POST';
-        if(id) cert.numeroRegistro = id;
-
-        try {
-            await fetch(url, { method, headers: {'Content-Type': 'application/json'}, body: JSON.stringify(cert) });
-            loadCerts(); cancelForm('certForm');
-        } catch(e) { alert('Erro ao salvar cert'); }
+        const url = id ? `${API_URL}/certificacoes/${id}` : `${API_URL}/certificacoes`;
+        const body = {
+            numeroRegistro: document.getElementById('certNumeroRegistro').value,
+            veterinario: { crmv: document.getElementById('certVet').value },
+            especialidade: { id: document.getElementById('certEspecialidadeId').value },
+            instituicaoCertificadora: document.getElementById('certInstituicao').value,
+            dataObtencao: document.getElementById('certDataObtencao').value
+        };
+        await fetch(url, { method, headers: getAuthHeaders(), body: JSON.stringify(body) });
+        loadCerts(); cancelForm('certForm');
     }
-
-    async function editCert(num) {
-        const res = await fetch(`${API_URL}/certificacoes/${num}`);
-        const cert = await handleResponse(res);
-        document.getElementById('certId').value = cert.numeroRegistro;
-        document.getElementById('certNumeroRegistro').value = cert.numeroRegistro;
-        document.getElementById('certVet').value = cert.veterinario ? cert.veterinario.crmv : '';
-        document.getElementById('certEspecialidadeId').value = cert.especialidade ? cert.especialidade.id : '';
-        document.getElementById('certInstituicao').value = cert.instituicaoCertificadora;
-        document.getElementById('certDataObtencao').value = cert.dataObtencao;
+    async function editCert(id) {
+        const res = await fetch(`${API_URL}/certificacoes/${id}`, { headers: getAuthHeaders() });
+        const c = await handleResponse(res);
+        document.getElementById('certId').value = c.numeroRegistro;
+        document.getElementById('certNumeroRegistro').value = c.numeroRegistro;
         document.getElementById('certNumeroRegistro').readOnly = true;
+        document.getElementById('certVet').value = c.veterinario?c.veterinario.crmv:'';
+        document.getElementById('certEspecialidadeId').value = c.especialidade?c.especialidade.id:'';
+        document.getElementById('certInstituicao').value = c.instituicaoCertificadora;
+        document.getElementById('certDataObtencao').value = c.dataObtencao;
         document.getElementById('certForm').classList.add('active');
     }
-
-    async function deleteCert(num) {
-        if(confirm('Excluir?')) { await fetch(`${API_URL}/certificacoes/${num}`, {method:'DELETE'}); loadCerts(); }
+    async function delCert(id) {
+         if(confirm('Excluir?')) { await fetch(`${API_URL}/certificacoes/${id}`, { method: 'DELETE', headers: getAuthHeaders() }); loadCerts(); }
     }
 
-    // ================= FICHA TÉCNICA (MongoDB) =================
-    async function showFicha(rfid) {
-        const modal = document.getElementById('fichaModal');
-        const body = document.getElementById('fichaModalBody');
-        body.innerHTML = '<p>Carregando...</p>';
-        modal.classList.add('active');
-
+    // SYNC MONGO
+    async function syncMongo() {
+        if(!confirm('Iniciar sincronização?')) return;
         try {
-            const response = await fetch(`${API_URL}/fichas/${rfid}`);
-            if (!response.ok) {
-                if (response.status === 404) throw new Error('Ficha não encontrada. Sincronize o MongoDB.');
-                throw new Error('Erro ao buscar ficha.');
-            }
-            const ficha = await handleResponse(response);
-            renderFicha(ficha);
-        } catch (error) {
-            console.error('Erro:', error);
-            body.innerHTML = `<p style="color: red; font-weight: bold;">${error.message}</p>`;
-        }
+            const res = await fetch(`${API_URL}/admin/sync-mongo`, { headers: getAuthHeaders() });
+            const msg = await res.text();
+            alert(msg);
+        } catch(e) { alert('Erro ao sincronizar'); }
     }
 
-    function hideFicha() {
-        document.getElementById('fichaModal').classList.remove('active');
-        document.getElementById('fichaModalBody').innerHTML = '';
+    // FICHA (MongoDB)
+    async function showFicha(rfid) {
+        const m = document.getElementById('fichaModal');
+        const b = document.getElementById('fichaModalBody');
+        b.innerHTML = 'Carregando...'; m.classList.add('active');
+        try {
+            const res = await fetch(`${API_URL}/fichas/${rfid}`, { headers: getAuthHeaders() });
+            if(!res.ok) throw new Error('Não encontrado no Mongo. Sincronize.');
+            const f = await res.json();
+            b.innerHTML = `<h3>${f.nomeAnimal} (${f.rfid})</h3>
+            <p><strong>Dono:</strong> ${f.dono?f.dono.nomeDono:'-'}</p>
+            <div style="margin-top:15px"><strong>Histórico:</strong> ${f.historicoConsultas?f.historicoConsultas.length:0} consultas.</div>`;
+        } catch(e) { b.innerHTML = `<p style="color:red">${e.message}</p>`; }
     }
+    function hideFicha() { document.getElementById('fichaModal').classList.remove('active'); }
 
-    function renderFicha(ficha) {
-        const dono = ficha.dono || {};
-        const historico = ficha.historicoConsultas || [];
-        const body = document.getElementById('fichaModalBody');
-
-        body.innerHTML = `
-            <div class="ficha-grid">
-                <div class="ficha-item"><strong>RFID:</strong> <span>${ficha.rfid}</span></div>
-                <div class="ficha-item"><strong>Nome:</strong> <span>${ficha.nomeAnimal || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Espécie:</strong> <span>${ficha.especie || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Idade:</strong> <span>${ficha.idade}</span></div>
-                <div class="ficha-item"><strong>Porte:</strong> <span>${ficha.porte || 'N/D'}</span></div>
-            </div>
-            <h3 class="historico-titulo">Dono</h3>
-            <div class="ficha-grid">
-                <div class="ficha-item"><strong>Nome:</strong> <span>${dono.nomeDono || 'N/D'}</span></div>
-                <div class="ficha-item"><strong>Telefone:</strong> <span>${dono.telefone || 'N/D'}</span></div>
-            </div>
-            <h3 class="historico-titulo">Histórico (${historico.length})</h3>
-            <div id="historico-lista">
-                ${historico.length === 0 ? '<p class="empty-state">Sem histórico.</p>' :
-                    historico.map(c => `
-                    <div class="consulta-card">
-                        <strong>Consulta ID: ${c.consultaId}</strong>
-                        <div class="consulta-body">
-                            <p><strong>Data:</strong> ${c.dataConsulta || 'N/D'} - <strong>Vet:</strong> ${c.nomeVeterinario || 'N/D'}</p>
-                            <p><strong>Diagnóstico:</strong> ${c.diagnostico || 'N/D'}</p>
-                            ${c.tratamento ? `<div class="tratamento-card"><p><strong>Tratamento:</strong> ${c.tratamento.descricao}</p></div>` : ''}
-                        </div>
-                    </div>`).join('')}
-            </div>`;
-    }
-
-    // ================= DASHBOARD & UTILS =================
+    // DASHBOARD
     function updateDashboard() {
-        const count = (id) => {
-            const rows = document.getElementById(id).getElementsByTagName('tr');
-            if (rows.length === 1 && rows[0].querySelector('.empty-state')) return 0;
-            return rows.length;
-        };
-        document.getElementById('dashTotalAnimais').innerText = count('animaisList');
-        document.getElementById('dashTotalDonos').innerText = count('donosList');
-        document.getElementById('dashTotalVets').innerText = count('vetsList');
-        document.getElementById('dashTotalConsultas').innerText = count('consultasList');
-    }
-
-    const masks = {
-        cpf(v) { v=v.replace(/\D/g,""); if(v.length>11) v=v.slice(0,11); if(v.length>9) return v.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/,"$1.$2.$3-$4"); return v; },
-        phone(v) { v=v.replace(/\D/g,""); if(v.length>11) v=v.slice(0,11); if(v.length>10) return v.replace(/^(\d{2})(\d{5})(\d{4}).*/,"($1) $2-$3"); return v; },
-        crmv(v) { if(!v)return ""; let r=v.toUpperCase().replace(/[^A-Z0-9]/g,"").replace("CRMV",""); let uf=r.replace(/[^A-Z]/g,"").slice(0,2); let n=r.replace(/\D/g,"").slice(0,5); return "CRMV-" + (uf.length>0?uf:"") + (uf.length===2&&n.length>0?" "+n:""); }
-    };
-
-    function setupMasks() {
-        const ids = {'donoCpf':masks.cpf, 'donoTelefone':masks.phone, 'animalDonoCpf':masks.cpf, 'vetCrmv':masks.crmv, 'certVet':masks.crmv};
-        for(const [id, fn] of Object.entries(ids)) {
-            const el = document.getElementById(id);
-            if(el) el.addEventListener('input', e => e.target.value = fn(e.target.value));
-        }
+        const c = (id) => { const r = document.getElementById(id).getElementsByTagName('tr'); return (r.length===1&&r[0].innerText==='Vazio')?0:r.length; };
+        document.getElementById('dashTotalAnimais').innerText = c('animaisList');
+        document.getElementById('dashTotalDonos').innerText = c('donosList');
+        document.getElementById('dashTotalVets').innerText = c('vetsList');
+        document.getElementById('dashTotalConsultas').innerText = c('consultasList');
     }
 
     async function renderAll() {
-        setupMasks();
-        // CORREÇÃO: Usando vírgulas dentro do array, não ponto e vírgula
-        await Promise.all([
-            loadDonos(),
-            loadAnimais(),
-            loadConsultas(),
-            loadTratamentos(),
-            loadVets(),
-            loadCerts()
-        ]);
+        await Promise.all([loadDonos(), loadAnimais(), loadConsultas(), loadTratamentos(), loadVets(), loadCerts()]);
         updateDashboard();
     }
 
-    document.addEventListener('DOMContentLoaded', renderAll);
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', checkLogin);
 </script>
 </body>
 </html>
